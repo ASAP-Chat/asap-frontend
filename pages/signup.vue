@@ -1,4 +1,17 @@
 <template>
+  <CommonModel
+    v-if="showModal"
+    :header="isSuccessRegister ? 'ลงทะเบียนสำเร็จ!' : 'ลงทะเบียนไม่สำเร็จ!'"
+    :content="
+      isSuccessRegister
+        ? 'คุณได้ทำการลงทะเบียนสำเร็จเรียบร้อยแล้ว'
+        : 'ขออภัย, ที่อยู่อีเมลนี้มีในระบบแล้ว'
+    "
+    :buttonText="isSuccessRegister ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
+    :isSuccess="isSuccessRegister"
+    :to="isSuccessRegister ? '/login' : '/signup'"
+    @btn-action="closeModel"
+  />
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
     <div
       class="tw-card tw-flex-shrink-0 sm:tw-max-w-xl tw-max-w-sm lg:tw-shadow-2xl tw-bg-base-100"
@@ -192,6 +205,7 @@
             rounded="lg"
             class="font-weight-bold"
             :disabled="isButtonDisabled"
+            @click="register(userInfo)"
           >
             สร้างบัญชีผู้ใช้งาน
           </v-btn>
@@ -249,6 +263,9 @@ const isFormValid = ref(false)
 const isSocialValid = ref(false)
 const selectedSocial = ref<string[]>([])
 
+const showModal = ref(false)
+const isSuccessRegister = ref()
+
 const categories = JSON.parse(JSON.stringify(businessCategories))
 
 const isShopInfoValid = computed(() => {
@@ -285,5 +302,42 @@ const resetShopValue = () => {
       line: '',
     },
   }
+}
+
+const register = async (user: UserSignup) => {
+  try {
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/register`,
+      {
+        method: 'post',
+        body: JSON.stringify({
+          email: user.email.trim(),
+          password: user.confirmPassword,
+          displayName: user.displayName.trim(),
+          isOwner: user.isOwner,
+          shop: user.shop,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    if (response.status.value === 'success') {
+      isSuccessRegister.value = true
+      showModal.value = true
+      window.scrollTo(0, document.body.offsetHeight)
+    } else {
+      isSuccessRegister.value = false
+      showModal.value = true
+      console.log(`Request failed with status: ${response.error.value}`)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const closeModel = () => {
+  showModal.value = false
 }
 </script>
