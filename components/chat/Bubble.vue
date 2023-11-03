@@ -6,8 +6,8 @@
         useDayjs()(props.date).format('ddd, DD/MM/YYYY') === 'Invalid Date',
     }"
   >
-    <v-chip>
-      <span class="tw-text-xs tw-opacity-50 tw-ms-2">
+    <v-chip color="info">
+      <span class="tw-text-xs">
         {{
           useDayjs()(props.date).format('ddd, DD/MM/YYYY') !== 'Invalid Date'
             ? useDayjs()(props.date).format('ddd, DD/MM/YYYY')
@@ -29,7 +29,7 @@
       }}</time>
     </div>
     <div
-      class="tw-chat-bubble"
+      class="tw-chat-bubble tw-bg-[#d4caff] text-secondary"
       v-if="props.msgType === 'text'"
     >
       {{ props.msgText }}

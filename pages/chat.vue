@@ -3,13 +3,15 @@
     <v-navigation-drawer
       permanent
       width="145"
+      color="#fafafa"
     >
-      <v-list>
+      <v-list color="primary">
         <v-list-item
           title="ทั้งหมด"
           value="home"
           prepend-icon="mdi-message-outline"
           exact
+          base-color="#707070"
         ></v-list-item>
 
         <v-list-subheader> สถานะแชต </v-list-subheader>
@@ -18,17 +20,20 @@
           title="รอดำเนินการ"
           value="pending"
           prepend-icon="mdi-emoticon-neutral-outline"
+          base-color="#707070"
         ></v-list-item>
 
         <v-list-item
           title="ดำเนินการ"
           value="doing"
           prepend-icon="mdi-emoticon-confused-outline"
+          base-color="#707070"
         ></v-list-item>
         <v-list-item
           title="เสร็จสิ้น"
           value="done"
           prepend-icon="mdi-emoticon-happy-outline"
+          base-color="#707070"
         ></v-list-item>
 
         <v-list-subheader> Social Media </v-list-subheader>
@@ -37,17 +42,20 @@
           title="Line"
           value="line"
           prepend-icon="fa:fa-brands fa-line"
+          base-color="#707070"
         ></v-list-item>
 
         <v-list-item
           title="Facebook"
           value="facebook"
           prepend-icon="mdi-facebook"
+          base-color="#707070"
         ></v-list-item>
         <v-list-item
           title="Instagram"
           value="instagram"
           prepend-icon="mdi-instagram"
+          base-color="#707070"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
