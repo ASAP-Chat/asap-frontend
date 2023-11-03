@@ -75,7 +75,7 @@ jobs:
             docker login --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} ghcr.io 
             docker-compose stop asapfrontendcon
             docker-compose rm --force asapfrontendcon
-            docker rmi ghcr.io/asap-chat/asap-frontend-images
-            docker pull ghcr.io/asap-chat/asap-frontend-images
+            docker rmi ghcr.io/asap-chat/asap-frontend-images:latest
+            docker pull ghcr.io/asap-chat/asap-frontend-images:latest
             docker-compose pull asapfrontendcon
             docker-compose up -d asapfrontendcon
