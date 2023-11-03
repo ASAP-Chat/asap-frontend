@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: connect with firebase -->
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
     <div
       class="tw-card tw-flex-shrink-0 sm:tw-max-w-xl tw-max-w-sm lg:tw-shadow-2xl tw-bg-base-100"
@@ -56,6 +55,16 @@
               @click:append-inner="confirmVisible = !confirmVisible"
               :append-inner-icon="confirmVisible ? 'mdi-eye' : 'mdi-eye-off'"
               :type="confirmVisible ? 'text' : 'password'"
+            />
+          </div>
+          <div class="form-control tw-mt-2">
+            <CommonTextField
+              :rules="[required]"
+              v-model="userInfo.displayName"
+              id="displayName"
+              name="displayName"
+              type="displayName"
+              label="ชื่อผู้ใช้"
             />
           </div>
           <div class="form-control tw-mt-2">
@@ -183,7 +192,6 @@
             rounded="lg"
             class="font-weight-bold"
             :disabled="isButtonDisabled"
-            @click="handleRegistration(userInfo)"
           >
             สร้างบัญชีผู้ใช้งาน
           </v-btn>
@@ -219,9 +227,8 @@ const {
   instagramLink,
 } = useFormRules()
 
-const { registerUser } = useFirebaseAuth() // auto-imported
-
 const userInfo = ref<UserSignup>({
+  displayName: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -278,9 +285,5 @@ const resetShopValue = () => {
       line: '',
     },
   }
-}
-
-const handleRegistration = async (user: UserSignup) => {
-  await registerUser(user.email, user.password)
 }
 </script>
