@@ -1,6 +1,7 @@
 import { SocialLinks } from './index.interface'
 
 export default interface UserSignUp {
+  displayName: string
   email: string
   password: string
   confirmPassword: string

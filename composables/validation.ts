@@ -9,8 +9,8 @@ export const useFormRules = () => {
     },
 
     passwordLength: (value: string) =>
-      (!!value && value.length >= 6) ||
-      'รหัสผ่านควรมีความยาวอย่างน้อย 6 ตัวอักษร',
+      (!!value && value.length >= 8) ||
+      'รหัสผ่านควรมีความยาวอย่างน้อย 8 ตัวอักษร',
 
     confirmPassword: (value?: string, password?: string) => {
       return value === password || 'รหัสผ่านไม่ตรงกัน โปรดลองอีกครั้ง'
