@@ -9,12 +9,11 @@
       >
         <v-list>
           <v-list-item>
-            <!-- TODO: Logo -->
-            <!-- <v-img
+            <v-img
               src="/images/logo.png"
               :width="50"
               class="mx-auto"
-            /> -->
+            />
           </v-list-item>
         </v-list>
 
