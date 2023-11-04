@@ -64,12 +64,11 @@
               location="end"
             >
               <v-list>
-                <v-list-item
-                  v-for="(item, index) in profileNav"
-                  :key="index"
-                  :value="index"
-                >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item>
+                  <v-list-item-title>โปรไฟล์</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="useSignOut()">
+                  <v-list-item-title>ออกจากระบบ</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -81,7 +80,7 @@
         app
         density="comfortable"
       >
-        <p class="tw-px-6 tw-text-white font-weight-bold tw-text-xl">
+        <v-app-bar-title class="font-weight-bold tw-text-xl">
           <span class="tw-pb-3">
             <v-icon
               :icon="getIcon()"
@@ -89,8 +88,15 @@
               size="small"
             />
           </span>
-          {{ pathTitle }}
-        </p>
+          {{ pathTitle }}</v-app-bar-title
+        >
+
+        <v-spacer></v-spacer>
+
+        <!-- In case
+          <p class="tw-text-sm">
+          <span>{{ useDayjs()(date).format('DD/MM/YYYY, HH:mm น.') }}</span>
+        </p> -->
       </v-app-bar>
 
       <v-main class="tw-bg-[#f2f2f2]">
@@ -108,6 +114,7 @@
 import { PathToTitleMap } from '~/interfaces/index.interface'
 
 const route = useRoute()
+const date = new Date()
 
 const pathToTitle = {
   chat: 'แชต',
@@ -165,6 +172,4 @@ const pathTitle = computed(() => {
   }
   return route.name
 })
-
-const profileNav = [{ title: 'โปรไฟล์' }, { title: 'ออกจากระบบ' }]
 </script>

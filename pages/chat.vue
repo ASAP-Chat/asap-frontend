@@ -211,7 +211,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 const latestMessages = ref()
 const filteredMessages = ref()
 
@@ -244,10 +244,10 @@ const getMessageSubtitle = (message: any) => {
   }
 }
 
-const socket = io('http://localhost:3000')
-socket.on('connect', () => {
-  console.log('Socket connected FE')
-})
+// const socket = io('http://localhost:3000')
+// socket.on('connect', () => {
+//   console.log('Socket connected FE')
+// })
 
 useHead({
   title: 'แชต',
@@ -279,11 +279,13 @@ let intervalId
 
 const fetchFilterChat = async (customerId: any) => {
   try {
-    const data = await useFetch(
-      `http://localhost:3000/api/social-message/ASAP-Shop/652e92d9fbacd5abf57c6249/${customerId}?$limit=50`
+    const response = await useFetch(
+      `${
+        import.meta.env.VITE_BASE_URL
+      }/social-message/ASAP-Shop/652e92d9fbacd5abf57c6249/${customerId}?$limit=50`
     )
     if (selectCustomer) {
-      filteredMessages.value = await data.data.value
+      filteredMessages.value = await response.data.value
       filteredMessagesDate.value = filteredMessages.value
     }
     window.scrollTo(0, document.body.offsetHeight)
@@ -294,19 +296,33 @@ const fetchFilterChat = async (customerId: any) => {
 
 const fetchLatestMessages = async () => {
   try {
-    const data = await useFetch(
-      'http://localhost:3000/api/social-message/ASAP-Shop/652e92d9fbacd5abf57c6249/'
+    const response = await useFetch(
+      `${
+        import.meta.env.VITE_BASE_URL
+      }/social-message/652712a90bfba5fec0dd29f3`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
     )
-    latestMessages.value = await data.data.value
-    if (Array.isArray(latestMessages.value)) {
-      latestMessages.value.sort(
-        (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
-          return (
-            new Date(b.sourceTimestamp).getTime() -
-            new Date(a.sourceTimestamp).getTime()
-          )
-        }
-      )
+    if (response.status.value === 'success') {
+      latestMessages.value = await response.data.value
+      if (Array.isArray(latestMessages.value)) {
+        latestMessages.value.sort(
+          (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
+            return (
+              new Date(b.sourceTimestamp).getTime() -
+              new Date(a.sourceTimestamp).getTime()
+            )
+          }
+        )
+      }
+    } else {
+      console.log('call - refresh token')
+      useRefreshToken()
+      fetchLatestMessages()
     }
   } catch (error: any) {
     console.log(error)

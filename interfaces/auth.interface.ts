@@ -15,3 +15,9 @@ interface ShopInfo {
   detail?: string
   social: SocialLinks
 }
+
+export interface UserLogin {
+  strategy: string
+  email: string
+  password: string
+}

@@ -223,7 +223,7 @@
 
 <script setup lang="ts">
 import { businessCategories } from '~/data/businessCategories.data'
-import UserSignup from '~/interfaces/signup.interface'
+import UserSignup from '~/interfaces/auth.interface'
 
 useHead({
   title: 'Welcome to ASAP',
