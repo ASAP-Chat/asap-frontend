@@ -64,12 +64,11 @@
               location="end"
             >
               <v-list>
-                <v-list-item
-                  v-for="(item, index) in profileNav"
-                  :key="index"
-                  :value="index"
-                >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <v-list-item>
+                  <v-list-item-title>โปรไฟล์</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="signOut()">
+                  <v-list-item-title>ออกจากระบบ</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -108,6 +107,7 @@
 import { PathToTitleMap } from '~/interfaces/index.interface'
 
 const route = useRoute()
+const router = useRouter()
 
 const pathToTitle = {
   chat: 'แชต',
@@ -166,5 +166,10 @@ const pathTitle = computed(() => {
   return route.name
 })
 
-const profileNav = [{ title: 'โปรไฟล์' }, { title: 'ออกจากระบบ' }]
+const signOut = () => {
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('user')
+  router.push('/login')
+}
 </script>
