@@ -116,7 +116,7 @@ const login = async (user: UserLogin) => {
       body: JSON.stringify({
         email: user.email.trim(),
         password: user.password,
-        strategy: 'local',
+        strategy: user.strategy,
       }),
       headers: {
         'Content-Type': 'application/json',
