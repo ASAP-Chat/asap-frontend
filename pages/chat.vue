@@ -211,7 +211,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 const latestMessages = ref()
 const filteredMessages = ref()
 
@@ -244,10 +244,10 @@ const getMessageSubtitle = (message: any) => {
   }
 }
 
-const socket = io('http://localhost:3000')
-socket.on('connect', () => {
-  console.log('Socket connected FE')
-})
+// const socket = io('http://localhost:3000')
+// socket.on('connect', () => {
+//   console.log('Socket connected FE')
+// })
 
 useHead({
   title: 'แชต',
