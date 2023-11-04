@@ -67,7 +67,7 @@
                 <v-list-item>
                   <v-list-item-title>โปรไฟล์</v-list-item-title>
                 </v-list-item>
-                <v-list-item @click="signOut()">
+                <v-list-item @click="useSignOut()">
                   <v-list-item-title>ออกจากระบบ</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -114,7 +114,6 @@
 import { PathToTitleMap } from '~/interfaces/index.interface'
 
 const route = useRoute()
-const router = useRouter()
 const date = new Date()
 
 const pathToTitle = {
@@ -173,11 +172,4 @@ const pathTitle = computed(() => {
   }
   return route.name
 })
-
-const signOut = () => {
-  localStorage.removeItem('accessToken')
-  localStorage.removeItem('refreshToken')
-  localStorage.removeItem('user')
-  router.push('/login')
-}
 </script>
