@@ -127,9 +127,17 @@ const login = async (user: UserLogin) => {
       loginError.value = false
 
       const responseData: any = response.data.value
+
+      const userData = {
+        _id: responseData.user._id,
+        email: responseData.user.email,
+        displayName: responseData.user.displayName,
+        isOwner: responseData.user.isOwner,
+        shop: responseData.user.shop,
+      }
       localStorage.setItem('accessToken', responseData.accessToken)
       localStorage.setItem('refreshToken', responseData.refreshToken)
-      localStorage.setItem('user', JSON.stringify(responseData.user))
+      localStorage.setItem('user', JSON.stringify(userData))
       router.push('/chat')
     } else {
       loginError.value = true
