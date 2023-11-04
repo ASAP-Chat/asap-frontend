@@ -80,7 +80,7 @@
         app
         density="comfortable"
       >
-        <p class="tw-px-6 tw-text-white font-weight-bold tw-text-xl">
+        <v-app-bar-title class="font-weight-bold tw-text-xl">
           <span class="tw-pb-3">
             <v-icon
               :icon="getIcon()"
@@ -88,8 +88,15 @@
               size="small"
             />
           </span>
-          {{ pathTitle }}
-        </p>
+          {{ pathTitle }}</v-app-bar-title
+        >
+
+        <v-spacer></v-spacer>
+
+        <!-- In case
+          <p class="tw-text-sm">
+          <span>{{ useDayjs()(date).format('DD/MM/YYYY, HH:mm น.') }}</span>
+        </p> -->
       </v-app-bar>
 
       <v-main class="tw-bg-[#f2f2f2]">
@@ -108,6 +115,7 @@ import { PathToTitleMap } from '~/interfaces/index.interface'
 
 const route = useRoute()
 const router = useRouter()
+const date = new Date()
 
 const pathToTitle = {
   chat: 'แชต',
