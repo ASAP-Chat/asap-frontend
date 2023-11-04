@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: connect with firebase -->
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200 xs:tw-bg-white">
     <div
       class="tw-card tw-flex-shrink-0 sm:tw-max-w-xl tw-max-w-sm lg:tw-shadow-2xl tw-bg-base-100"
@@ -18,11 +17,14 @@
           </p>
           <h5 class="tw-text-3xl font-weight-bold tw-mb-4">เข้าสู่ระบบ ASAP</h5>
         </div>
-        <v-form v-model="isFormValid">
+        <v-form
+          v-model="isFormValid"
+          @submit.prevent="login(userInfo)"
+        >
           <div class="form-control">
             <CommonTextField
               :rules="[required, checkEmail]"
-              v-model="email"
+              v-model="userInfo.email"
               id="email"
               name="email"
               type="email"
@@ -32,7 +34,7 @@
           <div class="form-control tw-mt-2">
             <CommonTextField
               :rules="[required]"
-              v-model="password"
+              v-model="userInfo.password"
               id="password"
               name="password"
               label="รหัสผ่าน"
@@ -40,6 +42,12 @@
               :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
               :type="visible ? 'text' : 'password'"
             />
+            <p
+              class="mb-4 text-error tw-text-sm"
+              v-if="loginError"
+            >
+              อีเมลหรือรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง
+            </p>
           </div>
           <div class="form-control tw-my-2">
             <v-btn
@@ -50,6 +58,8 @@
               type="submit"
               class="font-weight-bold"
               :disabled="!isFormValid"
+              :loading="loading"
+              @click="load"
             >
               เข้าสู่ระบบ
             </v-btn>
@@ -69,6 +79,10 @@
 </template>
 
 <script setup lang="ts">
+import { UserLogin } from '~/interfaces/auth.interface'
+
+const router = useRouter()
+
 useHead({
   title: 'Welcome to ASAP',
 })
@@ -77,11 +91,54 @@ definePageMeta({
   layout: false,
 })
 
-const email = ref('')
-const password = ref('')
 const isFormValid = ref(false)
-
 const visible = ref(false)
+const loading = ref(false)
+const loginError = ref(false)
+
+const load = () => {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 2000)
+}
+
+const userInfo = ref<UserLogin>({
+  strategy: 'local',
+  email: '',
+  password: '',
+})
+
+const login = async (user: UserLogin) => {
+  try {
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+      method: 'post',
+      body: JSON.stringify({
+        email: user.email.trim(),
+        password: user.password,
+        strategy: 'local',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.status.value === 'success') {
+      loginError.value = false
+
+      const responseData: any = response.data.value
+      localStorage.setItem('accessToken', responseData.accessToken)
+      localStorage.setItem('refreshToken', responseData.refreshToken)
+      localStorage.setItem('user', JSON.stringify(responseData.user))
+      router.push('/chat')
+    } else {
+      loginError.value = true
+      console.log(`Request failed with status: ${response.error.value}`)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 const { checkEmail, required } = useFormRules()
 </script>
