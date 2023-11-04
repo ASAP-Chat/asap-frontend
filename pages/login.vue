@@ -7,12 +7,12 @@
       <div class="tw-card-body">
         <div class="text-center">
           <v-img
-            :width="100"
+            :width="150"
             aspect-ratio="1/1"
             src="/images/logo.png"
             class="tw-mx-auto"
           />
-          <p class="tw-mb-5">
+          <p class="tw-mb-5 mt-2">
             ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media
           </p>
           <h5 class="tw-text-3xl font-weight-bold tw-mb-4">เข้าสู่ระบบ ASAP</h5>

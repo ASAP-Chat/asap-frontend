@@ -14,13 +14,13 @@
   />
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
     <div
-      class="tw-card tw-flex-shrink-0 sm:tw-max-w-xl tw-max-w-sm lg:tw-shadow-2xl tw-bg-base-100"
+      class="tw-card tw-flex-shrink-0 sm:tw-max-w-xl tw-max-w-sm lg:tw-shadow-2xl tw-bg-base-100 mt-4 mb-4"
       style="width: 1500px"
     >
       <div class="tw-card-body">
         <div class="text-center">
           <v-img
-            :width="100"
+            :width="150"
             aspect-ratio="1/1"
             src="/images/logo.png"
             class="mx-auto"
