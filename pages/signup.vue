@@ -210,7 +210,7 @@
             สร้างบัญชีผู้ใช้งาน
           </v-btn>
         </div>
-        <p class="text-medium-emphasis">
+        <p class="tw-text-[#6F7580]">
           มีบัญชีอยู่แล้ว?
           <NuxtLink to="/login">
             <a class="text-primary text-decoration-underline"> เข้าสู่ระบบ</a>
