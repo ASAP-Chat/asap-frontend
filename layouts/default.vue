@@ -52,18 +52,26 @@
 
         <template v-slot:append>
           <div class="tw-text-center">
-            <v-btn
+            <v-img
+              :width="40"
+              :height="40"
+              :aspect-ratio="1"
+              cover
+              class="rounded-circle ma-2 tw-cursor-pointer zoom"
+              :src="
+                userProfile
+                  ? userProfile
+                  : 'https://i.pinimg.com/564x/6d/61/eb/6d61eba8c8530d891373ea366b38da7d.jpg'
+              "
               id="menu-activator"
-              class="ma-2"
-              variant="text"
-              icon="mdi-account-circle-outline"
-            />
+            ></v-img>
+
             <v-menu
               activator="#menu-activator"
               location="end"
             >
               <v-list>
-                <v-list-item>
+                <v-list-item @click="settingProfile">
                   <v-list-item-title>โปรไฟล์</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="useSignOut()">
@@ -112,6 +120,8 @@
 <script lang="ts" setup>
 import { PathToTitleMap } from '~/interfaces/index.interface'
 
+const userProfile = ref()
+const router = useRouter()
 const route = useRoute()
 const date = new Date()
 
@@ -120,6 +130,9 @@ const pathToTitle = {
   chatbot: 'แชตบอท',
   'chat-template': 'รูปแบบคำตอบ',
   setting: 'ตั้งค่า',
+  'setting-profile': 'ตั้งค่า',
+  'setting-integration': 'ตั้งค่า',
+  'setting-member': 'ตั้งค่า',
 } as PathToTitleMap
 
 const sidebarList = [
@@ -145,7 +158,7 @@ const sidebarList = [
     prependIcon: 'mdi-cog-outline',
     title: 'ตั้งค่า',
     value: 'setting',
-    path: '/setting',
+    path: '/setting/profile',
   },
 ]
 
@@ -159,9 +172,8 @@ const getIcon = () => {
     case 'chat-template':
       return 'mdi-message-text-outline'
     case 'setting':
-      return 'mdi-cog-outline'
     default:
-      return 'mdi-default-icon'
+      return 'mdi-cog-outline'
   }
 }
 
@@ -171,4 +183,8 @@ const pathTitle = computed(() => {
   }
   return route.name
 })
+
+const settingProfile = () => {
+  router.push('/setting/profile')
+}
 </script>
