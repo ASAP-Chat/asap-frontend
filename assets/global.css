@@ -18,3 +18,10 @@ button {
 .v-icon {
   color: #7450c8;
 }
+
+.zoom {
+  transition: transform 0.2s;
+}
+.zoom:hover {
+  transform: scale(1.3);
+}
