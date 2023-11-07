@@ -31,7 +31,7 @@
             link
             :to="item.path"
             :active="i === 3"
-            @click="i === 3 ? selectItem('ข้อมูลส่วนตัว') : null"
+            @click="i === 3 ? selectItem('profile') : null"
           >
             <!-- TODO: Tooltip -->
 
@@ -55,18 +55,22 @@
         <template v-slot:append>
           <div class="tw-text-center">
             <v-img
+              v-if="userProfile"
               :width="40"
               :height="40"
               :aspect-ratio="1"
               cover
               class="rounded-circle ma-2 tw-cursor-pointer zoom"
-              :src="
-                userProfile
-                  ? userProfile
-                  : 'https://i.pinimg.com/564x/6d/61/eb/6d61eba8c8530d891373ea366b38da7d.jpg'
-              "
+              :src="userProfile"
               id="menu-activator"
             ></v-img>
+            <v-btn
+              v-else
+              id="menu-activator"
+              class="ma-2"
+              variant="text"
+              icon="mdi-account-circle-outline"
+            />
 
             <v-menu
               activator="#menu-activator"
@@ -90,13 +94,12 @@
         density="comfortable"
       >
         <v-app-bar-title class="font-weight-bold tw-text-xl">
-          <span class="tw-pb-3">
-            <v-icon
-              icon="mdi-cog-outline"
-              color="white"
-              size="small"
-            />
-          </span>
+          <v-icon
+            icon="mdi-cog-outline"
+            color="white"
+            size="small"
+            class="pb-1"
+          />
           ตั้งค่า</v-app-bar-title
         >
 
@@ -104,51 +107,46 @@
       </v-app-bar>
       <v-navigation-drawer
         permanent
-        width="145"
+        width="190"
         color="#fafafa"
       >
-        <v-list
-          color="primary"
-          class="tw-text-center"
-        >
-          <v-list-item
-            title="ข้อมูลส่วนตัว"
-            value="profile"
-            exact
-            base-color="#707070"
-            :active="selectedItem === 'ข้อมูลส่วนตัว'"
-            @click="selectItem('ข้อมูลส่วนตัว')"
-            to="profile"
-          ></v-list-item>
-
-          <v-divider></v-divider>
-          <v-list-item
-            title="การตั้งค่าช่องทาง"
-            value="integration"
-            exact
-            base-color="#707070"
-            :active="selectedItem === 'การตั้งค่าช่องทาง'"
-            @click="selectItem('การตั้งค่าช่องทาง')"
-            to="integration"
-          ></v-list-item>
-          <v-divider></v-divider>
-          <v-list-item
-            title="จัดการสมาชิก"
-            value="team"
-            exact
-            base-color="#707070"
-            :active="selectedItem === 'จัดการสมาชิก'"
-            @click="selectItem('จัดการสมาชิก')"
-            to="member"
-          ></v-list-item>
+        <v-list color="primary">
+          <div v-for="item in settingItems">
+            <v-list-item
+              :key="item.value"
+              :title="item.title"
+              :value="item.value"
+              exact
+              base-color="#707070"
+              :prepend-icon="item.icon"
+              :active="selectedItem === item.value"
+              @click="selectItem(item.value)"
+              :to="item.value"
+            ></v-list-item>
+            <v-divider></v-divider>
+          </div>
         </v-list>
       </v-navigation-drawer>
 
       <v-main class="tw-bg-[#f2f2f2]">
         <v-container
           fluid
-          class="tw-min-h-screen"
+          class="tw-min-h-screen tw-p-6"
         >
+          <h1 class="tw-text-xl">
+            <v-icon class="pb-2">
+              {{
+                settingItems.find(
+                  (item) => 'setting-' + item.value === route.name
+                )?.icon || ''
+              }}
+            </v-icon>
+            {{
+              settingItems.find(
+                (item) => 'setting-' + item.value === route.name
+              )?.title || ''
+            }}
+          </h1>
           <slot />
         </v-container>
       </v-main>
@@ -189,21 +187,29 @@ const sidebarList = [
 
 const settingProfile = () => {
   router.push('/setting/profile')
-  selectedItem.value = 'ข้อมูลส่วนตัว'
+  selectedItem.value = 'profile'
 }
-const selectedItem = ref('ข้อมูลส่วนตัว')
+const selectedItem = ref('profile')
 
 const selectItem = (item: string) => {
   selectedItem.value = item
 }
 
-if (route.path.includes('/setting')) {
-  selectItem('ข้อมูลส่วนตัว')
-} else if (route.path.includes('/setting/profile')) {
-  selectItem('ข้อมูลส่วนตัว')
-} else if (route.path.includes('/setting/integration')) {
-  selectItem('การตั้งค่าช่องทาง')
-} else if (route.path.includes('/setting/member')) {
-  selectItem('จัดการสมาชิก')
-}
+const settingItems = [
+  {
+    title: 'ข้อมูลส่วนตัว',
+    value: 'profile',
+    icon: 'mdi-account-outline',
+  },
+  {
+    title: 'การตั้งค่าช่องทาง',
+    value: 'integration',
+    icon: 'mdi-store-cog-outline',
+  },
+  {
+    title: 'สมาชิก',
+    value: 'member',
+    icon: 'mdi-account-group-outline',
+  },
+]
 </script>

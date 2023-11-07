@@ -53,18 +53,22 @@
         <template v-slot:append>
           <div class="tw-text-center">
             <v-img
+              v-if="userProfile"
               :width="40"
               :height="40"
               :aspect-ratio="1"
               cover
               class="rounded-circle ma-2 tw-cursor-pointer zoom"
-              :src="
-                userProfile
-                  ? userProfile
-                  : 'https://i.pinimg.com/564x/6d/61/eb/6d61eba8c8530d891373ea366b38da7d.jpg'
-              "
+              :src="userProfile"
               id="menu-activator"
             ></v-img>
+            <v-btn
+              v-else
+              id="menu-activator"
+              class="ma-2"
+              variant="text"
+              icon="mdi-account-circle-outline"
+            />
 
             <v-menu
               activator="#menu-activator"
@@ -88,16 +92,14 @@
         density="comfortable"
       >
         <v-app-bar-title class="font-weight-bold tw-text-xl">
-          <span class="tw-pb-3">
-            <v-icon
-              :icon="getIcon()"
-              color="white"
-              size="small"
-            />
-          </span>
-          {{ pathTitle }}</v-app-bar-title
-        >
-
+          <v-icon
+            :icon="getIcon()"
+            color="white"
+            size="small"
+            :class="route.name === 'chatbot' ? 'pb-2' : ''"
+          />
+          {{ pathTitle }}
+        </v-app-bar-title>
         <v-spacer></v-spacer>
 
         <!-- In case
@@ -183,6 +185,7 @@ const pathTitle = computed(() => {
   }
   return route.name
 })
+console.log('🍪🥛 ~ file: default.vue:184 ~ pathTitle ~ pathTitle:', pathTitle)
 
 const settingProfile = () => {
   router.push('/setting/profile')
