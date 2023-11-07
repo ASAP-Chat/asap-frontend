@@ -12,6 +12,8 @@
           prepend-icon="mdi-message-outline"
           exact
           base-color="#707070"
+          :active="selectedItem === 'ทั้งหมด'"
+          @click="selectItem('ทั้งหมด')"
         ></v-list-item>
 
         <v-list-subheader> สถานะแชต </v-list-subheader>
@@ -21,6 +23,8 @@
           value="pending"
           prepend-icon="mdi-emoticon-neutral-outline"
           base-color="#707070"
+          :active="selectedItem === 'รอดำเนินการ'"
+          @click="selectItem('รอดำเนินการ')"
         ></v-list-item>
 
         <v-list-item
@@ -28,12 +32,16 @@
           value="doing"
           prepend-icon="mdi-emoticon-confused-outline"
           base-color="#707070"
+          :active="selectedItem === 'ดำเนินการ'"
+          @click="selectItem('ดำเนินการ')"
         ></v-list-item>
         <v-list-item
           title="เสร็จสิ้น"
           value="done"
           prepend-icon="mdi-emoticon-happy-outline"
           base-color="#707070"
+          :active="selectedItem === 'เสร็จสิ้น'"
+          @click="selectItem('เสร็จสิ้น')"
         ></v-list-item>
 
         <v-list-subheader> Social Media </v-list-subheader>
@@ -43,6 +51,8 @@
           value="line"
           prepend-icon="fa:fa-brands fa-line"
           base-color="#707070"
+          :active="selectedItem === 'Line'"
+          @click="selectItem('Line')"
         ></v-list-item>
 
         <v-list-item
@@ -50,12 +60,16 @@
           value="facebook"
           prepend-icon="mdi-facebook"
           base-color="#707070"
+          :active="selectedItem === 'Facebook'"
+          @click="selectItem('Facebook')"
         ></v-list-item>
         <v-list-item
           title="Instagram"
           value="instagram"
           prepend-icon="mdi-instagram"
           base-color="#707070"
+          :active="selectedItem === 'Instagram'"
+          @click="selectItem('Instagram')"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -68,7 +82,14 @@
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
-        v-for="message in latestMessages.data"
+        v-for="(message, i) in latestMessages.data.filter((msg: any) => {
+            if (selectedItem === 'ทั้งหมด') {
+              return true
+            } else if (selectedItem === 'Line') {return msg.source === 'LINE'}
+            else if (selectedItem === 'Facebook') {return msg.source === 'FACEBOOK'}
+            else if (selectedItem === 'Instagram') {return msg.source === 'INSTAGRAM'}
+            }
+          )"
       >
         <v-list-item
           class="tw-gap-x-3"
@@ -333,6 +354,11 @@ fetchLatestMessages()
 // intervalId = setInterval(() => {
 //   fetchLatestMessages()
 // }, 1000)
+
+const selectedItem = ref('ทั้งหมด')
+const selectItem = (item: string) => {
+  selectedItem.value = item
+}
 </script>
 <style>
 .v-list-item-title {
