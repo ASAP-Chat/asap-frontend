@@ -8,12 +8,12 @@
       <v-list color="primary">
         <v-list-item
           title="ทั้งหมด"
-          value="home"
+          value="all"
           prepend-icon="mdi-message-outline"
           exact
           base-color="#707070"
-          :active="selectedItem === 'ทั้งหมด'"
-          @click="selectItem('ทั้งหมด')"
+          :active="selectedItem === 'all'"
+          @click="selectItem('all')"
         ></v-list-item>
 
         <v-list-subheader> สถานะแชต </v-list-subheader>
@@ -23,8 +23,8 @@
           value="pending"
           prepend-icon="mdi-emoticon-neutral-outline"
           base-color="#707070"
-          :active="selectedItem === 'รอดำเนินการ'"
-          @click="selectItem('รอดำเนินการ')"
+          :active="selectedItem === 'pending'"
+          @click="selectItem('pending')"
         ></v-list-item>
 
         <v-list-item
@@ -32,44 +32,44 @@
           value="doing"
           prepend-icon="mdi-emoticon-confused-outline"
           base-color="#707070"
-          :active="selectedItem === 'ดำเนินการ'"
-          @click="selectItem('ดำเนินการ')"
+          :active="selectedItem === 'doing'"
+          @click="selectItem('doing')"
         ></v-list-item>
         <v-list-item
           title="เสร็จสิ้น"
           value="done"
           prepend-icon="mdi-emoticon-happy-outline"
           base-color="#707070"
-          :active="selectedItem === 'เสร็จสิ้น'"
-          @click="selectItem('เสร็จสิ้น')"
+          :active="selectedItem === 'done'"
+          @click="selectItem('done')"
         ></v-list-item>
 
         <v-list-subheader> Social Media </v-list-subheader>
         <v-divider></v-divider>
         <v-list-item
           title="Line"
-          value="line"
+          :value="SocialType.line"
           prepend-icon="fa:fa-brands fa-line"
           base-color="#707070"
-          :active="selectedItem === 'Line'"
-          @click="selectItem('Line')"
+          :active="selectedItem === SocialType.line"
+          @click="selectItem(SocialType.line)"
         ></v-list-item>
 
         <v-list-item
           title="Facebook"
-          value="facebook"
-          prepend-icon="mdi-facebook"
+          :value="SocialType.fb"
+          prepend-icon="fa:fa-brands fa-square-facebook"
           base-color="#707070"
-          :active="selectedItem === 'Facebook'"
-          @click="selectItem('Facebook')"
+          :active="selectedItem === SocialType.fb"
+          @click="selectItem(SocialType.fb)"
         ></v-list-item>
         <v-list-item
           title="Instagram"
-          value="instagram"
+          :value="SocialType.ig"
           prepend-icon="mdi-instagram"
           base-color="#707070"
-          :active="selectedItem === 'Instagram'"
-          @click="selectItem('Instagram')"
+          :active="selectedItem === SocialType.ig"
+          @click="selectItem(SocialType.ig)"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -83,13 +83,12 @@
         class="tw-p-0"
         v-if="latestMessages"
         v-for="(message, i) in latestMessages.data.filter((msg: any) => {
-            if (selectedItem === 'ทั้งหมด') {
+            if (selectedItem === 'all') {
               return true
-            } else if (selectedItem === 'Line') {return msg.source === 'LINE'}
-            else if (selectedItem === 'Facebook') {return msg.source === 'FACEBOOK'}
-            else if (selectedItem === 'Instagram') {return msg.source === 'INSTAGRAM'}
-            }
-          )"
+            } 
+            return msg.source === selectedItem
+          }
+        )"
       >
         <v-list-item
           class="tw-gap-x-3"
@@ -117,7 +116,11 @@
             >
               <v-icon
                 color="#02c153"
-                :icon="message.source === 'LINE' ? 'fa:fa-brands fa-line' : ''"
+                :icon="
+                  message.source === SocialType.line
+                    ? 'fa:fa-brands fa-line'
+                    : ''
+                "
                 variant="text"
               ></v-icon>
             </v-badge>
@@ -355,7 +358,7 @@ fetchLatestMessages()
 //   fetchLatestMessages()
 // }, 1000)
 
-const selectedItem = ref('ทั้งหมด')
+const selectedItem = ref('all')
 const selectItem = (item: string) => {
   selectedItem.value = item
 }
