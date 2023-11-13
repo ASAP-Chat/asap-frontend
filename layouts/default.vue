@@ -133,7 +133,7 @@ const pathToTitle = {
   'chat-template': 'รูปแบบคำตอบ',
   setting: 'ตั้งค่า',
   'setting-profile': 'ตั้งค่า',
-  'setting-integration': 'ตั้งค่า',
+  'setting-chat-integration': 'ตั้งค่า',
   'setting-member': 'ตั้งค่า',
 } as PathToTitleMap
 
@@ -185,7 +185,6 @@ const pathTitle = computed(() => {
   }
   return route.name
 })
-console.log('🍪🥛 ~ file: default.vue:184 ~ pathTitle ~ pathTitle:', pathTitle)
 
 const settingProfile = () => {
   router.push('/setting/profile')
