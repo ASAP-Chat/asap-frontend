@@ -203,7 +203,7 @@ const settingItems = [
   },
   {
     title: 'การตั้งค่าช่องทาง',
-    value: 'integration',
+    value: 'chat-integration',
     icon: 'mdi-store-cog-outline',
   },
   {
