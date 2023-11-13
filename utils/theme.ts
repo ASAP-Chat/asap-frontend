@@ -8,6 +8,7 @@ export const light: ThemeDefinition = {
     'primary-lighten': '#d4caff',
     error: '#E71313',
     secondary: '#323335',
+    'secondary-lighten': '#8f8f8f',
     info: '#53b389',
   },
 }
