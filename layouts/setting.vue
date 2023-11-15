@@ -10,7 +10,7 @@
         <v-list>
           <v-list-item>
             <v-img
-              src="/images/logo.png"
+              :src="imageSrc"
               :width="50"
               class="mx-auto"
             />
@@ -146,12 +146,14 @@
   </v-card>
 </template>
 <script setup lang="ts">
+import imageSrc from '~/assets/images/logo.png'
+
 const userProfile = ref()
 const router = useRouter()
 const route = useRoute()
 
-const userInfoString = localStorage.getItem('user')
-const userInfo = userInfoString && JSON.parse(userInfoString)
+const userInfoString = process.client && localStorage.getItem('user')
+const userInfo = userInfoString ? JSON.parse(userInfoString) : null
 const isOwner = userInfo && userInfo.isOwner
 
 const sidebarList = [
