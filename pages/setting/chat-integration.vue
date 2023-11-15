@@ -42,6 +42,7 @@
           <td :class="item.status.isAvailable ? 'text-info' : 'text-error'">
             <span>
               <v-tooltip
+                v-if="!item.status.isAvailable"
                 activator="parent"
                 location="top"
                 >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
