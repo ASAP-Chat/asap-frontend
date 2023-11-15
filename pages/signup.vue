@@ -194,6 +194,7 @@
             rounded="lg"
             class="font-weight-bold"
             :disabled="isButtonDisabled"
+            :loading="loading"
             @click="register(userInfo)"
           >
             สร้างบัญชีผู้ใช้งาน
@@ -249,6 +250,7 @@ const selectedSocial = ref<string[]>([])
 
 const showModal = ref(false)
 const isSuccessRegister = ref()
+const loading = ref(false)
 
 const categories = JSON.parse(JSON.stringify(businessCategories))
 
@@ -289,6 +291,7 @@ const resetShopValue = () => {
 }
 
 const register = async (user: UserSignup) => {
+  loading.value = true
   try {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/register`, {
       method: 'post',
@@ -305,10 +308,12 @@ const register = async (user: UserSignup) => {
     })
 
     if (response.status.value === 'success') {
+      loading.value = false
       isSuccessRegister.value = true
       showModal.value = true
       window.scrollTo(0, document.body.offsetHeight)
     } else {
+      loading.value = false
       isSuccessRegister.value = false
       showModal.value = true
       console.log(`Request failed with status: ${response.error.value}`)

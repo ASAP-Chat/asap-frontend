@@ -57,7 +57,6 @@
               class="font-weight-bold"
               :disabled="!isFormValid"
               :loading="loading"
-              @click="load"
             >
               เข้าสู่ระบบ
             </v-btn>
@@ -93,13 +92,6 @@ const visible = ref(false)
 const loading = ref(false)
 const loginError = ref(false)
 
-const load = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 2000)
-}
-
 const userInfo = ref<UserLogin>({
   strategy: 'local',
   email: '',
@@ -108,6 +100,7 @@ const userInfo = ref<UserLogin>({
 
 const login = async (user: UserLogin) => {
   try {
+    loading.value = true
     if (process.client) {
       const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
         method: 'post',
@@ -122,6 +115,7 @@ const login = async (user: UserLogin) => {
       })
 
       if (response.status.value === 'success') {
+        loading.value = false
         loginError.value = false
 
         const responseData: any = response.data.value
@@ -136,9 +130,9 @@ const login = async (user: UserLogin) => {
         localStorage.setItem('accessToken', responseData.accessToken)
         localStorage.setItem('refreshToken', responseData.refreshToken)
         localStorage.setItem('user', JSON.stringify(userData))
-
         router.push('/chat')
       } else {
+        loading.value = false
         loginError.value = true
         console.log(`Request failed with status: ${response.error.value}`)
       }
