@@ -3,11 +3,9 @@
     v-if="showModal"
     :header="isSuccessCreate ? 'เชื่อมต่อสำเร็จ!' : 'เชื่อมต่อไม่สำเร็จ!'"
     :content="
-      isSuccessCreate
-        ? 'การเชื่อมต่อเรียบร้อยแล้ว'
-        : 'ขออภัย, กรุณาตรวจสอบการเชื่อมต่อและลองอีกครั้ง'
+      isSuccessCreate ? 'การเชื่อมต่อเรียบร้อยแล้ว' : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'
     "
-    buttonText="ปิด"
+    :buttonText="isSuccessCreate ? 'ปิด' : 'ลองอีกครั้ง'"
     :isSuccess="isSuccessCreate"
     @btn-action="closeModal"
   />
@@ -131,6 +129,7 @@ const showModal = ref(false)
 const isSuccessCreate = ref()
 
 const createLine = async (lineInfo: CreateLineInfo) => {
+  loading.value = true
   try {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
       method: 'post',
@@ -148,8 +147,6 @@ const createLine = async (lineInfo: CreateLineInfo) => {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     })
-    loading.value = true
-
     if (response.status.value === 'success') {
       isSuccessCreate.value = true
       showModal.value = true
@@ -169,6 +166,6 @@ const createLine = async (lineInfo: CreateLineInfo) => {
 
 const closeModal = () => {
   showModal.value = false
-  emits('created-success')
+  isSuccessCreate.value === true ? emits('created-success') : null
 }
 </script>

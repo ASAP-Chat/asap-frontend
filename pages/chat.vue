@@ -343,7 +343,7 @@ const fetchLatestMessages = async () => {
   }
 }
 
-fetchLatestMessages()
+// fetchLatestMessages()
 // intervalId = setInterval(() => {
 //   fetchLatestMessages()
 // }, 1000)

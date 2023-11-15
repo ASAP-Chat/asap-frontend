@@ -4,10 +4,7 @@
     width="auto"
     persistent
   >
-    <v-card
-      class="rounded-xl pa-8"
-      :class="getSystemColorScheme() === 'dark' ? 'tw-bg-[#1D232A]' : ''"
-    >
+    <v-card class="rounded-xl pa-8 tw-bg-white">
       <v-card-title class="mx-2 pb-0 text-center">
         <v-icon
           class="tw-text-8xl"
@@ -18,10 +15,7 @@
         <br />
         <b class="tw-text-3xl text-error">{{ props.header }}</b>
       </v-card-title>
-      <v-card-text
-        class="text-center tw-mt-0 tw-text-base"
-        :class="getSystemColorScheme() === 'dark' ? 'text-white' : ''"
-      >
+      <v-card-text class="text-center tw-mt-0 tw-text-base">
         <p>
           {{ props.content }}
         </p>

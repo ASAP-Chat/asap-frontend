@@ -54,13 +54,7 @@
               >
                 {{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
               </v-icon>
-              {{
-                item.status.isAvailable
-                  ? 'พร้อมใช้งาน'
-                  : item.status.errorMessage === 'access_token in invalid format'
-                  ? 'Channel Access Token ไม่ถูกต้อง'
-                  : ''
-              }}
+              {{ item.status.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
             </span>
           </td>
           <td class="text-center">
@@ -252,6 +246,7 @@ const cancelSocialAccount = async (id: string) => {
       isSuccessDelete.value = false
       deleteModal.value = true
       useRefreshToken()
+      cancelSocialAccount(id)
     }
   } catch (error: any) {
     console.log(error)
