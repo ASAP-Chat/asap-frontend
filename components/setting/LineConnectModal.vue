@@ -4,12 +4,11 @@
     :header="isSuccessCreate ? 'เชื่อมต่อสำเร็จ!' : 'เชื่อมต่อไม่สำเร็จ!'"
     :content="
       isSuccessCreate
-        ? 'คุณได้ทำการลงทะเบียนสำเร็จเรียบร้อยแล้ว'
-        : 'ขออภัย, ที่อยู่อีเมลนี้มีในระบบแล้ว'
+        ? 'การเชื่อมต่อเรียบร้อยแล้ว'
+        : 'ขออภัย, กรุณาตรวจสอบการเชื่อมต่อและลองอีกครั้ง'
     "
-    :buttonText="isSuccessCreate ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
+    buttonText="ปิด"
     :isSuccess="isSuccessCreate"
-    :to="isSuccessCreate ? '/login' : '/signup'"
     @btn-action="closeModal"
   />
   <v-card>
@@ -52,7 +51,7 @@
           และเลือกบัญชี LINE OA
         </li>
         <li>
-          ไปที่ Messaging API เพื่อคัดลอก Channel secret และ Channel access token (long-lived)
+          ไปที่ Messaging API เพื่อคัดลอก Channel Secret และ Channel Access Token (long-lived)
         </li>
       </ol>
       <p class="tw-mt-2 tw-text-sm">
@@ -87,6 +86,7 @@
         color="primary"
         variant="flat"
         :disabled="isButtonDisabled"
+        :loading="loading"
         @click="createLine(lineInfo)"
       >
         เชื่อมต่อ
@@ -97,8 +97,9 @@
 <script setup lang="ts">
 import { CreateLineInfo } from '~/interfaces/social.interface'
 
-const emits = defineEmits(['back'])
+const emits = defineEmits(['back', 'created-success'])
 const { required } = useFormRules()
+const loading = ref(false)
 
 const back = () => {
   emits('back')
@@ -147,11 +148,15 @@ const createLine = async (lineInfo: CreateLineInfo) => {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       },
     })
+    loading.value = true
 
     if (response.status.value === 'success') {
       isSuccessCreate.value = true
       showModal.value = true
+      loading.value = false
+      useGetSocialAccount()
     } else {
+      loading.value = false
       isSuccessCreate.value = false
       showModal.value = true
       useRefreshToken()
@@ -164,5 +169,6 @@ const createLine = async (lineInfo: CreateLineInfo) => {
 
 const closeModal = () => {
   showModal.value = false
+  emits('created-success')
 }
 </script>
