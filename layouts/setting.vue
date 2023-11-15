@@ -30,9 +30,8 @@
             exact
             link
             :to="item.path"
+            :active="i === 3"
           >
-            <!-- TODO: Tooltip -->
-
             <template #title>
               <v-row
                 no-gutters
@@ -52,30 +51,31 @@
 
         <template v-slot:append>
           <div class="tw-text-center">
-            <v-img
-              v-if="userProfile"
-              :width="40"
-              :height="40"
-              :aspect-ratio="1"
-              cover
-              class="rounded-circle ma-2 tw-cursor-pointer zoom"
-              :src="userProfile"
-              id="menu-activator"
-            ></v-img>
-            <v-btn
-              v-else
-              id="menu-activator"
-              class="ma-2"
-              variant="text"
-              icon="mdi-account-circle-outline"
-            />
+            <v-menu location="end">
+              <template v-slot:activator="{ props }">
+                <v-img
+                  v-if="userProfile"
+                  :width="40"
+                  :height="40"
+                  :aspect-ratio="1"
+                  cover
+                  class="rounded-circle ma-2 tw-cursor-pointer zoom"
+                  :src="userProfile"
+                  id="menu-activator"
+                  v-bind="props"
+                ></v-img>
+                <v-btn
+                  v-else
+                  id="menu-activator"
+                  class="ma-2"
+                  variant="text"
+                  icon="mdi-account-circle-outline"
+                  v-bind="props"
+                />
+              </template>
 
-            <v-menu
-              activator="#menu-activator"
-              location="end"
-            >
               <v-list>
-                <v-list-item @click="settingProfile">
+                <v-list-item @click="router.push('/setting/profile')">
                   <v-list-item-title>โปรไฟล์</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="useSignOut()">
@@ -93,49 +93,66 @@
       >
         <v-app-bar-title class="font-weight-bold tw-text-xl">
           <v-icon
-            :icon="getIcon()"
+            icon="mdi-cog-outline"
             color="white"
             size="small"
-            :class="route.name === 'chatbot' ? 'pb-2' : ''"
+            class="pb-1"
           />
-          {{ pathTitle }}
-        </v-app-bar-title>
-        <v-spacer></v-spacer>
+          ตั้งค่า</v-app-bar-title
+        >
 
-        <!-- In case
-          <p class="tw-text-sm">
-          <span>{{ useDayjs()(date).format('DD/MM/YYYY, HH:mm น.') }}</span>
-        </p> -->
+        <v-spacer></v-spacer>
       </v-app-bar>
+      <v-navigation-drawer
+        permanent
+        width="190"
+        color="#fafafa"
+      >
+        <v-list color="primary">
+          <div
+            v-for="item in isOwner
+              ? settingItems
+              : settingItems.filter((item) => item.value !== 'chat-integration')"
+          >
+            <v-list-item
+              :key="item.value"
+              :title="item.title"
+              :value="item.value"
+              exact
+              base-color="#707070"
+              :prepend-icon="item.icon"
+              :to="item.value"
+            ></v-list-item>
+            <v-divider></v-divider>
+          </div>
+        </v-list>
+      </v-navigation-drawer>
 
       <v-main class="tw-bg-[#f2f2f2]">
         <v-container
           fluid
-          class="tw-min-h-screen"
+          class="tw-min-h-screen tw-p-6"
         >
+          <h1 class="tw-text-xl">
+            <v-icon class="pb-2">
+              {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.icon || '' }}
+            </v-icon>
+            {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.title || '' }}
+          </h1>
           <slot />
         </v-container>
       </v-main>
     </v-layout>
   </v-card>
 </template>
-<script lang="ts" setup>
-import { PathToTitleMap } from '~/interfaces/index.interface'
-
+<script setup lang="ts">
 const userProfile = ref()
 const router = useRouter()
 const route = useRoute()
-const date = new Date()
 
-const pathToTitle = {
-  chat: 'แชต',
-  chatbot: 'แชตบอท',
-  'chat-template': 'รูปแบบคำตอบ',
-  setting: 'ตั้งค่า',
-  'setting-profile': 'ตั้งค่า',
-  'setting-chat-integration': 'ตั้งค่า',
-  'setting-member': 'ตั้งค่า',
-} as PathToTitleMap
+const userInfoString = localStorage.getItem('user')
+const userInfo = userInfoString && JSON.parse(userInfoString)
+const isOwner = userInfo && userInfo.isOwner
 
 const sidebarList = [
   {
@@ -164,29 +181,21 @@ const sidebarList = [
   },
 ]
 
-const getIcon = () => {
-  const routeName = route.name
-  switch (routeName) {
-    case 'chat':
-      return 'mdi-message-outline'
-    case 'chatbot':
-      return 'mdi-robot-outline'
-    case 'chat-template':
-      return 'mdi-message-text-outline'
-    case 'setting':
-    default:
-      return 'mdi-cog-outline'
-  }
-}
-
-const pathTitle = computed(() => {
-  if (route.name) {
-    return pathToTitle[route.name.toString()]
-  }
-  return route.name
-})
-
-const settingProfile = () => {
-  router.push('/setting/profile')
-}
+const settingItems = [
+  {
+    title: 'ข้อมูลส่วนตัว',
+    value: 'profile',
+    icon: 'mdi-account-outline',
+  },
+  {
+    title: 'การตั้งค่าช่องทาง',
+    value: 'chat-integration',
+    icon: 'mdi-store-cog-outline',
+  },
+  {
+    title: 'สมาชิก',
+    value: 'member',
+    icon: 'mdi-account-group-outline',
+  },
+]
 </script>

@@ -8,10 +8,12 @@
       <v-list color="primary">
         <v-list-item
           title="ทั้งหมด"
-          value="home"
+          value="all"
           prepend-icon="mdi-message-outline"
           exact
           base-color="#707070"
+          :active="selectedItem === 'all'"
+          @click="selectItem('all')"
         ></v-list-item>
 
         <v-list-subheader> สถานะแชต </v-list-subheader>
@@ -21,6 +23,8 @@
           value="pending"
           prepend-icon="mdi-emoticon-neutral-outline"
           base-color="#707070"
+          :active="selectedItem === 'pending'"
+          @click="selectItem('pending')"
         ></v-list-item>
 
         <v-list-item
@@ -28,34 +32,44 @@
           value="doing"
           prepend-icon="mdi-emoticon-confused-outline"
           base-color="#707070"
+          :active="selectedItem === 'doing'"
+          @click="selectItem('doing')"
         ></v-list-item>
         <v-list-item
           title="เสร็จสิ้น"
           value="done"
           prepend-icon="mdi-emoticon-happy-outline"
           base-color="#707070"
+          :active="selectedItem === 'done'"
+          @click="selectItem('done')"
         ></v-list-item>
 
         <v-list-subheader> Social Media </v-list-subheader>
         <v-divider></v-divider>
         <v-list-item
           title="Line"
-          value="line"
+          :value="SocialType.LINE"
           prepend-icon="fa:fa-brands fa-line"
           base-color="#707070"
+          :active="selectedItem === SocialType.LINE"
+          @click="selectItem(SocialType.LINE)"
         ></v-list-item>
 
         <v-list-item
           title="Facebook"
-          value="facebook"
-          prepend-icon="mdi-facebook"
+          :value="SocialType.FACEBOOK"
+          prepend-icon="fa:fa-brands fa-square-facebook"
           base-color="#707070"
+          :active="selectedItem === SocialType.FACEBOOK"
+          @click="selectItem(SocialType.FACEBOOK)"
         ></v-list-item>
         <v-list-item
           title="Instagram"
-          value="instagram"
+          :value="SocialType.INSTAGRAM"
           prepend-icon="mdi-instagram"
           base-color="#707070"
+          :active="selectedItem === SocialType.INSTAGRAM"
+          @click="selectItem(SocialType.INSTAGRAM)"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -68,7 +82,13 @@
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
-        v-for="message in latestMessages.data"
+        v-for="(message, i) in latestMessages.data.filter((msg: any) => {
+            if (selectedItem === 'all') {
+              return true
+            } 
+            return msg.source === selectedItem
+          }
+        )"
       >
         <v-list-item
           class="tw-gap-x-3"
@@ -77,9 +97,7 @@
           :title="message.senderDetail.displayName"
           :subtitle="getMessageSubtitle(message)"
           :value="message.senderDetail.userId"
-          :active="
-            message.senderDetail.userId === selectCustomer.senderDetail.userId
-          "
+          :active="message.senderDetail.userId === selectCustomer.senderDetail.userId"
           @click="
             setSelectCustomer(
               message.senderDetail.userId,
@@ -96,7 +114,7 @@
             >
               <v-icon
                 color="#02c153"
-                :icon="message.source === 'LINE' ? 'fa:fa-brands fa-line' : ''"
+                :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
                 variant="text"
               ></v-icon>
             </v-badge>
@@ -277,12 +295,16 @@ const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
 
 let intervalId
 
+const userInfoString = localStorage.getItem('user')
+const userInfo = userInfoString && JSON.parse(userInfoString)
+
+const { shop, _id } = userInfo
+const { name } = shop
+
 const fetchFilterChat = async (customerId: any) => {
   try {
     const response = await useFetch(
-      `${
-        import.meta.env.VITE_BASE_URL
-      }/social-message/ASAP-Shop/652e92d9fbacd5abf57c6249/${customerId}?$limit=50`
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${_id}/${customerId}?$limit=50`
     )
     if (selectCustomer) {
       filteredMessages.value = await response.data.value
@@ -296,26 +318,18 @@ const fetchFilterChat = async (customerId: any) => {
 
 const fetchLatestMessages = async () => {
   try {
-    const response = await useFetch(
-      `${
-        import.meta.env.VITE_BASE_URL
-      }/social-message/652712a90bfba5fec0dd29f3`,
-      {
-        method: 'get',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${_id}`, {
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     if (response.status.value === 'success') {
       latestMessages.value = await response.data.value
       if (Array.isArray(latestMessages.value)) {
         latestMessages.value.sort(
           (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
-            return (
-              new Date(b.sourceTimestamp).getTime() -
-              new Date(a.sourceTimestamp).getTime()
-            )
+            return new Date(b.sourceTimestamp).getTime() - new Date(a.sourceTimestamp).getTime()
           }
         )
       }
@@ -329,19 +343,17 @@ const fetchLatestMessages = async () => {
   }
 }
 
-fetchLatestMessages()
+// fetchLatestMessages()
 // intervalId = setInterval(() => {
 //   fetchLatestMessages()
 // }, 1000)
+
+const selectedItem = ref('all')
+const selectItem = (item: string) => {
+  selectedItem.value = item
+}
 </script>
 <style>
-.v-list-item-title {
-  font-size: 14px;
-  font-weight: bold;
-}
-.v-list-item__prepend {
-  display: grid;
-}
 .v-list-item--one-line .v-list-item-subtitle {
   -webkit-line-clamp: 2;
   line-height: 1.5rem;

@@ -1,0 +1,300 @@
+<template>
+  <CommonModal
+    v-if="deleteModal"
+    :header="isSuccessDelete ? 'ยกเลิกการเชื่อมต่อสำเร็จ!' : 'ยกเลิกการเชื่อมต่อไม่สำเร็จ!'"
+    :content="isSuccessDelete ? 'การเชื่อมต่อได้ถูกยกเลิกเรียบร้อยแล้ว' : 'ขออภัย, โปรดลองอีกครั้ง'"
+    buttonText="ปิด"
+    :isSuccess="isSuccessDelete"
+    @btn-action="closeModal"
+  />
+
+  <div class="mt-6 mx-auto">
+    <v-table
+      v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
+      fixed-header
+      class="tw-bg-[#F2F2F2]"
+      width="100px"
+    >
+      <thead>
+        <tr class="tw-text-sm">
+          <th class="text-left font-weight-bold tw-w-64">ชื่อช่องทาง</th>
+          <th class="text-left font-weight-bold tw-w-64">สถานะ</th>
+          <th class="text-left tw-w-64"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="tw-text-sm"
+          v-if="socialInfo && socialInfo.data"
+          v-for="item in socialInfo.data"
+          :key="item.name"
+        >
+          <td class="font-weight-bold">
+            <v-icon
+              class="mr-3 mb-1"
+              size="x-large"
+              :color="getSocialColor(item.socialType)"
+            >
+              {{ getSocialIcon(item.socialType) }}
+            </v-icon>
+            {{ item.shopName }}
+          </td>
+          <td :class="item.status.isAvailable ? 'text-info' : 'text-error'">
+            <span>
+              <v-tooltip
+                v-if="!item.status.isAvailable"
+                activator="parent"
+                location="top"
+                >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
+              </v-tooltip>
+
+              <v-icon
+                :color="item.status.isAvailable ? 'info' : 'error'"
+                size="sm"
+                class="mr-1"
+              >
+                {{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
+              </v-icon>
+              {{ item.status.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <v-btn
+              variant="flat"
+              class="font-weight-bold"
+              color="error"
+              @click="confirmDeleteModal = true"
+              >ยกเลิกการเชื่อมต่อ</v-btn
+            >
+            <CommonConfirmModal
+              v-if="confirmDeleteModal"
+              :header="`คุณต้องการยกเลิกการเชื่อมต่อ ${item.socialType} ใช่หรือไม่ ?`"
+              content="หากยืนยัน, การเชื่อมต่อจะถูกยกเลิก และคุณจะต้องทำการเชื่อมต่อใหม่เมื่อต้องการใช้บริการอีกครั้ง"
+              buttonText="ปิด"
+              cancelWording="ยกเลิก"
+              confirmWording="ยืนยัน"
+              :isSuccess="false"
+              @btn-action="closeModal"
+              @confirm-action="cancelSocialAccount(item._id)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+
+    <div class="tw-text-center">
+      <v-btn
+        variant="flat"
+        class="font-weight-bold tw-mx-auto mt-4"
+        color="info"
+        prepend-icon="mdi-plus-circle-outline"
+        @click="connectDialog = true"
+      >
+        <template v-slot:prepend>
+          <v-icon color="white"></v-icon>
+        </template>
+        เพิ่มการเชื่อมต่อ</v-btn
+      >
+    </div>
+
+    <div>
+      <v-row justify="center">
+        <v-dialog
+          v-model="connectDialog"
+          width="auto"
+        >
+          <v-card
+            :width="400"
+            class="text-center pt-3"
+          >
+            <v-card-text>
+              <v-btn
+                class="tw-absolute tw-top-2.5 tw-right-2.5"
+                @click="connectDialog = false"
+                variant="text"
+              >
+                <v-icon
+                  icon="mdi-close"
+                  color="secondary-lighten"
+                ></v-icon>
+              </v-btn>
+              <div class="text-center mx-auto">
+                <h3 class="tw-text-xl">เลือกช่องทาง</h3>
+                <p class="tw-text-sm tw-opacity-60">เลือกช่องทางที่ต้องการเชื่อมต่อ</p>
+              </div>
+              <v-table
+                fixed-header
+                class="tw-bg-white pt-4"
+              >
+                <tbody>
+                  <tr
+                    class="tw-text-sm"
+                    v-for="item in socialList"
+                  >
+                    <td class="font-weight-bold text-left">
+                      <v-icon
+                        class="mr-3 mb-1"
+                        size="x-large"
+                        :color="getSocialColor(item.socialType)"
+                      >
+                        {{ getSocialIcon(item.socialType) }}
+                      </v-icon>
+                      {{ item.name }}
+                    </td>
+
+                    <td class="text-center">
+                      <v-icon
+                        v-if="socialInfo.data.some((data: any) => data.socialType === item.socialType)"
+                        color="info"
+                      >
+                        mdi-check
+                      </v-icon>
+                      <v-btn
+                        v-else
+                        variant="outlined"
+                        class="font-weight-bold text-secondary-lighten"
+                        @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
+                        :disabled="
+                          item.socialType === SocialType.FACEBOOK ||
+                          item.socialType === SocialType.INSTAGRAM
+                        "
+                      >
+                        {{
+                          item.socialType === SocialType.FACEBOOK ||
+                          item.socialType === SocialType.INSTAGRAM
+                            ? 'เร็วๆ นี้'
+                            : 'เชื่อมต่อ'
+                        }}
+                      </v-btn>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog
+          v-model="connectSocialDialog"
+          width="auto"
+        >
+          <component
+            :is="getSocialConnectModalComponent(selectSocial)"
+            @back="connectSocialDialog = false"
+            @created-success=";(connectSocialDialog = false), (connectDialog = false)"
+          />
+        </v-dialog>
+      </v-row>
+    </div>
+  </div>
+  <div class="text-center mt-4"></div>
+</template>
+<script setup lang="ts">
+import SettingLineConnectModal from '~/components/setting/LineConnectModal.vue'
+import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
+import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
+
+useHead({
+  title: 'การตั้งค่า',
+})
+definePageMeta({
+  layout: 'setting',
+})
+
+const connectDialog = ref(false)
+const connectSocialDialog = ref(false)
+const deleteModal = ref(false)
+const isSuccessDelete = ref()
+const confirmDeleteModal = ref(false)
+
+const closeModal = () => {
+  deleteModal.value = false
+  confirmDeleteModal.value = false
+}
+
+const selectSocial = ref('')
+
+const socialList = [
+  {
+    name: 'LINE Official Account',
+    socialType: SocialType.LINE,
+  },
+  {
+    name: 'Facebook Page',
+    socialType: SocialType.FACEBOOK,
+  },
+  {
+    name: 'Instagram',
+    socialType: SocialType.INSTAGRAM,
+  },
+]
+const { socialInfo } = await useGetSocialAccount()
+
+const cancelSocialAccount = async (id: string) => {
+  try {
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
+      method: 'delete',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
+    if (response.status.value === 'success') {
+      socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
+      isSuccessDelete.value = true
+      deleteModal.value = true
+    } else {
+      console.log('call - refresh token')
+      isSuccessDelete.value = false
+      deleteModal.value = true
+      useRefreshToken()
+      cancelSocialAccount(id)
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+}
+const getSocialConnectModalComponent = (socialType: string) => {
+  switch (socialType) {
+    case SocialType.LINE:
+      return SettingLineConnectModal
+    case SocialType.FACEBOOK:
+      return SettingFbConnectModal
+    case SocialType.INSTAGRAM:
+      return SettingIgConnectModal
+    default:
+      return null
+  }
+}
+const getSocialColor = (socialType: string) => {
+  switch (socialType) {
+    case SocialType.LINE:
+      return '#02c153'
+    case SocialType.FACEBOOK:
+      return '#0765FF'
+    default:
+      return ''
+  }
+}
+
+const getSocialIcon = (socialType: string) => {
+  switch (socialType) {
+    case SocialType.LINE:
+      return 'fa:fa-brands fa-line'
+    case SocialType.FACEBOOK:
+      return 'fa:fa-brands fa-square-facebook'
+    case SocialType.INSTAGRAM:
+      return 'mdi-instagram'
+    default:
+      return ''
+  }
+}
+
+onBeforeMount(async () => {
+  await useGetSocialAccount()
+})
+</script>
+<style>
+.v-table.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th {
+  background-color: #f2f2f2;
+}
+</style>

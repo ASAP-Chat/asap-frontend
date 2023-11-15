@@ -65,7 +65,7 @@
             </v-btn>
           </div>
         </v-form>
-        <p class="text-medium-emphasis tw-text-black">
+        <p class="tw-text-[#6F7580]">
           ยังไม่เคยมีบัญชี?
           <NuxtLink to="/signup">
             <a class="text-primary text-decoration-underline">
@@ -80,7 +80,6 @@
 
 <script setup lang="ts">
 import { UserLogin } from '~/interfaces/auth.interface'
-
 const router = useRouter()
 
 useHead({

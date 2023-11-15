@@ -1,5 +1,5 @@
 <template>
-  <CommonModel
+  <CommonModal
     v-if="showModal"
     :header="isSuccessRegister ? 'ลงทะเบียนสำเร็จ!' : 'ลงทะเบียนไม่สำเร็จ!'"
     :content="
@@ -10,7 +10,7 @@
     :buttonText="isSuccessRegister ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
     :isSuccess="isSuccessRegister"
     :to="isSuccessRegister ? '/login' : '/signup'"
-    @btn-action="closeModel"
+    @btn-action="closeModal"
   />
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
     <div
@@ -25,9 +25,7 @@
             src="/images/logo.png"
             class="mx-auto"
           ></v-img>
-          <p class="tw-mb-5">
-            ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media
-          </p>
+          <p class="tw-mb-5">ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media</p>
           <h5 class="tw-text-3xl font-weight-bold tw-mb-4">สร้างบัญชี ASAP</h5>
         </div>
         <v-form v-model="isFormValid">
@@ -104,8 +102,7 @@
               class="tw-text-xs text-error"
               v-if="userInfo?.isOwner === false"
             >
-              ในกรณีที่ท่านไม่ใช่เจ้าของร้านค้า ท่านจะมีสิทธิ์เป็น Agent Lead
-              หรือ Agent เท่านั้น
+              ในกรณีที่ท่านไม่ใช่เจ้าของร้านค้า ท่านจะมีสิทธิ์เป็น Agent Lead หรือ Agent เท่านั้น
             </p>
           </div>
         </v-form>
@@ -155,11 +152,7 @@
               ></v-checkbox>
               <CommonTextField
                 v-if="selectedSocial.find((value) => value === 'facebook')"
-                :rules="
-                  selectedSocial.includes('facebook')
-                    ? [required, facebookLink]
-                    : []
-                "
+                :rules="selectedSocial.includes('facebook') ? [required, facebookLink] : []"
                 v-model="userInfo.shop!.social!.facebook"
                 label="Facebook Page Link"
               />
@@ -172,11 +165,7 @@
               ></v-checkbox>
               <CommonTextField
                 v-if="selectedSocial.find((value) => value === 'instagram')"
-                :rules="
-                  selectedSocial.includes('instagram')
-                    ? [required, instagramLink]
-                    : []
-                "
+                :rules="selectedSocial.includes('instagram') ? [required, instagramLink] : []"
                 v-model="userInfo.shop!.social!.instagram"
                 label="Instagram Page Link"
               />
@@ -210,7 +199,7 @@
             สร้างบัญชีผู้ใช้งาน
           </v-btn>
         </div>
-        <p class="text-medium-emphasis">
+        <p class="tw-text-[#6F7580]">
           มีบัญชีอยู่แล้ว?
           <NuxtLink to="/login">
             <a class="text-primary text-decoration-underline"> เข้าสู่ระบบ</a>
@@ -232,14 +221,8 @@ useHead({
 definePageMeta({
   layout: false,
 })
-const {
-  checkEmail,
-  required,
-  passwordLength,
-  confirmPassword,
-  facebookLink,
-  instagramLink,
-} = useFormRules()
+const { checkEmail, required, passwordLength, confirmPassword, facebookLink, instagramLink } =
+  useFormRules()
 
 const userInfo = ref<UserSignup>({
   displayName: '',
@@ -306,22 +289,19 @@ const resetShopValue = () => {
 
 const register = async (user: UserSignup) => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/register`,
-      {
-        method: 'post',
-        body: JSON.stringify({
-          email: user.email.trim(),
-          password: user.confirmPassword,
-          displayName: user.displayName.trim(),
-          isOwner: user.isOwner,
-          shop: user.shop,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/register`, {
+      method: 'post',
+      body: JSON.stringify({
+        email: user.email.trim(),
+        password: user.confirmPassword,
+        displayName: user.displayName.trim(),
+        isOwner: user.isOwner,
+        shop: user.shop,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
     if (response.status.value === 'success') {
       isSuccessRegister.value = true
@@ -337,7 +317,7 @@ const register = async (user: UserSignup) => {
   }
 }
 
-const closeModel = () => {
+const closeModal = () => {
   showModal.value = false
 }
 </script>

@@ -10,11 +10,21 @@ button {
   border-radius: 12px;
 }
 
-.v-radio-group,
-.v-checkbox {
-  color: rgb(0, 0, 0);
-}
-
 .v-icon {
   color: #7450c8;
+}
+
+.zoom {
+  transition: transform 0.2s;
+}
+.zoom:hover {
+  transform: scale(1.3);
+}
+
+.v-list-item-title {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+.v-list-item__prepend {
+  display: grid !important;
 }

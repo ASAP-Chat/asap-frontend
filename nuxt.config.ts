@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     head: {
       titleTemplate: '%s | ASAP',
     },
+    baseURL: '/ssa3/',
   },
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
