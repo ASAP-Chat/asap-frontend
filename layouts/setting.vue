@@ -31,7 +31,6 @@
             link
             :to="item.path"
             :active="i === 3"
-            @click="i === 3 ? selectItem('profile') : null"
           >
             <template #title>
               <v-row
@@ -75,7 +74,7 @@
               location="end"
             >
               <v-list>
-                <v-list-item @click="settingProfile">
+                <v-list-item @click="router.push('/setting/profile')">
                   <v-list-item-title>โปรไฟล์</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="useSignOut()">
@@ -121,8 +120,6 @@
               exact
               base-color="#707070"
               :prepend-icon="item.icon"
-              :active="selectedItem === item.value"
-              @click="selectItem(item.value)"
               :to="item.value"
             ></v-list-item>
             <v-divider></v-divider>
@@ -182,16 +179,6 @@ const sidebarList = [
     path: '/setting/profile',
   },
 ]
-
-const settingProfile = () => {
-  router.push('/setting/profile')
-  selectedItem.value = 'profile'
-}
-const selectedItem = ref('profile')
-
-const selectItem = (item: string) => {
-  selectedItem.value = item
-}
 
 const settingItems = [
   {
