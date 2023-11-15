@@ -295,52 +295,52 @@ const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
 
 let intervalId
 
-const userInfoString = localStorage.getItem('user')
-const userInfo = userInfoString && JSON.parse(userInfoString)
+// const userInfoString = localStorage.getItem('user')
+// const userInfo = userInfoString && JSON.parse(userInfoString)
 
-const { shop, _id } = userInfo
-const { name } = shop
+// const { shop, _id } = userInfo
+// const { name } = shop
 
 const fetchFilterChat = async (customerId: any) => {
-  try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${_id}/${customerId}?$limit=50`
-    )
-    if (selectCustomer) {
-      filteredMessages.value = await response.data.value
-      filteredMessagesDate.value = filteredMessages.value
-    }
-    window.scrollTo(0, document.body.offsetHeight)
-  } catch (error) {
-    console.log(error)
-  }
+  // try {
+  //   const response = await useFetch(
+  //     `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${_id}/${customerId}?$limit=50`
+  //   )
+  //   if (selectCustomer) {
+  //     filteredMessages.value = await response.data.value
+  //     filteredMessagesDate.value = filteredMessages.value
+  //   }
+  //   window.scrollTo(0, document.body.offsetHeight)
+  // } catch (error) {
+  //   console.log(error)
+  // }
 }
 
 const fetchLatestMessages = async () => {
-  try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${_id}`, {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-    })
-    if (response.status.value === 'success') {
-      latestMessages.value = await response.data.value
-      if (Array.isArray(latestMessages.value)) {
-        latestMessages.value.sort(
-          (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
-            return new Date(b.sourceTimestamp).getTime() - new Date(a.sourceTimestamp).getTime()
-          }
-        )
-      }
-    } else {
-      console.log('call - refresh token')
-      useRefreshToken()
-      fetchLatestMessages()
-    }
-  } catch (error: any) {
-    console.log(error)
-  }
+  // try {
+  //   const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${_id}`, {
+  //     method: 'get',
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+  //     },
+  //   })
+  //   if (response.status.value === 'success') {
+  //     latestMessages.value = await response.data.value
+  //     if (Array.isArray(latestMessages.value)) {
+  //       latestMessages.value.sort(
+  //         (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
+  //           return new Date(b.sourceTimestamp).getTime() - new Date(a.sourceTimestamp).getTime()
+  //         }
+  //       )
+  //     }
+  //   } else {
+  //     console.log('call - refresh token')
+  //     useRefreshToken()
+  //     fetchLatestMessages()
+  //   }
+  // } catch (error: any) {
+  //   console.log(error)
+  // }
 }
 
 // fetchLatestMessages()
