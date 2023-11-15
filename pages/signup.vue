@@ -10,7 +10,7 @@
     :buttonText="isSuccessRegister ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
     :isSuccess="isSuccessRegister"
     :to="isSuccessRegister ? '/login' : '/signup'"
-    @btn-action="closeModel"
+    @btn-action="closeModal"
   />
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
     <div
@@ -317,7 +317,7 @@ const register = async (user: UserSignup) => {
   }
 }
 
-const closeModel = () => {
+const closeModal = () => {
   showModal.value = false
 }
 </script>
