@@ -1,7 +1,7 @@
 <template>
   <div class="mt-6 mx-auto">
     <v-table
-      v-if="socialInfo.length !== 0"
+      v-if="socialInfo"
       fixed-header
       class="tw-bg-[#F2F2F2]"
       width="100px"
@@ -16,7 +16,8 @@
       <tbody>
         <tr
           class="tw-text-sm"
-          v-for="item in socialInfo"
+          v-if="socialInfo && socialInfo.data"
+          v-for="item in socialInfo.data"
           :key="item.name"
         >
           <td class="font-weight-bold">
@@ -27,15 +28,15 @@
             >
               {{ getSocialIcon(item.socialType) }}
             </v-icon>
-            {{ item.name }}
+            {{ item.shopName }}
           </td>
-          <td :class="item.status ? 'text-info' : 'text-error'">
+          <td :class="item.status.isAvailable ? 'text-info' : 'text-error'">
             <v-icon
-              :color="item.status ? 'info' : 'error'"
+              :color="item.status.isAvailable ? 'info' : 'error'"
               size="sm"
               class="mr-1"
-              >{{ item.status ? 'mdi-check-circle' : 'mdi-alert-circle' }}</v-icon
-            >{{ item.status ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
+              >{{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}</v-icon
+            >{{ item.status.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
           </td>
           <td class="text-center">
             <v-btn
@@ -121,6 +122,10 @@
                         variant="outlined"
                         class="font-weight-bold text-secondary-lighten"
                         @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
+                        :disabled="
+                          item.socialType === SocialType.FACEBOOK ||
+                          item.socialType === SocialType.INSTAGRAM
+                        "
                       >
                         เชื่อมต่อ
                       </v-btn>
@@ -147,7 +152,6 @@
   <div class="text-center mt-4"></div>
 </template>
 <script setup lang="ts">
-import { SocialConnectInfo } from '~/interfaces/social.interface'
 import SettingLineConnectModal from '~/components/setting/LineConnectModal.vue'
 import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
 import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
@@ -166,43 +170,54 @@ const selectSocial = ref('')
 const socialList = [
   {
     name: 'LINE Official Account',
-    socialType: SocialType.line,
+    socialType: SocialType.LINE,
   },
   {
     name: 'Facebook Page',
-    socialType: SocialType.fb,
+    socialType: SocialType.FACEBOOK,
   },
   {
     name: 'Instagram',
-    socialType: SocialType.ig,
+    socialType: SocialType.INSTAGRAM,
   },
 ]
 
-const socialInfo = [
-  // {
-  //   name: 'TestLINEOA',
-  //   status: true,
-  //   socialType: SocialType.line,
-  // },
-  {
-    name: 'TestFacebook',
-    status: false,
-    socialType: SocialType.fb,
-  },
-  {
-    name: 'TestIG',
-    status: true,
-    socialType: SocialType.ig,
-  },
-] as SocialConnectInfo[]
+const socialInfo = ref()
 
+const userInfoString = localStorage.getItem('user')
+const userInfo = userInfoString && JSON.parse(userInfoString)
+
+const { _id } = userInfo
+
+const getSocialAccount = async () => {
+  try {
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/social-account/?ownerId=${_id}&$limit=3`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    )
+    if (response.status.value === 'success') {
+      socialInfo.value = await response.data.value
+    } else {
+      console.log('call - refresh token')
+      useRefreshToken()
+      getSocialAccount()
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+}
 const getSocialConnectModalComponent = (socialType: string) => {
   switch (socialType) {
-    case SocialType.line:
+    case SocialType.LINE:
       return SettingLineConnectModal
-    case SocialType.fb:
+    case SocialType.FACEBOOK:
       return SettingFbConnectModal
-    case SocialType.ig:
+    case SocialType.INSTAGRAM:
       return SettingIgConnectModal
     default:
       return null
@@ -210,9 +225,9 @@ const getSocialConnectModalComponent = (socialType: string) => {
 }
 const getSocialColor = (socialType: string) => {
   switch (socialType) {
-    case SocialType.line:
+    case SocialType.LINE:
       return '#02c153'
-    case SocialType.fb:
+    case SocialType.FACEBOOK:
       return '#0765FF'
     default:
       return ''
@@ -221,16 +236,20 @@ const getSocialColor = (socialType: string) => {
 
 const getSocialIcon = (socialType: string) => {
   switch (socialType) {
-    case SocialType.line:
+    case SocialType.LINE:
       return 'fa:fa-brands fa-line'
-    case SocialType.fb:
+    case SocialType.FACEBOOK:
       return 'fa:fa-brands fa-square-facebook'
-    case SocialType.ig:
+    case SocialType.INSTAGRAM:
       return 'mdi-instagram'
     default:
       return ''
   }
 }
+
+onBeforeMount(async () => {
+  await getSocialAccount()
+})
 </script>
 <style>
 .v-table.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th {
