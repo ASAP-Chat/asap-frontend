@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       titleTemplate: '%s | ASAP',
-      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.ico' }],
+      link: [{ rel: 'icon', type: 'image/png', href: '/ssa3/favicon.ico' }],
     },
     baseURL: '/ssa3/',
   },
