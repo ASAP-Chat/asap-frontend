@@ -33,8 +33,6 @@
             :active="i === 3"
             @click="i === 3 ? selectItem('profile') : null"
           >
-            <!-- TODO: Tooltip -->
-
             <template #title>
               <v-row
                 no-gutters
@@ -111,7 +109,11 @@
         color="#fafafa"
       >
         <v-list color="primary">
-          <div v-for="item in settingItems">
+          <div
+            v-for="item in isOwner
+              ? settingItems
+              : settingItems.filter((item) => item.value !== 'chat-integration')"
+          >
             <v-list-item
               :key="item.value"
               :title="item.title"
@@ -135,17 +137,9 @@
         >
           <h1 class="tw-text-xl">
             <v-icon class="pb-2">
-              {{
-                settingItems.find(
-                  (item) => 'setting-' + item.value === route.name
-                )?.icon || ''
-              }}
+              {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.icon || '' }}
             </v-icon>
-            {{
-              settingItems.find(
-                (item) => 'setting-' + item.value === route.name
-              )?.title || ''
-            }}
+            {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.title || '' }}
           </h1>
           <slot />
         </v-container>
@@ -153,10 +147,14 @@
     </v-layout>
   </v-card>
 </template>
-<script lang="ts" setup>
+<script setup lang="ts">
 const userProfile = ref()
 const router = useRouter()
 const route = useRoute()
+
+const userInfoString = localStorage.getItem('user')
+const userInfo = userInfoString && JSON.parse(userInfoString)
+const isOwner = userInfo && userInfo.isOwner
 
 const sidebarList = [
   {
