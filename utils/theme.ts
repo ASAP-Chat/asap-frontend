@@ -10,5 +10,6 @@ export const light: ThemeDefinition = {
     secondary: '#323335',
     'secondary-lighten': '#8f8f8f',
     info: '#53b389',
+    warning: '#FFBE00',
   },
 }
