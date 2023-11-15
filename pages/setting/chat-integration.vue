@@ -1,7 +1,16 @@
 <template>
+  <CommonModal
+    v-if="deleteModal"
+    :header="isSuccessDelete ? 'ยกเลิกการเชื่อมต่อสำเร็จ!' : 'ยกเลิกการเชื่อมต่อไม่สำเร็จ!'"
+    :content="isSuccessDelete ? 'การเชื่อมต่อได้ถูกยกเลิกเรียบร้อยแล้ว' : 'ขออภัย, โปรดลองอีกครั้ง'"
+    buttonText="ปิด"
+    :isSuccess="isSuccessDelete"
+    @btn-action="closeModal"
+  />
+
   <div class="mt-6 mx-auto">
     <v-table
-      v-if="socialInfo"
+      v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
       fixed-header
       class="tw-bg-[#F2F2F2]"
       width="100px"
@@ -31,20 +40,48 @@
             {{ item.shopName }}
           </td>
           <td :class="item.status.isAvailable ? 'text-info' : 'text-error'">
-            <v-icon
-              :color="item.status.isAvailable ? 'info' : 'error'"
-              size="sm"
-              class="mr-1"
-              >{{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}</v-icon
-            >{{ item.status.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
+            <span>
+              <v-tooltip
+                activator="parent"
+                location="top"
+                >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
+              </v-tooltip>
+
+              <v-icon
+                :color="item.status.isAvailable ? 'info' : 'error'"
+                size="sm"
+                class="mr-1"
+              >
+                {{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
+              </v-icon>
+              {{
+                item.status.isAvailable
+                  ? 'พร้อมใช้งาน'
+                  : item.status.errorMessage === 'access_token in invalid format'
+                  ? 'Channel Access Token ไม่ถูกต้อง'
+                  : ''
+              }}
+            </span>
           </td>
           <td class="text-center">
             <v-btn
               variant="flat"
               class="font-weight-bold"
               color="error"
+              @click="confirmDeleteModal = true"
               >ยกเลิกการเชื่อมต่อ</v-btn
             >
+            <CommonConfirmModal
+              v-if="confirmDeleteModal"
+              :header="`คุณต้องการยกเลิกการเชื่อมต่อ ${item.socialType} ใช่หรือไม่ ?`"
+              content="หากยืนยัน, การเชื่อมต่อจะถูกยกเลิก และคุณจะต้องทำการเชื่อมต่อใหม่เมื่อต้องการใช้บริการอีกครั้ง"
+              buttonText="ปิด"
+              cancelWording="ยกเลิก"
+              confirmWording="ยืนยัน"
+              :isSuccess="false"
+              @btn-action="closeModal"
+              @confirm-action="cancelSocialAccount(item._id)"
+            />
           </td>
         </tr>
       </tbody>
@@ -112,7 +149,7 @@
 
                     <td class="text-center">
                       <v-icon
-                        v-if="socialInfo.some((data: any) => data.socialType === item.socialType)"
+                        v-if="socialInfo.data.some((data: any) => data.socialType === item.socialType)"
                         color="info"
                       >
                         mdi-check
@@ -127,7 +164,12 @@
                           item.socialType === SocialType.INSTAGRAM
                         "
                       >
-                        เชื่อมต่อ
+                        {{
+                          item.socialType === SocialType.FACEBOOK ||
+                          item.socialType === SocialType.INSTAGRAM
+                            ? 'เร็วๆ นี้'
+                            : 'เชื่อมต่อ'
+                        }}
                       </v-btn>
                     </td>
                   </tr>
@@ -144,6 +186,7 @@
           <component
             :is="getSocialConnectModalComponent(selectSocial)"
             @back="connectSocialDialog = false"
+            @created-success=";(connectSocialDialog = false), (connectDialog = false)"
           />
         </v-dialog>
       </v-row>
@@ -165,6 +208,15 @@ definePageMeta({
 
 const connectDialog = ref(false)
 const connectSocialDialog = ref(false)
+const deleteModal = ref(false)
+const isSuccessDelete = ref()
+const confirmDeleteModal = ref(false)
+
+const closeModal = () => {
+  deleteModal.value = false
+  confirmDeleteModal.value = false
+}
+
 const selectSocial = ref('')
 
 const socialList = [
@@ -181,31 +233,25 @@ const socialList = [
     socialType: SocialType.INSTAGRAM,
   },
 ]
+const { socialInfo } = await useGetSocialAccount()
 
-const socialInfo = ref()
-
-const userInfoString = localStorage.getItem('user')
-const userInfo = userInfoString && JSON.parse(userInfoString)
-
-const { _id } = userInfo
-
-const getSocialAccount = async () => {
+const cancelSocialAccount = async (id: string) => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-account/?ownerId=${_id}&$limit=3`,
-      {
-        method: 'get',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
+      method: 'delete',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     if (response.status.value === 'success') {
-      socialInfo.value = await response.data.value
+      socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
+      isSuccessDelete.value = true
+      deleteModal.value = true
     } else {
       console.log('call - refresh token')
+      isSuccessDelete.value = false
+      deleteModal.value = true
       useRefreshToken()
-      getSocialAccount()
     }
   } catch (error: any) {
     console.log(error)
@@ -248,7 +294,7 @@ const getSocialIcon = (socialType: string) => {
 }
 
 onBeforeMount(async () => {
-  await getSocialAccount()
+  await useGetSocialAccount()
 })
 </script>
 <style>
