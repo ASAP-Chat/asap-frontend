@@ -10,7 +10,7 @@
         <v-list>
           <v-list-item>
             <v-img
-              src="/images/logo.png"
+              :src="imageSrc"
               :width="50"
               class="mx-auto"
             />
@@ -121,6 +121,7 @@
 </template>
 <script lang="ts" setup>
 import { PathToTitleMap } from '~/interfaces/index.interface'
+import imageSrc from '~/assets/images/logo.png'
 
 const userProfile = ref()
 const router = useRouter()

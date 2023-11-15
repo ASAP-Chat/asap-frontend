@@ -22,7 +22,7 @@
           <v-img
             :width="150"
             aspect-ratio="1/1"
-            src="/images/logo.png"
+            :src="imageSrc"
             class="mx-auto"
           ></v-img>
           <p class="tw-mb-5">ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media</p>
@@ -213,6 +213,7 @@
 <script setup lang="ts">
 import { businessCategories } from '~/data/businessCategories.data'
 import UserSignup from '~/interfaces/auth.interface'
+import imageSrc from '~/assets/images/logo.png'
 
 useHead({
   title: 'Welcome to ASAP',

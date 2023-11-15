@@ -9,12 +9,10 @@
           <v-img
             :width="150"
             aspect-ratio="1/1"
-            src="/images/logo.png"
+            :src="imageSrc"
             class="tw-mx-auto"
           />
-          <p class="tw-mb-5 mt-2">
-            ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media
-          </p>
+          <p class="tw-mb-5 mt-2">ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media</p>
           <h5 class="tw-text-3xl font-weight-bold tw-mb-4">เข้าสู่ระบบ ASAP</h5>
         </div>
         <v-form
@@ -68,9 +66,7 @@
         <p class="tw-text-[#6F7580]">
           ยังไม่เคยมีบัญชี?
           <NuxtLink to="/signup">
-            <a class="text-primary text-decoration-underline">
-              ลงทะเบียนที่นี่</a
-            >
+            <a class="text-primary text-decoration-underline"> ลงทะเบียนที่นี่</a>
           </NuxtLink>
         </p>
       </div>
@@ -80,6 +76,8 @@
 
 <script setup lang="ts">
 import { UserLogin } from '~/interfaces/auth.interface'
+import imageSrc from '~/assets/images/logo.png'
+
 const router = useRouter()
 
 useHead({
@@ -110,37 +108,40 @@ const userInfo = ref<UserLogin>({
 
 const login = async (user: UserLogin) => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
-      method: 'post',
-      body: JSON.stringify({
-        email: user.email.trim(),
-        password: user.password,
-        strategy: user.strategy,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    if (process.client) {
+      const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+        method: 'post',
+        body: JSON.stringify({
+          email: user.email.trim(),
+          password: user.password,
+          strategy: user.strategy,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
-    if (response.status.value === 'success') {
-      loginError.value = false
+      if (response.status.value === 'success') {
+        loginError.value = false
 
-      const responseData: any = response.data.value
+        const responseData: any = response.data.value
 
-      const userData = {
-        _id: responseData.user._id,
-        email: responseData.user.email,
-        displayName: responseData.user.displayName,
-        isOwner: responseData.user.isOwner,
-        shop: responseData.user.shop,
+        const userData = {
+          _id: responseData.user._id,
+          email: responseData.user.email,
+          displayName: responseData.user.displayName,
+          isOwner: responseData.user.isOwner,
+          shop: responseData.user.shop,
+        }
+        localStorage.setItem('accessToken', responseData.accessToken)
+        localStorage.setItem('refreshToken', responseData.refreshToken)
+        localStorage.setItem('user', JSON.stringify(userData))
+
+        router.push('/chat')
+      } else {
+        loginError.value = true
+        console.log(`Request failed with status: ${response.error.value}`)
       }
-      localStorage.setItem('accessToken', responseData.accessToken)
-      localStorage.setItem('refreshToken', responseData.refreshToken)
-      localStorage.setItem('user', JSON.stringify(userData))
-      router.push('/chat')
-    } else {
-      loginError.value = true
-      console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {
     console.error(error)
