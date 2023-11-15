@@ -48,28 +48,28 @@
         <v-divider></v-divider>
         <v-list-item
           title="Line"
-          :value="SocialType.line"
+          :value="SocialType.LINE"
           prepend-icon="fa:fa-brands fa-line"
           base-color="#707070"
-          :active="selectedItem === SocialType.line"
-          @click="selectItem(SocialType.line)"
+          :active="selectedItem === SocialType.LINE"
+          @click="selectItem(SocialType.LINE)"
         ></v-list-item>
 
         <v-list-item
           title="Facebook"
-          :value="SocialType.fb"
+          :value="SocialType.FACEBOOK"
           prepend-icon="fa:fa-brands fa-square-facebook"
           base-color="#707070"
-          :active="selectedItem === SocialType.fb"
-          @click="selectItem(SocialType.fb)"
+          :active="selectedItem === SocialType.FACEBOOK"
+          @click="selectItem(SocialType.FACEBOOK)"
         ></v-list-item>
         <v-list-item
           title="Instagram"
-          :value="SocialType.ig"
+          :value="SocialType.INSTAGRAM"
           prepend-icon="mdi-instagram"
           base-color="#707070"
-          :active="selectedItem === SocialType.ig"
-          @click="selectItem(SocialType.ig)"
+          :active="selectedItem === SocialType.INSTAGRAM"
+          @click="selectItem(SocialType.INSTAGRAM)"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -97,9 +97,7 @@
           :title="message.senderDetail.displayName"
           :subtitle="getMessageSubtitle(message)"
           :value="message.senderDetail.userId"
-          :active="
-            message.senderDetail.userId === selectCustomer.senderDetail.userId
-          "
+          :active="message.senderDetail.userId === selectCustomer.senderDetail.userId"
           @click="
             setSelectCustomer(
               message.senderDetail.userId,
@@ -116,11 +114,7 @@
             >
               <v-icon
                 color="#02c153"
-                :icon="
-                  message.source === SocialType.line
-                    ? 'fa:fa-brands fa-line'
-                    : ''
-                "
+                :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
                 variant="text"
               ></v-icon>
             </v-badge>
@@ -301,12 +295,16 @@ const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
 
 let intervalId
 
+const userInfoString = localStorage.getItem('user')
+const userInfo = userInfoString && JSON.parse(userInfoString)
+
+const { shop, _id } = userInfo
+const { name } = shop
+
 const fetchFilterChat = async (customerId: any) => {
   try {
     const response = await useFetch(
-      `${
-        import.meta.env.VITE_BASE_URL
-      }/social-message/ASAP-Shop/652e92d9fbacd5abf57c6249/${customerId}?$limit=50`
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${_id}/${customerId}?$limit=50`
     )
     if (selectCustomer) {
       filteredMessages.value = await response.data.value
@@ -320,26 +318,18 @@ const fetchFilterChat = async (customerId: any) => {
 
 const fetchLatestMessages = async () => {
   try {
-    const response = await useFetch(
-      `${
-        import.meta.env.VITE_BASE_URL
-      }/social-message/652712a90bfba5fec0dd29f3`,
-      {
-        method: 'get',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${_id}`, {
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
     if (response.status.value === 'success') {
       latestMessages.value = await response.data.value
       if (Array.isArray(latestMessages.value)) {
         latestMessages.value.sort(
           (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
-            return (
-              new Date(b.sourceTimestamp).getTime() -
-              new Date(a.sourceTimestamp).getTime()
-            )
+            return new Date(b.sourceTimestamp).getTime() - new Date(a.sourceTimestamp).getTime()
           }
         )
       }
@@ -364,13 +354,6 @@ const selectItem = (item: string) => {
 }
 </script>
 <style>
-.v-list-item-title {
-  font-size: 14px;
-  font-weight: bold;
-}
-.v-list-item__prepend {
-  display: grid;
-}
 .v-list-item--one-line .v-list-item-subtitle {
   -webkit-line-clamp: 2;
   line-height: 1.5rem;

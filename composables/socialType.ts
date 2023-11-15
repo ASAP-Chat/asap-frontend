@@ -1,5 +1,5 @@
 export enum SocialType {
-  line = 'LINE',
-  fb = 'FACEBOOK',
-  ig = 'INSTAGRAM',
+  LINE = 'LINE',
+  FACEBOOK = 'FACEBOOK',
+  INSTAGRAM = 'INSTAGRAM',
 }
