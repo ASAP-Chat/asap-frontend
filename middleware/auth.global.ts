@@ -1,29 +1,27 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (process.client) {
-    const accessToken = localStorage.getItem('accessToken')
+  const { accessToken, user } = useGetCookie()
 
-    const userInfoString = localStorage.getItem('user')
-    const userInfo = userInfoString && JSON.parse(userInfoString)
+  const isOwner = user?.isOwner
 
-    const indexRoute = '/'
-    const allowedRoutes = ['/login', '/signup']
-    const chatRedirectRoutes = ['/chat']
-    const profileRedirectRoute = '/setting/profile'
-    const chatIntegrationRoute = '/setting/chat-integration'
+  const allowedRoutes = ['/login', '/signup']
+  const chatRedirectRoutes = ['/chat']
+  const profileRedirectRoute = '/setting/profile'
+  const chatIntegrationRoute = '/setting/chat-integration'
 
-    if (indexRoute.includes(to.path)) {
+  // Check if user is not authenticated
+  if (!accessToken) {
+    // Redirect to login if not on an allowed route
+    if (!allowedRoutes.includes(to.path)) {
       return navigateTo('/login')
     }
-
-    if (!accessToken) {
-      if (!allowedRoutes.includes(to.path)) {
-        return navigateTo('/login')
-      }
-    } else if (allowedRoutes.includes(to.path)) {
-      return navigateTo(chatRedirectRoutes.includes(to.path) ? '/chat' : '/login')
+  } else {
+    // If user is authenticated, redirect to appropriate routes
+    if (allowedRoutes.includes(to.path)) {
+      return navigateTo(chatRedirectRoutes.includes(to.path) ? '/chat' : '/')
     }
 
-    if (userInfo && !userInfo.isOwner && to.path === chatIntegrationRoute) {
+    // Redirect non-owners trying to access chat integration to profile
+    if (user && !isOwner && to.path === chatIntegrationRoute) {
       return navigateTo(profileRedirectRoute)
     }
   }
