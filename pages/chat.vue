@@ -53,7 +53,11 @@
           base-color="#707070"
           :active="selectedItem === SocialType.LINE"
           @click="selectItem(SocialType.LINE)"
-        ></v-list-item>
+        >
+          <template v-slot:prepend>
+            <v-icon color="#02c153"></v-icon>
+          </template>
+        </v-list-item>
 
         <v-list-item
           title="Facebook"
@@ -62,7 +66,11 @@
           base-color="#707070"
           :active="selectedItem === SocialType.FACEBOOK"
           @click="selectItem(SocialType.FACEBOOK)"
-        ></v-list-item>
+        >
+          <template v-slot:prepend>
+            <v-icon color="#0765FF"></v-icon>
+          </template>
+        </v-list-item>
         <v-list-item
           title="Instagram"
           :value="SocialType.INSTAGRAM"
@@ -78,6 +86,7 @@
     <v-navigation-drawer
       permanent
       width="280"
+      app
     >
       <v-list
         class="tw-p-0"
@@ -93,6 +102,7 @@
         <v-list-item
           class="tw-gap-x-3"
           height="90"
+          exact
           :prepend-avatar="message.senderDetail.pictureUrl"
           :title="message.senderDetail.displayName"
           :subtitle="getMessageSubtitle(message)"
@@ -123,7 +133,7 @@
       </v-list>
     </v-navigation-drawer>
   </div>
-  <!-- TODO: scroll to bottom -->
+
   <div>
     <div v-if="filteredMessages">
       <div
@@ -189,7 +199,26 @@
           </template>
         </v-app-bar>
       </div>
-      <div v-for="(message, index) in filteredMessages.data">
+      <div
+        class="text-center mb-2"
+        v-if="filteredMessages.total > totalChat"
+      >
+        <v-btn
+          prepend-icon="mdi-cursor-default-click-outline"
+          variant="flat"
+          @click="getMoreChat()"
+          :loading="loadingBtn"
+        >
+          <template v-slot:prepend>
+            <v-icon color="primary"></v-icon>
+          </template>
+
+          คลิกเพื่อแสดงข้อความก่อนหน้า
+        </v-btn>
+      </div>
+      <div
+        v-for="(message, index) in filteredMessages.data.sort((a:any, b:any) => a.sourceTimestamp - b.sourceTimestamp)"
+      >
         <ChatBubble
           :msgType="message.messageObject.type"
           :msg-text="message.messageObject.text"
@@ -226,22 +255,24 @@
         </v-container>
       </v-form>
     </v-footer>
+    <CommonLoading
+      class="tw-mt-[25%]"
+      v-if="loading"
+    />
   </div>
 </template>
 <script setup lang="ts">
-// import io from 'socket.io-client'
-const latestMessages = ref()
-const filteredMessages = ref()
-
-const filteredMessagesDate = ref()
+const filteredMessages: any = ref()
+const loading = ref(false)
+const loadingBtn = ref(false)
 
 const shouldDisplayTime = (index: number) => {
   if (index === 0) {
     return true
   }
 
-  const currentMessage = filteredMessagesDate.value.data[index]
-  const previousMessage = filteredMessagesDate.value.data[index - 1]
+  const currentMessage = filteredMessages.value.data[index]
+  const previousMessage = filteredMessages.value.data[index - 1]
 
   const currentDate = new Date(currentMessage.sourceTimestamp)
   const previousDate = new Date(previousMessage.sourceTimestamp)
@@ -261,11 +292,6 @@ const getMessageSubtitle = (message: any) => {
       return message.message
   }
 }
-
-// const socket = io('http://localhost:3000')
-// socket.on('connect', () => {
-//   console.log('Socket connected FE')
-// })
 
 useHead({
   title: 'แชต',
@@ -288,66 +314,101 @@ const sendMessage = (msg: string) => {
   console.log('sent msg', msg)
 }
 
+const totalChat = ref(0)
+
 const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
-  fetchFilterChat(userId)
+  totalChat.value = 0
+  getMsgById(userId, totalChat.value)
   selectCustomer.value.senderDetail = { userId, displayName, pictureUrl }
 }
 
 let intervalId
+const customer_Id = ref('')
 
-// const userInfoString = localStorage.getItem('user')
-// const userInfo = userInfoString && JSON.parse(userInfoString)
+const { accessToken, user } = useGetCookie()
 
-// const { shop, _id } = userInfo
-// const { name } = shop
+const { shop } = user
+const { name } = shop
 
-const fetchFilterChat = async (customerId: any) => {
-  // try {
-  //   const response = await useFetch(
-  //     `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${_id}/${customerId}?$limit=50`
-  //   )
-  //   if (selectCustomer) {
-  //     filteredMessages.value = await response.data.value
-  //     filteredMessagesDate.value = filteredMessages.value
-  //   }
-  //   window.scrollTo(0, document.body.offsetHeight)
-  // } catch (error) {
-  //   console.log(error)
-  // }
+const getMsgById = async (customerId: any, total: number) => {
+  customer_Id.value = customerId
+  loading.value = true
+  try {
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customerId}`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+        },
+        params: {
+          $skip: total,
+        },
+      }
+    )
+    if (selectCustomer) {
+      filteredMessages.value = await response.data.value
+      totalChat.value = filteredMessages.value && filteredMessages.value.data.length
+      loading.value = false
+    } else {
+      console.log('call - refresh token')
+      useRefreshToken()
+      getMsgById(name, customerId)
+      loading.value = false
+    }
+    nextTick(() => {
+      window.scrollTo(0, document.body.scrollHeight)
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-const fetchLatestMessages = async () => {
-  // try {
-  //   const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${_id}`, {
-  //     method: 'get',
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-  //     },
-  //   })
-  //   if (response.status.value === 'success') {
-  //     latestMessages.value = await response.data.value
-  //     if (Array.isArray(latestMessages.value)) {
-  //       latestMessages.value.sort(
-  //         (a: { sourceTimestamp: string }, b: { sourceTimestamp: string }) => {
-  //           return new Date(b.sourceTimestamp).getTime() - new Date(a.sourceTimestamp).getTime()
-  //         }
-  //       )
-  //     }
-  //   } else {
-  //     console.log('call - refresh token')
-  //     useRefreshToken()
-  //     fetchLatestMessages()
-  //   }
-  // } catch (error: any) {
-  //   console.log(error)
-  // }
-}
+const getMoreChat = async () => {
+  loadingBtn.value = true
 
-// fetchLatestMessages()
+  try {
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customer_Id.value}`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+        },
+        params: {
+          $skip: totalChat.value,
+        },
+      }
+    )
+    if (selectCustomer) {
+      const result: any = await response.data.value
+      filteredMessages.value.data.push(...Object.values(result.data))
+
+      if (Array.isArray(result.data)) {
+        totalChat.value += result.data.length
+      }
+      loadingBtn.value = false
+    } else {
+      console.log('call - refresh token')
+      useRefreshToken()
+      getMoreChat()
+      loadingBtn.value = false
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+const { latestMessages } = await useGetLatestMsg()
+
+// getLatestMessages()
 // intervalId = setInterval(() => {
 //   fetchLatestMessages()
 // }, 1000)
-
+onMounted(() => {
+  nextTick(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+  })
+})
 const selectedItem = ref('all')
 const selectItem = (item: string) => {
   selectedItem.value = item
