@@ -52,28 +52,26 @@
 
         <template v-slot:append>
           <div class="tw-text-center">
-            <v-img
-              v-if="userProfile"
-              :width="40"
-              :height="40"
-              :aspect-ratio="1"
-              cover
-              class="rounded-circle ma-2 tw-cursor-pointer zoom"
-              :src="userProfile"
-              id="menu-activator"
-            ></v-img>
-            <v-btn
-              v-else
-              id="menu-activator"
-              class="ma-2"
-              variant="text"
-              icon="mdi-account-circle-outline"
-            />
-
-            <v-menu
-              activator="#menu-activator"
-              location="end"
-            >
+            <v-menu location="end">
+              <template v-slot:activator="{ props }">
+                <v-img
+                  v-if="userProfile"
+                  v-bind="props"
+                  :width="40"
+                  :height="40"
+                  :aspect-ratio="1"
+                  cover
+                  class="rounded-circle ma-2 tw-cursor-pointer zoom"
+                  :src="userProfile"
+                ></v-img>
+                <v-btn
+                  v-else
+                  v-bind="props"
+                  class="ma-2"
+                  variant="text"
+                  icon="mdi-account-circle-outline"
+                />
+              </template>
               <v-list>
                 <v-list-item @click="settingProfile">
                   <v-list-item-title>โปรไฟล์</v-list-item-title>
