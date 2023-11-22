@@ -152,9 +152,8 @@ const userProfile = ref()
 const router = useRouter()
 const route = useRoute()
 
-const userInfoString = process.client && localStorage.getItem('user')
-const userInfo = userInfoString ? JSON.parse(userInfoString) : null
-const isOwner = userInfo && userInfo.isOwner
+const { user } = useGetCookie()
+const { isOwner } = user
 
 const sidebarList = [
   {

@@ -98,44 +98,46 @@ const userInfo = ref<UserLogin>({
   password: '',
 })
 
-const login = async (user: UserLogin) => {
+const accessToken = useCookie('accessToken', cookieOptions)
+const refreshToken = useCookie('refreshToken', cookieOptions)
+const user = useCookie('user', cookieOptions)
+
+const login = async (userData: UserLogin) => {
   try {
     loading.value = true
-    if (process.client) {
-      const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
-        method: 'post',
-        body: JSON.stringify({
-          email: user.email.trim(),
-          password: user.password,
-          strategy: user.strategy,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+      method: 'post',
+      body: JSON.stringify({
+        email: userData.email.trim(),
+        password: userData.password,
+        strategy: userData.strategy,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
-      if (response.status.value === 'success') {
-        loading.value = false
-        loginError.value = false
+    if (response.status.value === 'success') {
+      loading.value = false
+      loginError.value = false
 
-        const responseData: any = response.data.value
+      const responseData: any = response.data.value
 
-        const userData = {
-          _id: responseData.user._id,
-          email: responseData.user.email,
-          displayName: responseData.user.displayName,
-          isOwner: responseData.user.isOwner,
-          shop: responseData.user.shop,
-        }
-        localStorage.setItem('accessToken', responseData.accessToken)
-        localStorage.setItem('refreshToken', responseData.refreshToken)
-        localStorage.setItem('user', JSON.stringify(userData))
-        router.push('/chat')
-      } else {
-        loading.value = false
-        loginError.value = true
-        console.log(`Request failed with status: ${response.error.value}`)
+      const userData = {
+        _id: responseData.user._id,
+        email: responseData.user.email,
+        displayName: responseData.user.displayName,
+        isOwner: responseData.user.isOwner,
+        shop: responseData.user.shop,
       }
+      accessToken.value = responseData.accessToken
+      refreshToken.value = responseData.refreshToken
+      user.value = JSON.stringify(userData)
+      router.push('/chat')
+    } else {
+      loading.value = false
+      loginError.value = true
+      console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {
     console.error(error)

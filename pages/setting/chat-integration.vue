@@ -229,29 +229,27 @@ const socialList = [
   },
 ]
 const { socialInfo } = await useGetSocialAccount()
+const { accessToken } = useGetCookie()
 
 const cancelSocialAccount = async (id: string) => {
   try {
-    // Check if the code is running on the client side
-    if (process.client) {
-      const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
-        method: 'delete',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
+      method: 'delete',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+    })
 
-      if (response.status.value === 'success') {
-        socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
-        isSuccessDelete.value = true
-        deleteModal.value = true
-      } else {
-        console.log('call - refresh token')
-        isSuccessDelete.value = false
-        deleteModal.value = true
-        useRefreshToken()
-        cancelSocialAccount(id)
-      }
+    if (response.status.value === 'success') {
+      socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
+      isSuccessDelete.value = true
+      deleteModal.value = true
+    } else {
+      console.log('call - refresh token')
+      isSuccessDelete.value = false
+      deleteModal.value = true
+      useRefreshToken()
+      cancelSocialAccount(id)
     }
   } catch (error: any) {
     console.log(error)

@@ -1,9 +1,10 @@
 export const useSignOut = () => {
-  const router = useRouter()
-  if (process.client) {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('user')
-  }
-  router.push('/login')
+  const { push } = useRouter()
+  const accessToken = useCookie('accessToken')
+  const user = useCookie('user')
+  const refreshToken = useCookie('refreshToken')
+  accessToken.value = null
+  user.value = null
+  refreshToken.value = null
+  push('/login')
 }

@@ -119,10 +119,9 @@ const lineInfo = ref<CreateLineInfo>({
   ownerId: '',
 })
 
-const userInfoString = process.client && localStorage.getItem('user')
-const userInfo = userInfoString ? JSON.parse(userInfoString) : null
+const { accessToken, user } = useGetCookie()
 
-const { shop, _id } = userInfo
+const { shop, _id } = user
 const { name } = shop
 
 const showModal = ref(false)
@@ -131,35 +130,33 @@ const isSuccessCreate = ref()
 const createLine = async (lineInfo: CreateLineInfo) => {
   loading.value = true
   try {
-    if (process.client) {
-      const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
-        method: 'post',
-        body: JSON.stringify({
-          shopName: name,
-          socialData: {
-            channelSecret: lineInfo.socialData.channelSecret,
-            channelAccessToken: lineInfo.socialData.channelAccessToken,
-          },
-          socialType: SocialType.LINE,
-          ownerId: _id,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
+      method: 'post',
+      body: JSON.stringify({
+        shopName: name,
+        socialData: {
+          channelSecret: lineInfo.socialData.channelSecret,
+          channelAccessToken: lineInfo.socialData.channelAccessToken,
         },
-      })
-      if (response.status.value === 'success') {
-        isSuccessCreate.value = true
-        showModal.value = true
-        loading.value = false
-        useGetSocialAccount()
-      } else {
-        loading.value = false
-        isSuccessCreate.value = false
-        showModal.value = true
-        useRefreshToken()
-        console.log(`Request failed with status: ${response.error.value}`)
-      }
+        socialType: SocialType.LINE,
+        ownerId: _id,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken,
+      },
+    })
+    if (response.status.value === 'success') {
+      isSuccessCreate.value = true
+      showModal.value = true
+      loading.value = false
+      useGetSocialAccount()
+    } else {
+      loading.value = false
+      isSuccessCreate.value = false
+      showModal.value = true
+      useRefreshToken()
+      console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {
     console.error(error)
