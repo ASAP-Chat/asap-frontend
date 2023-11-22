@@ -324,11 +324,38 @@ const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
 
 let intervalId
 const customer_Id = ref('')
+const latestMessages = ref()
 
 const { accessToken, user } = useGetCookie()
 
-const { shop } = user
+const { shop, isOwner } = user
 const { name } = shop
+
+const getLatestMsg = async () => {
+  if (isOwner) {
+    try {
+      const response = await useFetch(
+        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/latest`,
+        {
+          method: 'get',
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+          },
+        }
+      )
+      if (response.status.value === 'success') {
+        latestMessages.value = await response.data.value
+      } else {
+        console.log('call - refresh token')
+        useRefreshToken()
+        getLatestMsg()
+      }
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+  return { latestMessages }
+}
 
 const getMsgById = async (customerId: any, total: number) => {
   customer_Id.value = customerId
@@ -398,7 +425,10 @@ const getMoreChat = async () => {
     console.log(error)
   }
 }
-const { latestMessages } = await useGetLatestMsg()
+
+onBeforeMount(async () => {
+  await getLatestMsg()
+})
 
 // getLatestMessages()
 // intervalId = setInterval(() => {
