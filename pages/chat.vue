@@ -134,7 +134,7 @@
     </v-navigation-drawer>
   </div>
 
-  <div>
+  <div id="test">
     <div v-if="filteredMessages">
       <div
         v-if="
@@ -414,6 +414,11 @@ const getMoreChat = async () => {
       if (Array.isArray(result.data)) {
         totalChat.value += result.data.length
       }
+      var myDiv = document.getElementById('test')
+      const height = myDiv && Math.trunc(myDiv.offsetHeight / 3.32)
+      nextTick(() => {
+        if (myDiv && height) window.scrollTo(0, height)
+      })
       loadingBtn.value = false
     } else {
       console.log('call - refresh token')
