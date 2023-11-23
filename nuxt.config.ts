@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   hooks: {
     "pages:extend": (pages) => {
       pages.map((page) => {
-        page.path = "/ssa3/" + page.path;
+        page.path = "/ssa3" + page.path;
       });
     },
   },
