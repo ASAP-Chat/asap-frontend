@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     head: {
       titleTemplate: '%s | ASAP',
       link: [{ rel: 'icon', type: 'image/png', href: '/ssa3/favicon.ico' }],
-    }
+    },
+    baseURL: '/ssa3/',
   },
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
