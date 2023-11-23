@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  hooks: {
+    "pages:extend": (pages) => {
+      pages.map((page) => {
+        page.path = "/ssa3/" + page.path;
+      });
+    },
+  },
   ssr: false,
   devServer: {
     port: 4000,
