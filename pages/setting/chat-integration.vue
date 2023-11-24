@@ -248,7 +248,7 @@ const cancelSocialAccount = async (id: string) => {
       console.log('call - refresh token')
       isSuccessDelete.value = false
       deleteModal.value = true
-      useRefreshToken()
+      await useRefreshToken()
       cancelSocialAccount(id)
     }
   } catch (error: any) {

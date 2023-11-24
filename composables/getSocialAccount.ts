@@ -18,8 +18,8 @@ export const useGetSocialAccount = async () => {
       socialInfo.value = await response.data.value
     } else {
       console.log('call - refresh token')
-      useRefreshToken()
-      useGetSocialAccount()
+      await useRefreshToken()
+      await useGetSocialAccount()
     }
   } catch (error: any) {
     console.log(error)

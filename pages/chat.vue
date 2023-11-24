@@ -326,7 +326,8 @@ let intervalId
 const customer_Id = ref('')
 const latestMessages = ref()
 
-const { accessToken, user } = useGetCookie()
+const { user } = useGetCookie()
+const accessToken = useCookie('accessToken')
 
 const { shop, isOwner } = user
 const { name } = shop
@@ -339,7 +340,7 @@ const getLatestMsg = async () => {
         {
           method: 'get',
           headers: {
-            Authorization: 'Bearer ' + accessToken,
+            Authorization: 'Bearer ' + accessToken.value,
           },
         }
       )
@@ -347,8 +348,8 @@ const getLatestMsg = async () => {
         latestMessages.value = await response.data.value
       } else {
         console.log('call - refresh token')
-        useRefreshToken()
-        getLatestMsg()
+        await useRefreshToken()
+        await getLatestMsg()
       }
     } catch (error: any) {
       console.log(error)
@@ -373,14 +374,14 @@ const getMsgById = async (customerId: any, total: number) => {
         },
       }
     )
-    if (selectCustomer) {
+    if (selectCustomer && response.status.value === 'success') {
       filteredMessages.value = await response.data.value
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
     } else {
       console.log('call - refresh token')
-      useRefreshToken()
-      getMsgById(name, customerId)
+      await useRefreshToken()
+      await getMsgById(name, customerId)
       loading.value = false
     }
     nextTick(() => {
@@ -422,8 +423,8 @@ const getMoreChat = async () => {
       loadingBtn.value = false
     } else {
       console.log('call - refresh token')
-      useRefreshToken()
-      getMoreChat()
+      await useRefreshToken()
+      await getMoreChat()
       loadingBtn.value = false
     }
   } catch (error) {
