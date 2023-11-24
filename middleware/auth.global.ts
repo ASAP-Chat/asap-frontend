@@ -11,26 +11,18 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // Check if user is not authenticated
   if (!accessToken) {
     if (indexRoute.includes(to.path)) {
-      console.log('1')
-
       return navigateTo('/login')
     }
     // Redirect to login if not on an allowed route
     if (!allowedRoutes.includes(to.path)) {
-      console.log('2')
-
       return navigateTo('/login')
     }
   } else {
     if (indexRoute.includes(to.path)) {
-      console.log('1')
-
       return navigateTo('/chat')
     }
     // If user is authenticated, redirect to appropriate routes
     if (allowedRoutes.includes(to.path)) {
-      console.log('3')
-
       return navigateTo(chatRedirectRoutes.includes(to.path) ? '/chat' : '/')
     }
 
