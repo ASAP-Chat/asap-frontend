@@ -29,6 +29,11 @@ export default defineNuxtConfig({
     },
     baseURL: '/ssa3/',
   },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: true,
+    },
+  },
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     configPath: 'tailwind.config',
