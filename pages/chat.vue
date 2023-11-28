@@ -367,7 +367,7 @@ const getMsgById = async (customerId: any, total: number) => {
       {
         method: 'get',
         headers: {
-          Authorization: 'Bearer ' + accessToken,
+          Authorization: 'Bearer ' + accessToken.value,
         },
         params: {
           $skip: total,
@@ -381,7 +381,7 @@ const getMsgById = async (customerId: any, total: number) => {
     } else {
       console.log('call - refresh token')
       await useRefreshToken()
-      await getMsgById(name, customerId)
+      await getMsgById(customerId, totalChat.value)
       loading.value = false
     }
     nextTick(() => {
@@ -401,7 +401,7 @@ const getMoreChat = async () => {
       {
         method: 'get',
         headers: {
-          Authorization: 'Bearer ' + accessToken,
+          Authorization: 'Bearer ' + accessToken.value,
         },
         params: {
           $skip: totalChat.value,
