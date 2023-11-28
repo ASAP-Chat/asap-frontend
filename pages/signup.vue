@@ -9,7 +9,7 @@
     "
     :buttonText="isSuccessRegister ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
     :isSuccess="isSuccessRegister"
-    :to="isSuccessRegister ? '/login' : '/signup'"
+    :to="isSuccessRegister ? '/login/' : '/signup/'"
     @btn-action="closeModal"
   />
   <div class="tw-hero tw-min-h-screen lg:tw-bg-base-200">
@@ -202,7 +202,7 @@
         </div>
         <p class="tw-text-[#6F7580]">
           มีบัญชีอยู่แล้ว?
-          <NuxtLink to="/login">
+          <NuxtLink to="/login/">
             <a class="text-primary text-decoration-underline"> เข้าสู่ระบบ</a>
           </NuxtLink>
         </p>

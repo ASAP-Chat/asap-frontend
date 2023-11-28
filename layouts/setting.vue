@@ -160,25 +160,25 @@ const sidebarList = [
     prependIcon: 'mdi-message-outline',
     title: 'แชต',
     value: 'chat',
-    path: '/chat',
+    path: '/chat/',
   },
   {
     prependIcon: 'mdi-robot-outline',
     title: 'แชตบอท',
     value: 'chatbot',
-    path: '/chatbot',
+    path: '/chatbot/',
   },
   {
     prependIcon: 'mdi-message-text-outline',
     title: 'รูปแบบคำตอบ',
     value: 'chat-template',
-    path: '/chat-template',
+    path: '/chat-template/',
   },
   {
     prependIcon: 'mdi-cog-outline',
     title: 'ตั้งค่า',
     value: 'setting',
-    path: '/setting/profile',
+    path: '/setting/profile/',
   },
 ]
 

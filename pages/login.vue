@@ -64,7 +64,7 @@
         </v-form>
         <p class="tw-text-[#6F7580]">
           ยังไม่เคยมีบัญชี?
-          <NuxtLink to="/signup">
+          <NuxtLink to="/signup/">
             <a class="text-primary text-decoration-underline"> ลงทะเบียนที่นี่</a>
           </NuxtLink>
         </p>
