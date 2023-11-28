@@ -50,40 +50,12 @@
         </v-list>
 
         <template v-slot:append>
-          <div class="tw-text-center">
-            <v-menu location="end">
-              <template v-slot:activator="{ props }">
-                <v-img
-                  v-if="userProfile"
-                  :width="40"
-                  :height="40"
-                  :aspect-ratio="1"
-                  cover
-                  class="rounded-circle ma-2 tw-cursor-pointer zoom"
-                  :src="userProfile"
-                  id="menu-activator"
-                  v-bind="props"
-                ></v-img>
-                <v-btn
-                  v-else
-                  id="menu-activator"
-                  class="ma-2"
-                  variant="text"
-                  icon="mdi-account-circle-outline"
-                  v-bind="props"
-                />
-              </template>
-
-              <v-list>
-                <v-list-item @click="router.push('/setting/profile')">
-                  <v-list-item-title>โปรไฟล์</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="useSignOut()">
-                  <v-list-item-title>ออกจากระบบ</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </div>
+          <v-btn
+            @click="useSignOut()"
+            class="ma-2"
+            variant="text"
+            icon="mdi-logout"
+          />
         </template>
       </v-navigation-drawer>
       <v-app-bar
@@ -148,8 +120,6 @@
 <script setup lang="ts">
 import imageSrc from '~/assets/images/logo.png'
 
-const userProfile = ref()
-const router = useRouter()
 const route = useRoute()
 
 const { user } = useGetCookie()
@@ -185,17 +155,17 @@ const sidebarList = [
 const settingItems = [
   {
     title: 'ข้อมูลส่วนตัว',
-    value: 'profile',
+    value: '/setting/profile/',
     icon: 'mdi-account-outline',
   },
   {
     title: 'การตั้งค่าช่องทาง',
-    value: 'chat-integration',
+    value: '/setting/chat-integration/',
     icon: 'mdi-store-cog-outline',
   },
   {
     title: 'สมาชิก',
-    value: 'member',
+    value: '/setting/member/',
     icon: 'mdi-account-group-outline',
   },
 ]
