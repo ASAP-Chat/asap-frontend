@@ -74,17 +74,12 @@
           {{ pathTitle }}
         </v-app-bar-title>
         <v-spacer></v-spacer>
-
-        <!-- In case
-          <p class="tw-text-sm">
-          <span>{{ useDayjs()(date).format('DD/MM/YYYY, HH:mm น.') }}</span>
-        </p> -->
       </v-app-bar>
 
       <v-main class="tw-bg-[#f2f2f2]">
         <v-container
           fluid
-          class="tw-min-h-screen"
+          :class="route.name === 'chat' ? 'tw-min-h-[72.9dvh]' : 'tw-min-h-[92.8dvh]'"
         >
           <slot />
         </v-container>
@@ -97,7 +92,6 @@ import { PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
 
 const route = useRoute()
-const date = new Date()
 
 const pathToTitle = {
   chat: 'แชต',
@@ -158,3 +152,4 @@ const pathTitle = computed(() => {
   return route.name
 })
 </script>
+<style></style>

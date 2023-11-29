@@ -103,7 +103,7 @@
       <v-main class="tw-bg-[#f2f2f2]">
         <v-container
           fluid
-          class="tw-min-h-screen tw-p-6"
+          class="tw-min-h-[92.8dvh]"
         >
           <h1 class="tw-text-xl">
             <v-icon class="pb-2">

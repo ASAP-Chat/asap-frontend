@@ -103,45 +103,62 @@
           class="tw-gap-x-3"
           height="90"
           exact
-          :prepend-avatar="message.senderDetail.pictureUrl"
-          :title="message.senderDetail.displayName"
+          :title="
+            message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
+          "
           :subtitle="getMessageSubtitle(message)"
-          :value="message.senderDetail.userId"
-          :active="message.senderDetail.userId === selectCustomer.senderDetail.userId"
+          :value="message.customerId"
+          :active="message.customerId === selectCustomer.userId"
           @click="
             setSelectCustomer(
-              message.senderDetail.userId,
-              message.senderDetail.displayName,
-              message.senderDetail.pictureUrl
+              message.customerId,
+              message.isOwner
+                ? message.receiverDetail.displayName
+                : message.senderDetail.displayName,
+              message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
+              message.source
             )
           "
         >
+          <template v-slot:prepend>
+            <v-badge color="white">
+              <template v-slot:badge>
+                <v-icon
+                  color="#02c153"
+                  :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
+                  size="small"
+                ></v-icon>
+              </template>
+              <v-avatar
+                :image="
+                  message.isOwner
+                    ? message.receiverDetail.pictureUrl
+                    : message.senderDetail.pictureUrl
+                "
+              />
+            </v-badge>
+          </template>
           <!-- Todo: อ่านแล้ว -->
           <template v-slot:append>
-            <v-badge
-              dot
-              color="error"
-            >
-              <v-icon
-                color="#02c153"
-                :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
-                variant="text"
-              ></v-icon>
-            </v-badge>
+            <time class="tw-text-xs tw-opacity-50">
+              {{ useDayjs()(message.sourceTimestamp).format('HH:mm') }}
+            </time>
           </template>
         </v-list-item>
       </v-list>
+      <v-list v-if="latestMessages?.data && latestMessages.data.length === 0">
+        <v-list-item
+          disabled
+          class="text-center"
+          title="ยังไม่มีข้อความ"
+        ></v-list-item
+      ></v-list>
     </v-navigation-drawer>
   </div>
 
   <div id="test">
     <div v-if="filteredMessages">
-      <div
-        v-if="
-          selectCustomer.senderDetail.userId.trim() !== '' &&
-          selectCustomer.senderDetail.displayName.trim() !== ''
-        "
-      >
+      <div v-if="selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''">
         <v-navigation-drawer
           v-model="drawer"
           permanent
@@ -164,7 +181,7 @@
             </div>
             <div>
               <h3>ชื่อ</h3>
-              <p>{{ selectCustomer.senderDetail.displayName }}</p>
+              <p>{{ selectCustomer.displayName }}</p>
               <h3 class="tw-mt-5">เบอร์โทรศัพท์</h3>
               <p>000000000</p>
               <h3 class="tw-mt-5">อีเมล</h3>
@@ -185,11 +202,11 @@
               aspect-ratio="1/1"
               cover
               class="tw-rounded-full"
-              :src="selectCustomer.senderDetail.pictureUrl"
+              :src="selectCustomer.pictureUrl"
             ></v-img>
           </template>
           <v-app-bar-title class="font-weight-bold">
-            {{ selectCustomer.senderDetail.displayName }}
+            {{ selectCustomer.displayName }}
           </v-app-bar-title>
           <template v-slot:append>
             <v-btn
@@ -227,34 +244,46 @@
           :img="message.senderDetail.pictureUrl"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
           :time="message.sourceTimestamp"
+          :is-owner="message.isOwner"
         />
       </div>
     </div>
 
     <v-footer
-      v-if="
-        selectCustomer.senderDetail.userId.trim() !== '' &&
-        selectCustomer.senderDetail.displayName.trim() !== ''
-      "
       app
       name="footer"
+      :class="
+        selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+          ? ''
+          : 'tw-bg-[#f2f2f2]'
+      "
     >
-      <v-form>
+      <v-form
+        :class="
+          selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+            ? ''
+            : 'tw-invisible'
+        "
+      >
         <v-container>
           <v-row>
             <v-col cols="12">
               <CommonTextField
                 v-model="sendMsg"
                 append-icon="mdi-send"
+                rounded
                 type="text"
-                @click:append=""
-                @keydown.prevent.enter="sendMessage(sendMsg)"
+                hide-details
+                placeholder="พิมพ์ข้อความ ..."
+                @keydown.prevent.enter="sendMessage()"
+                @click:append="sendMessage()"
               />
             </v-col>
           </v-row>
         </v-container>
       </v-form>
     </v-footer>
+
     <CommonLoading
       class="tw-mt-[25%]"
       v-if="loading"
@@ -302,27 +331,25 @@ const rail = ref(false)
 const sendMsg = ref()
 
 const selectCustomer = ref<any>({
-  senderDetail: {
-    userId: '',
-    displayName: '',
-    pictureUrl: '',
-  },
+  userId: '',
+  displayName: '',
+  pictureUrl: '',
+  source: '',
 })
-
-const sendMessage = (msg: string) => {
-  alert(`Have Send : ${msg}`)
-  console.log('sent msg', msg)
-}
 
 const totalChat = ref(0)
 
-const setSelectCustomer = (userId: any, displayName: any, pictureUrl: any) => {
+const setSelectCustomer = (
+  userId: string,
+  displayName: string,
+  pictureUrl: string,
+  source: string
+) => {
   totalChat.value = 0
   getMsgById(userId, totalChat.value)
-  selectCustomer.value.senderDetail = { userId, displayName, pictureUrl }
+  selectCustomer.value = { userId, displayName, pictureUrl, source }
 }
 
-let intervalId
 const customer_Id = ref('')
 const latestMessages = ref()
 
@@ -331,6 +358,43 @@ const accessToken = useCookie('accessToken')
 
 const { shop, isOwner } = user
 const { name } = shop
+
+const sendMessage = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${selectCustomer.value.userId}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          source: selectCustomer.value.source,
+          message: {
+            text: sendMsg.value,
+          },
+        }),
+        headers: {
+          'content-Type': 'application/json',
+          Authorization: 'Bearer ' + accessToken.value,
+        },
+      }
+    )
+
+    if (response.status === 200 || response.status === 201) {
+      sendMsg.value = ''
+      await getMsgById(selectCustomer.value.userId, 0)
+    } else if (response.status === 401) {
+      console.log('call - refresh token')
+      await useRefreshToken()
+      await sendMessage()
+    } else {
+      console.log('err')
+    }
+    nextTick(() => {
+      window.scrollTo(0, document.body.scrollHeight)
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const getLatestMsg = async () => {
   if (isOwner) {
@@ -346,6 +410,14 @@ const getLatestMsg = async () => {
       )
       if (response.status.value === 'success') {
         latestMessages.value = await response.data.value
+
+        // set default customer
+        if (latestMessages.value.data[0]) {
+          const { customerId, isOwner, senderDetail, receiverDetail, source } =
+            latestMessages.value.data[0]
+          const { displayName, pictureUrl } = isOwner ? receiverDetail : senderDetail
+          setSelectCustomer(customerId, displayName, pictureUrl, source)
+        }
       } else {
         console.log('call - refresh token')
         await useRefreshToken()
@@ -394,7 +466,6 @@ const getMsgById = async (customerId: any, total: number) => {
 
 const getMoreChat = async () => {
   loadingBtn.value = true
-
   try {
     const response = await useFetch(
       `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customer_Id.value}`,
@@ -436,10 +507,6 @@ onBeforeMount(async () => {
   await getLatestMsg()
 })
 
-// getLatestMessages()
-// intervalId = setInterval(() => {
-//   fetchLatestMessages()
-// }, 1000)
 onMounted(() => {
   nextTick(() => {
     window.scrollTo(0, document.body.scrollHeight)
@@ -460,6 +527,9 @@ const selectItem = (item: string) => {
 }
 .v-badge--dot .v-badge__badge {
   display: none;
+}
+.v-badge__badge {
+  bottom: calc(100% - 43px) !important;
 }
 .v-list-item-title {
   font-size: 14px !important;
