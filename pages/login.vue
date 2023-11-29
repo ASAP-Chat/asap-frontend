@@ -133,7 +133,7 @@ const login = async (userData: UserLogin) => {
       accessToken.value = responseData.accessToken
       refreshToken.value = responseData.refreshToken
       user.value = JSON.stringify(userData)
-      router.push('/chat')
+      router.push('/chat/')
     } else {
       loading.value = false
       loginError.value = true
