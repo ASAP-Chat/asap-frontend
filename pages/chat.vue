@@ -410,14 +410,6 @@ const getLatestMsg = async () => {
       )
       if (response.status.value === 'success') {
         latestMessages.value = await response.data.value
-
-        // set default customer
-        if (latestMessages.value.data[0]) {
-          const { customerId, isOwner, senderDetail, receiverDetail, source } =
-            latestMessages.value.data[0]
-          const { displayName, pictureUrl } = isOwner ? receiverDetail : senderDetail
-          setSelectCustomer(customerId, displayName, pictureUrl, source)
-        }
       } else {
         console.log('call - refresh token')
         await useRefreshToken()
