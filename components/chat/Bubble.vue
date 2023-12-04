@@ -17,14 +17,26 @@
   </div>
   <div
     class="tw-chat"
-    :class="isOwner ? 'tw-chat-end' : 'tw-chat-start'"
+    :class="[
+      isOwner ? 'tw-chat-end' : 'tw-chat-start',
+      props.msgType !== 'text' ? '' : 'tw-drop-shadow-lg',
+    ]"
   >
     <div
       class="tw-chat-image tw-avatar"
       :class="props.msgType !== 'text' ? 'tw-row-auto' : ''"
     >
-      <div class="tw-w-10 tw-rounded-full">
+      <div
+        class="tw-w-10 tw-rounded-full"
+        v-if="props.img"
+      >
         <img :src="props.img" />
+      </div>
+      <div
+        class="tw-w-10 tw-rounded-full"
+        v-else
+      >
+        <v-icon size="x-large">mdi-account-circle-outline</v-icon>
       </div>
     </div>
     <div class="tw-chat-header">
@@ -32,7 +44,6 @@
         {{ useDayjs()(props.time).format('HH:mm') }}
       </time>
     </div>
-    <!-- #555555 -->
     <div
       class="tw-chat-bubble text-secondary"
       :class="isOwner ? 'tw-bg-[#d4caff]' : 'tw-bg-[#fff]'"
