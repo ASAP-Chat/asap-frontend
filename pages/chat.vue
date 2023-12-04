@@ -21,7 +21,7 @@
         <v-list-item
           title="รอดำเนินการ"
           value="pending"
-          prepend-icon="mdi-emoticon-neutral-outline"
+          prepend-icon="mdi-emoticon-confused-outline"
           base-color="#707070"
           :active="selectedItem === 'pending'"
           @click="selectItem('pending')"
@@ -30,7 +30,7 @@
         <v-list-item
           title="ดำเนินการ"
           value="doing"
-          prepend-icon="mdi-emoticon-confused-outline"
+          prepend-icon="mdi-emoticon-neutral-outline"
           base-color="#707070"
           :active="selectedItem === 'doing'"
           @click="selectItem('doing')"
@@ -91,11 +91,13 @@
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
-        v-for="(message, i) in latestMessages.data.filter((msg: any) => {
+        v-for="(message, i) in latestMessages.data
+          .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
+          .filter((msg: any) => {
             if (selectedItem === 'all') {
-              return true
-            } 
-            return msg.source === selectedItem
+              return true;
+            }
+            return msg.source === selectedItem;
           }
         )"
       >
@@ -268,16 +270,26 @@
         <v-container>
           <v-row>
             <v-col cols="12">
-              <CommonTextField
+              <v-text-field
                 v-model="sendMsg"
-                append-icon="mdi-send"
                 rounded
                 type="text"
                 hide-details
                 placeholder="พิมพ์ข้อความ ..."
                 @keydown.prevent.enter="sendMessage()"
-                @click:append="sendMessage()"
-              />
+                density="compact"
+                variant="outlined"
+                color="primary"
+              >
+                <template v-slot:append>
+                  <v-btn
+                    icon="mdi-send"
+                    variant="text"
+                    @click="sendMessage()"
+                    :disabled="sendMsg === ''"
+                  ></v-btn>
+                </template>
+              </v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -291,7 +303,40 @@
   </div>
 </template>
 <script setup lang="ts">
+import { Manager } from 'socket.io-client'
+
+const manager = new Manager(import.meta.env.VITE_SOCKET_URL)
+const socket = manager.socket('/socketio/latest-message')
+
+const { user } = useGetCookie()
+const accessToken = useCookie('accessToken')
+
+const { shop, isOwner } = user
+const { name } = shop
+const newMsg = ref()
+const latestMessages = ref()
 const filteredMessages: any = ref()
+
+onBeforeMount(() => {
+  if (name) {
+    socket.emit('shopName', name)
+
+    socket.on('latest-message', (data: any) => {
+      newMsg.value = data
+      const existingIndex = latestMessages.value.data.findIndex(
+        (item: any) => item.customerId === newMsg.value.data[0].customerId
+      )
+
+      if (existingIndex !== -1) {
+        latestMessages.value.data[existingIndex] = newMsg.value.data[0]
+        // filteredMessages.value.data[existingIndex] = newMsg.value.data[0]
+      } else {
+        latestMessages.value.data.push(newMsg.value.data[0])
+      }
+    })
+  }
+})
+
 const loading = ref(false)
 const loadingBtn = ref(false)
 
@@ -351,13 +396,6 @@ const setSelectCustomer = (
 }
 
 const customer_Id = ref('')
-const latestMessages = ref()
-
-const { user } = useGetCookie()
-const accessToken = useCookie('accessToken')
-
-const { shop, isOwner } = user
-const { name } = shop
 
 const sendMessage = async () => {
   try {
