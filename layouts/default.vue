@@ -1,4 +1,15 @@
 <template>
+  <CommonConfirmModal
+    v-if="confirmLogout"
+    header="คุณต้องการออกจากระบบใช่หรือไม่ ?"
+    buttonText="ปิด"
+    cancelWording="ยกเลิก"
+    confirmWording="ยืนยัน"
+    :isSuccess="false"
+    @btn-action="confirmLogout = false"
+    @confirm-action="useSignOut()"
+  />
+
   <v-card>
     <v-layout>
       <v-navigation-drawer
@@ -52,7 +63,7 @@
 
         <template v-slot:append>
           <v-btn
-            @click="useSignOut()"
+            @click="confirmLogout = true"
             class="ma-2"
             variant="text"
             icon="mdi-logout"
@@ -92,6 +103,7 @@ import { PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
 
 const route = useRoute()
+const confirmLogout = ref(false)
 
 const pathToTitle = {
   chat: 'แชต',
