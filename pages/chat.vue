@@ -91,7 +91,7 @@
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
-        v-for="(message, i) in latestMessages.data
+        v-for="(message) in latestMessages.data
           .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
           .filter((msg: any) => {
             if (selectedItem === 'all') {
@@ -108,9 +108,8 @@
           :title="
             message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
           "
-          :subtitle="getMessageSubtitle(message)"
           :value="message.customerId"
-          :active="message.customerId === selectCustomer.userId"
+          :active="message.customerId === storeSelectCus.userId"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -118,12 +117,21 @@
                 ? message.receiverDetail.displayName
                 : message.senderDetail.displayName,
               message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
-              message.source
+              message.source,
+              message._id
             )
           "
         >
+          <template v-slot:subtitle>
+            <div :class="message.isRead ? '' : 'font-weight-bold'">
+              {{ getMessageSubtitle(message) }}
+            </div>
+          </template>
           <template v-slot:prepend>
-            <v-badge color="white">
+            <v-badge
+              color="white"
+              class="social_icon"
+            >
               <template v-slot:badge>
                 <v-icon
                   color="#02c153"
@@ -140,10 +148,40 @@
               />
             </v-badge>
           </template>
-          <!-- Todo: อ่านแล้ว -->
           <template v-slot:append>
-            <time class="tw-text-xs tw-opacity-50">
-              {{ useDayjs()(message.sourceTimestamp).format('HH:mm') }}
+            <v-badge
+              dot
+              floating
+              color="error"
+              v-if="message.isRead === false"
+            >
+              <time class="tw-text-xs tw-opacity-50">
+                {{
+                  ((timestamp) => {
+                    const messageTimestamp = useDayjs()(message.sourceTimestamp)
+                    const currentTimestamp = useDayjs()()
+
+                    return messageTimestamp.diff(currentTimestamp, 'hours') <= 24
+                      ? messageTimestamp.fromNow()
+                      : messageTimestamp.format('HH:mm')
+                  })(message.sourceTimestamp)
+                }}
+              </time>
+            </v-badge>
+            <time
+              class="tw-text-xs tw-opacity-50"
+              v-else
+            >
+              {{
+                ((timestamp) => {
+                  const messageTimestamp = useDayjs()(message.sourceTimestamp)
+                  const currentTimestamp = useDayjs()()
+
+                  return messageTimestamp.diff(currentTimestamp, 'hours') <= 24
+                    ? messageTimestamp.fromNow()
+                    : messageTimestamp.format('HH:mm')
+                })(message.sourceTimestamp)
+              }}
             </time>
           </template>
         </v-list-item>
@@ -160,42 +198,7 @@
 
   <div id="test">
     <div v-if="filteredMessages">
-      <div v-if="selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''">
-        <v-navigation-drawer
-          v-model="drawer"
-          permanent
-          width="280"
-          location="right"
-          :rail="rail"
-          @click="rail = false"
-        >
-          <div class="pa-3 pt-6">
-            <div class="text-center mb-3">
-              <h2>
-                ข้อมูล
-                <span
-                  ><v-btn
-                    variant="text"
-                    icon="mdi-pencil-outline"
-                  ></v-btn
-                ></span>
-              </h2>
-            </div>
-            <div>
-              <h3>ชื่อ</h3>
-              <p>{{ selectCustomer.displayName }}</p>
-              <h3 class="tw-mt-5">เบอร์โทรศัพท์</h3>
-              <p>000000000</p>
-              <h3 class="tw-mt-5">อีเมล</h3>
-              <p>Example@gmail.com</p>
-              <h3 class="tw-mt-5">หมายเหตุ</h3>
-              <p>Example</p>
-              <h3 class="tw-mt-5">ที่อยู่</h3>
-              <p>Example</p>
-            </div>
-          </div>
-        </v-navigation-drawer>
-
+      <div v-if="storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''">
         <v-app-bar>
           <template v-slot:prepend>
             <v-img
@@ -204,18 +207,12 @@
               aspect-ratio="1/1"
               cover
               class="tw-rounded-full"
-              :src="selectCustomer.pictureUrl"
+              :src="storeSelectCus.pictureUrl"
             ></v-img>
           </template>
           <v-app-bar-title class="font-weight-bold">
-            {{ selectCustomer.displayName }}
+            {{ storeSelectCus.displayName }}
           </v-app-bar-title>
-          <template v-slot:append>
-            <v-btn
-              icon="mdi-information-outline"
-              @click.stop="drawer = !drawer"
-            ></v-btn>
-          </template>
         </v-app-bar>
       </div>
       <div
@@ -255,14 +252,14 @@
       app
       name="footer"
       :class="
-        selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+        storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''
           ? ''
           : 'tw-bg-[#f2f2f2]'
       "
     >
       <v-form
         :class="
-          selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+          storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''
             ? ''
             : 'tw-invisible'
         "
@@ -323,15 +320,45 @@ onBeforeMount(() => {
 
     socket.on('latest-message', (data: any) => {
       newMsg.value = data
-      const existingIndex = latestMessages.value.data.findIndex(
-        (item: any) => item.customerId === newMsg.value.data[0].customerId
-      )
+      if (
+        latestMessages.value &&
+        Array.isArray(latestMessages.value.data) &&
+        newMsg.value.data &&
+        newMsg.value.data.length > 0
+      ) {
+        const existingIndex = latestMessages.value.data.findIndex(
+          (item: any) => item.customerId === newMsg.value.data[0].customerId
+        )
 
-      if (existingIndex !== -1) {
-        latestMessages.value.data[existingIndex] = newMsg.value.data[0]
-        // filteredMessages.value.data[existingIndex] = newMsg.value.data[0]
-      } else {
-        latestMessages.value.data.push(newMsg.value.data[0])
+        if (existingIndex !== -1) {
+          latestMessages.value.data[existingIndex] = newMsg.value.data[0]
+        } else {
+          latestMessages.value.data.push(newMsg.value.data[0])
+        }
+      }
+
+      if (
+        storeSelectCus.value.userId &&
+        filteredMessages.value &&
+        Array.isArray(filteredMessages.value.data)
+      ) {
+        const isCustomerIdEqual = filteredMessages.value.data.every(
+          (item: any) => item.customerId === newMsg.value.data[0].customerId
+        )
+        const isIdNotPresent = !filteredMessages.value.data.some(
+          (item: any) => item._id === newMsg.value.data[0]._id
+        )
+        if (isCustomerIdEqual && isIdNotPresent) {
+          filteredMessages.value.data.push(newMsg.value.data[0])
+          updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
+          nextTick(() => {
+            window.scrollTo(0, document.body.scrollHeight)
+            console.log(
+              '🍪🥛 ~ file: chat.vue:356 ~ nextTick ~ document.body.scrollHeight:',
+              document.body.scrollHeight
+            )
+          })
+        }
       }
     })
   }
@@ -371,8 +398,6 @@ useHead({
   title: 'แชต',
 })
 
-const drawer = ref(false)
-const rail = ref(false)
 const sendMsg = ref()
 
 const selectCustomer = ref<any>({
@@ -382,29 +407,32 @@ const selectCustomer = ref<any>({
   source: '',
 })
 
+const storeSelectCus: any = useCookie('storeSelectCus', cookieOptions)
+
 const totalChat = ref(0)
 
-const setSelectCustomer = (
+const setSelectCustomer = async (
   userId: string,
   displayName: string,
   pictureUrl: string,
-  source: string
+  source: string,
+  msgId: string
 ) => {
   totalChat.value = 0
   getMsgById(userId, totalChat.value)
+  await updateMsg(userId, msgId)
   selectCustomer.value = { userId, displayName, pictureUrl, source }
+  storeSelectCus.value = selectCustomer.value
 }
-
-const customer_Id = ref('')
 
 const sendMessage = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${selectCustomer.value.userId}`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
       {
         method: 'POST',
         body: JSON.stringify({
-          source: selectCustomer.value.source,
+          source: storeSelectCus.value.source,
           message: {
             text: sendMsg.value,
           },
@@ -418,7 +446,7 @@ const sendMessage = async () => {
 
     if (response.status === 200 || response.status === 201) {
       sendMsg.value = ''
-      await getMsgById(selectCustomer.value.userId, 0)
+      await getMsgById(storeSelectCus.value.userId, 0)
     } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
@@ -428,6 +456,10 @@ const sendMessage = async () => {
     }
     nextTick(() => {
       window.scrollTo(0, document.body.scrollHeight)
+      console.log(
+        '🍪🥛 ~ file: chat.vue:455 ~ nextTick ~ document.body.scrollHeight:',
+        document.body.scrollHeight
+      )
     })
   } catch (error) {
     console.log(error)
@@ -461,7 +493,6 @@ const getLatestMsg = async () => {
 }
 
 const getMsgById = async (customerId: any, total: number) => {
-  customer_Id.value = customerId
   loading.value = true
   try {
     const response = await useFetch(
@@ -476,7 +507,7 @@ const getMsgById = async (customerId: any, total: number) => {
         },
       }
     )
-    if (selectCustomer && response.status.value === 'success') {
+    if (storeSelectCus.value && response.status.value === 'success') {
       filteredMessages.value = await response.data.value
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
@@ -498,7 +529,7 @@ const getMoreChat = async () => {
   loadingBtn.value = true
   try {
     const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customer_Id.value}`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
       {
         method: 'get',
         headers: {
@@ -509,7 +540,7 @@ const getMoreChat = async () => {
         },
       }
     )
-    if (selectCustomer) {
+    if (storeSelectCus) {
       const result: any = await response.data.value
       filteredMessages.value.data.push(...Object.values(result.data))
 
@@ -533,15 +564,24 @@ const getMoreChat = async () => {
   }
 }
 
+const updateMsg = async (userId: string, msgId: string) => {
+  await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`, {
+    method: 'patch',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken.value,
+    },
+    body: JSON.stringify({
+      isRead: true,
+    }),
+  })
+}
+
 onBeforeMount(async () => {
+  storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
   await getLatestMsg()
 })
 
-onMounted(() => {
-  nextTick(() => {
-    window.scrollTo(0, document.body.scrollHeight)
-  })
-})
 const selectedItem = ref('all')
 const selectItem = (item: string) => {
   selectedItem.value = item
@@ -555,12 +595,11 @@ const selectItem = (item: string) => {
 .v-footer {
   display: grid;
 }
-.v-badge--dot .v-badge__badge {
-  display: none;
-}
-.v-badge__badge {
+
+.social_icon .v-badge__badge {
   bottom: calc(100% - 43px) !important;
 }
+
 .v-list-item-title {
   font-size: 14px !important;
   font-weight: bold !important;
