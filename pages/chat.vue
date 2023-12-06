@@ -356,7 +356,8 @@ onBeforeMount(() => {
       if (
         storeSelectCus.value &&
         filteredMessages.value &&
-        Array.isArray(filteredMessages.value.data)
+        Array.isArray(filteredMessages.value.data) &&
+        newMsg.value.data[0].customerId
       ) {
         const isCustomerIdEqual = filteredMessages.value.data.every(
           (item: any) => item.customerId === newMsg.value.data[0].customerId
