@@ -353,10 +353,6 @@ onBeforeMount(() => {
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
           nextTick(() => {
             window.scrollTo(0, document.body.scrollHeight)
-            console.log(
-              '🍪🥛 ~ file: chat.vue:356 ~ nextTick ~ document.body.scrollHeight:',
-              document.body.scrollHeight
-            )
           })
         }
       }
@@ -456,10 +452,6 @@ const sendMessage = async () => {
     }
     nextTick(() => {
       window.scrollTo(0, document.body.scrollHeight)
-      console.log(
-        '🍪🥛 ~ file: chat.vue:455 ~ nextTick ~ document.body.scrollHeight:',
-        document.body.scrollHeight
-      )
     })
   } catch (error) {
     console.log(error)
