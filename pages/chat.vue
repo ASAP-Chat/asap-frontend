@@ -118,7 +118,7 @@
             message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
           "
           :value="message.customerId"
-          :active="message.customerId === selectCustomer.userId"
+          :active="storeSelectCus && message.customerId === storeSelectCus.userId"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -170,9 +170,13 @@
                     const messageTimestamp = useDayjs()(message.sourceTimestamp)
                     const currentTimestamp = useDayjs()()
 
-                    return messageTimestamp.diff(currentTimestamp, 'hours') <= 24
+                    const hoursDifference = Math.abs(
+                      messageTimestamp.diff(currentTimestamp, 'hours')
+                    )
+
+                    return hoursDifference <= 24
                       ? messageTimestamp.fromNow()
-                      : messageTimestamp.format('HH:mm')
+                      : messageTimestamp.format('DD/MM/YYYY HH:mm')
                   })(message.sourceTimestamp)
                 }}
               </time>
@@ -186,9 +190,11 @@
                   const messageTimestamp = useDayjs()(message.sourceTimestamp)
                   const currentTimestamp = useDayjs()()
 
-                  return messageTimestamp.diff(currentTimestamp, 'hours') <= 24
+                  const hoursDifference = Math.abs(messageTimestamp.diff(currentTimestamp, 'hours'))
+
+                  return hoursDifference <= 24
                     ? messageTimestamp.fromNow()
-                    : messageTimestamp.format('HH:mm')
+                    : messageTimestamp.format('DD/MM/YYYY HH:mm')
                 })(message.sourceTimestamp)
               }}
             </time>
@@ -261,14 +267,18 @@
       app
       name="footer"
       :class="
-        selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+        storeSelectCus &&
+        storeSelectCus.userId.trim() !== '' &&
+        storeSelectCus.displayName.trim() !== ''
           ? ''
           : 'tw-bg-[#f2f2f2]'
       "
     >
       <v-form
         :class="
-          selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
+          storeSelectCus &&
+          storeSelectCus.userId.trim() !== '' &&
+          storeSelectCus.displayName.trim() !== ''
             ? ''
             : 'tw-invisible'
         "
@@ -563,23 +573,52 @@ const getMoreChat = async () => {
 }
 
 const updateMsg = async (userId: string, msgId: string) => {
-  await useFetch(`${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`, {
-    method: 'patch',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken.value,
-    },
-    body: JSON.stringify({
-      isRead: true,
-    }),
-  })
+  const res = await useFetch(
+    `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`,
+    {
+      method: 'patch',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken.value,
+      },
+      body: JSON.stringify({
+        isRead: true,
+      }),
+    }
+  )
+  if (res.status.value === 'error') {
+    await useRefreshToken()
+    await updateMsg(userId, msgId)
+  }
 }
 
-const { socialInfo } = await useGetSocialAccount()
+const socialInfo = ref()
+const getSocialAccount = async () => {
+  try {
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + accessToken.value,
+      },
+      params: {
+        ownerId: _id,
+      },
+    })
+    if (response.status.value === 'success') {
+      socialInfo.value = await response.data.value
+    } else {
+      console.log('call - refresh token')
+      await useRefreshToken()
+      await getSocialAccount()
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+}
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
-  await useGetSocialAccount()
+  await getSocialAccount()
   await getLatestMsg()
 })
 
