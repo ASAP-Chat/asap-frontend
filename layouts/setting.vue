@@ -62,7 +62,7 @@
 
         <template v-slot:append>
           <v-btn
-            @click="confirmLogout"
+            @click="confirmLogout = true"
             class="ma-2"
             variant="text"
             icon="mdi-logout"

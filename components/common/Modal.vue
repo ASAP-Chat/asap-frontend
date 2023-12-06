@@ -9,8 +9,17 @@
         <v-icon
           class="tw-text-8xl"
           :color="props.isSuccess ? 'info' : 'error'"
+          v-if="!props.customIcon"
         >
           {{ props.isSuccess ? 'mdi-tooltip-check-outline' : 'mdi-tooltip-remove-outline' }}
+          {{ props.customIcon }}
+        </v-icon>
+        <v-icon
+          class="tw-text-8xl"
+          :color="props.isSuccess ? 'info' : 'error'"
+          v-else
+        >
+          {{ props.customIcon }}
         </v-icon>
         <br />
         <b
@@ -44,6 +53,7 @@ const props = defineProps<{
   content?: string
   buttonText?: string
   isSuccess: boolean
+  customIcon?: string
   to?: string
 }>()
 

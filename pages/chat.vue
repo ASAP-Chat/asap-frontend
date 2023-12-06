@@ -1,4 +1,13 @@
 <template>
+  <CommonModal
+    v-if="socialInfo && socialInfo.data.length === 0"
+    header="ยังไม่ได้ลงทะเบียนบัญชี Social Media!"
+    custom-icon="mdi-store-cog-outline"
+    content="กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP"
+    buttonText="ตั้งค่า"
+    :isSuccess="false"
+    @btn-action="navigateTo('/setting/chat-integration/')"
+  />
   <div>
     <v-navigation-drawer
       permanent
@@ -109,7 +118,7 @@
             message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
           "
           :value="message.customerId"
-          :active="message.customerId === storeSelectCus.userId"
+          :active="message.customerId === selectCustomer.userId"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -252,14 +261,14 @@
       app
       name="footer"
       :class="
-        storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''
+        selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
           ? ''
           : 'tw-bg-[#f2f2f2]'
       "
     >
       <v-form
         :class="
-          storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''
+          selectCustomer.userId.trim() !== '' && selectCustomer.displayName.trim() !== ''
             ? ''
             : 'tw-invisible'
         "
@@ -308,7 +317,7 @@ const socket = manager.socket('/socketio/latest-message')
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
 
-const { shop, isOwner } = user
+const { shop, isOwner, _id } = user
 const { name } = shop
 const newMsg = ref()
 const latestMessages = ref()
@@ -317,7 +326,6 @@ const filteredMessages: any = ref()
 onBeforeMount(() => {
   if (name) {
     socket.emit('shopName', name)
-
     socket.on('latest-message', (data: any) => {
       newMsg.value = data
       if (
@@ -329,16 +337,14 @@ onBeforeMount(() => {
         const existingIndex = latestMessages.value.data.findIndex(
           (item: any) => item.customerId === newMsg.value.data[0].customerId
         )
-
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
         }
       }
-
       if (
-        storeSelectCus.value.userId &&
+        storeSelectCus.value &&
         filteredMessages.value &&
         Array.isArray(filteredMessages.value.data)
       ) {
@@ -569,8 +575,11 @@ const updateMsg = async (userId: string, msgId: string) => {
   })
 }
 
+const { socialInfo } = await useGetSocialAccount()
+
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
+  await useGetSocialAccount()
   await getLatestMsg()
 })
 
