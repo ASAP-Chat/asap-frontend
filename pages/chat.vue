@@ -1,6 +1,6 @@
 <template>
   <CommonModal
-    v-if="socialInfo && socialInfo.data.length === 0"
+    v-if="socialInfo && socialInfo.data.length === 0 && isOwner"
     header="ยังไม่ได้ลงทะเบียนบัญชี Social Media!"
     custom-icon="mdi-store-cog-outline"
     content="กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP"
@@ -100,15 +100,7 @@
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
-        v-for="(message) in latestMessages.data
-          .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
-          .filter((msg: any) => {
-            if (selectedItem === 'all') {
-              return true;
-            }
-            return msg.source === selectedItem;
-          }
-        )"
+        v-for="message in filteredMsg"
       >
         <v-list-item
           class="tw-gap-x-3"
@@ -201,7 +193,7 @@
           </template>
         </v-list-item>
       </v-list>
-      <v-list v-if="latestMessages?.data && latestMessages.data.length === 0">
+      <v-list v-if="filteredMsg.length === 0">
         <v-list-item
           disabled
           class="text-center"
@@ -332,10 +324,11 @@ const { name } = shop
 const newMsg = ref()
 const latestMessages = ref()
 const filteredMessages: any = ref()
+const socialInfo = ref()
 
 onBeforeMount(() => {
   if (name) {
-    socket.emit('shopName', name)
+    socket.emit('join-message', name)
     socket.on('latest-message', (data: any) => {
       newMsg.value = data
       if (
@@ -353,11 +346,13 @@ onBeforeMount(() => {
           latestMessages.value.data.push(newMsg.value.data[0])
         }
       }
+
       if (
         storeSelectCus.value &&
         filteredMessages.value &&
         Array.isArray(filteredMessages.value.data) &&
-        newMsg.value.data[0].customerId
+        newMsg.value.data &&
+        newMsg.value.data.length > 0
       ) {
         const isCustomerIdEqual = filteredMessages.value.data.every(
           (item: any) => item.customerId === newMsg.value.data[0].customerId
@@ -474,6 +469,7 @@ const sendMessage = async () => {
     console.log(error)
   }
 }
+const socialTypes = ref()
 
 const getLatestMsg = async () => {
   if (isOwner) {
@@ -494,6 +490,9 @@ const getLatestMsg = async () => {
         await useRefreshToken()
         await getLatestMsg()
       }
+      nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight)
+      })
     } catch (error: any) {
       console.log(error)
     }
@@ -520,6 +519,9 @@ const getMsgById = async (customerId: any, total: number) => {
       filteredMessages.value = await response.data.value
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
+      nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight)
+      })
     } else {
       console.log('call - refresh token')
       await useRefreshToken()
@@ -593,7 +595,6 @@ const updateMsg = async (userId: string, msgId: string) => {
   }
 }
 
-const socialInfo = ref()
 const getSocialAccount = async () => {
   try {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
@@ -607,6 +608,9 @@ const getSocialAccount = async () => {
     })
     if (response.status.value === 'success') {
       socialInfo.value = await response.data.value
+      if (Array.isArray(socialInfo.value.data)) {
+        socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
+      }
     } else {
       console.log('call - refresh token')
       await useRefreshToken()
@@ -616,17 +620,37 @@ const getSocialAccount = async () => {
     console.log(error)
   }
 }
+await getSocialAccount()
+await getLatestMsg()
+const selectedItem = ref('all')
+const selectItem = (item: string) => {
+  selectedItem.value = item
+}
+
+const filteredMsg = computed(() => {
+  const messages =
+    latestMessages.value && latestMessages.value.data ? latestMessages.value.data : []
+  const sortedMessages = messages
+    .slice()
+    .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
+  const filteredBySocialTypes = sortedMessages.filter((msg: any) =>
+    socialTypes.value.includes(msg.source)
+  )
+  const filteredBySelectedItem = filteredBySocialTypes.filter((msg: any) => {
+    if (selectedItem.value === 'all') {
+      return true
+    }
+    return msg.source === selectedItem.value
+  })
+
+  return filteredBySelectedItem
+})
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
   await getSocialAccount()
   await getLatestMsg()
 })
-
-const selectedItem = ref('all')
-const selectItem = (item: string) => {
-  selectedItem.value = item
-}
 </script>
 <style>
 .v-list-item--one-line .v-list-item-subtitle {
