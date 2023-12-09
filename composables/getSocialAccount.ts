@@ -1,10 +1,10 @@
 const socialInfo = ref()
 
-const { user } = useGetCookie()
-const accessToken = useCookie('accessToken')
-const { _id } = user
-
 export const useGetSocialAccount = async () => {
+  const { user } = useGetCookie()
+  const accessToken = useCookie('accessToken')
+  const { _id } = user
+
   try {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
       method: 'get',

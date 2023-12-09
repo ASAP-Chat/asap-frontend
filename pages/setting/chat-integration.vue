@@ -230,6 +230,7 @@ const socialList = [
 ]
 const { socialInfo } = await useGetSocialAccount()
 const { accessToken } = useGetCookie()
+const storeSelectCus = useCookie('storeSelectCus')
 
 const cancelSocialAccount = async (id: string) => {
   try {
@@ -244,12 +245,13 @@ const cancelSocialAccount = async (id: string) => {
       socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
       isSuccessDelete.value = true
       deleteModal.value = true
+      storeSelectCus.value = null
     } else {
       console.log('call - refresh token')
       isSuccessDelete.value = false
       deleteModal.value = true
       await useRefreshToken()
-      cancelSocialAccount(id)
+      await cancelSocialAccount(id)
     }
   } catch (error: any) {
     console.log(error)

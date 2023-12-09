@@ -156,6 +156,7 @@ const createLine = async (lineInfo: CreateLineInfo) => {
       isSuccessCreate.value = false
       showModal.value = true
       await useRefreshToken()
+      await createLine(lineInfo)
       console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {
