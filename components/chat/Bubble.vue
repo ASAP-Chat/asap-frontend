@@ -2,14 +2,14 @@
   <div
     class="text-center"
     :class="{
-      'tw-hidden': useDayjs()(props.date).format('ddd, DD/MM/YYYY') === 'Invalid Date',
+      'tw-hidden': useDayjs()(prop.date).format('ddd, DD/MM/YYYY') === 'Invalid Date',
     }"
   >
     <v-chip color="info">
       <span class="tw-text-xs">
         {{
-          useDayjs()(props.date).format('ddd, DD/MM/YYYY') !== 'Invalid Date'
-            ? useDayjs()(props.date).format('ddd, DD/MM/YYYY')
+          useDayjs()(prop.date).format('ddd, DD/MM/YYYY') !== 'Invalid Date'
+            ? useDayjs()(prop.date).format('ddd, DD/MM/YYYY')
             : null
         }}
       </span>
@@ -19,18 +19,18 @@
     class="tw-chat"
     :class="[
       isOwner ? 'tw-chat-end' : 'tw-chat-start',
-      props.msgType !== 'text' ? '' : 'tw-drop-shadow-lg',
+      prop.msgType !== 'text' ? '' : 'tw-drop-shadow-lg',
     ]"
   >
     <div
       class="tw-chat-image tw-avatar"
-      :class="props.msgType !== 'text' ? 'tw-row-auto' : ''"
+      :class="prop.msgType !== 'text' ? 'tw-row-auto' : ''"
     >
       <div
         class="tw-w-10 tw-rounded-full"
-        v-if="props.img"
+        v-if="prop.img"
       >
-        <img :src="props.img" />
+        <img :src="prop.img" />
       </div>
       <div
         class="tw-w-10 tw-rounded-full"
@@ -41,32 +41,56 @@
     </div>
     <div class="tw-chat-header">
       <time class="tw-text-xs tw-opacity-50 tw-ms-2">
-        {{ useDayjs()(props.time).format('HH:mm') }}
+        {{ useDayjs()(prop.time).format('HH:mm') }}
       </time>
     </div>
     <div
       class="tw-chat-bubble text-secondary"
       :class="isOwner ? 'tw-bg-[#d4caff]' : 'tw-bg-[#fff]'"
-      v-if="props.msgType === 'text'"
+      v-if="prop.msgType === 'text'"
     >
-      {{ props.msgText }}
+      {{ prop.msgText }}
     </div>
 
     <div
       class="tw-chat-bubble tw-bg-transparent"
-      v-if="props.msgType !== 'text'"
+      v-if="prop.msgType === 'sticker'"
     >
-      <img :src="props.msgSticker" />
+      <img :src="prop.msgSticker" />
+    </div>
+    <div
+      class="tw-chat-bubble tw-bg-transparent"
+      v-if="prop.msgType === 'image'"
+    >
+      <v-hover v-slot="{ isHovering, props }">
+        <v-card
+          :class="{ 'on-hover tw-opacity-50	': isHovering }"
+          v-bind="props"
+          variant="flat"
+        >
+          <a
+            :href="prop.msgImg"
+            target="_blank"
+          >
+            <v-img
+              :width="266"
+              cover
+              :src="prop.msgImg"
+            ></v-img>
+          </a>
+        </v-card>
+      </v-hover>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const props = defineProps<{
+const prop = defineProps<{
   name?: string
   img?: string
   msgType: string
   msgText?: string
   msgSticker?: string
+  msgImg?: string
   date?: any
   time?: number
   isOwner?: boolean

@@ -254,6 +254,7 @@
           :msgType="message.messageObject.type"
           :msg-text="message.messageObject.text"
           :msg-sticker="message.messageObject.link"
+          :msg-img="message.link[0]"
           :name="message.senderDetail.displayName"
           :img="message.senderDetail.pictureUrl"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
@@ -471,7 +472,7 @@ const sendMessage = async () => {
       console.log('err')
     }
     nextTick(() => {
-      window.scrollTo(0, document.body.scrollHeight)
+      window.scrollTo(0, 50000)
     })
   } catch (error) {
     console.log(error)
@@ -601,6 +602,9 @@ const updateMsg = async (userId: string, msgId: string) => {
     await useRefreshToken()
     await updateMsg(userId, msgId)
   }
+  nextTick(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+  })
 }
 
 const getSocialAccount = async () => {
