@@ -95,7 +95,7 @@
           <div
             v-for="item in isOwner
               ? settingItems
-              : settingItems.filter((item) => item.value !== 'chat-integration')"
+              : settingItems.filter((item) => item.value !== '/setting/chat-integration/')"
           >
             <v-list-item
               :key="item.value"

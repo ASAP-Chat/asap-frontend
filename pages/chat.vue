@@ -1,12 +1,20 @@
 <template>
   <CommonModal
-    v-if="socialInfo && socialInfo.data.length === 0 && isOwner"
-    header="ยังไม่ได้ลงทะเบียนบัญชี Social Media!"
+    v-if="socialInfo && socialInfo.data.length === 0"
+    :header="
+      isOwner
+        ? 'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'
+        : 'กรุณารอเจ้าของร้านค้าทำการเชิญเข้าร่วมทีมของร้านค้า'
+    "
     custom-icon="mdi-store-cog-outline"
-    content="กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP"
-    buttonText="ตั้งค่า"
+    :content="
+      isOwner
+        ? 'กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP'
+        : 'สามารถใช้งานระบบได้เมื่อเจ้าของร้านค้าทำการเชิญเข้าร่วมทีม'
+    "
+    :buttonText="isOwner ? 'ตั้งค่า' : 'ออกจากระบบ'"
     :isSuccess="false"
-    @btn-action="navigateTo('/setting/chat-integration/')"
+    @btn-action="isOwner ? navigateTo('/setting/chat-integration/') : useSignOut()"
   />
   <div>
     <v-navigation-drawer
