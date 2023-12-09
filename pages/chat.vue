@@ -213,7 +213,13 @@
 
   <div id="test">
     <div v-if="filteredMessages">
-      <div v-if="storeSelectCus.userId.trim() !== '' && storeSelectCus.displayName.trim() !== ''">
+      <div
+        v-if="
+          storeSelectCus &&
+          storeSelectCus.userId.trim() !== '' &&
+          storeSelectCus.displayName.trim() !== ''
+        "
+      >
         <v-app-bar>
           <template v-slot:prepend>
             <v-img
@@ -436,10 +442,13 @@ const setSelectCustomer = async (
   msgId: string
 ) => {
   totalChat.value = 0
-  getMsgById(userId, totalChat.value)
+  await getMsgById(userId, totalChat.value)
   await updateMsg(userId, msgId)
   selectCustomer.value = { userId, displayName, pictureUrl, source }
   storeSelectCus.value = selectCustomer.value
+  nextTick(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+  })
 }
 
 const sendMessage = async () => {
@@ -472,7 +481,7 @@ const sendMessage = async () => {
       console.log('err')
     }
     nextTick(() => {
-      window.scrollTo(0, 50000)
+      window.scrollTo(0, document.body.scrollHeight)
     })
   } catch (error) {
     console.log(error)
@@ -499,9 +508,6 @@ const getLatestMsg = async () => {
         await useRefreshToken()
         await getLatestMsg()
       }
-      nextTick(() => {
-        window.scrollTo(0, document.body.scrollHeight)
-      })
     } catch (error: any) {
       console.log(error)
     }
@@ -524,22 +530,20 @@ const getMsgById = async (customerId: any, total: number) => {
         },
       }
     )
-    if (storeSelectCus.value && response.status.value === 'success') {
+    if (response.status.value === 'success') {
       filteredMessages.value = await response.data.value
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
-      nextTick(() => {
-        window.scrollTo(0, document.body.scrollHeight)
-      })
+      filteredMessages.value &&
+        nextTick(() => {
+          window.scrollTo(0, document.body.scrollHeight)
+        })
     } else {
-      console.log('call - refresh token')
+      console.log(response.error.value)
       await useRefreshToken()
       await getMsgById(customerId, totalChat.value)
       loading.value = false
     }
-    nextTick(() => {
-      window.scrollTo(0, document.body.scrollHeight)
-    })
   } catch (error) {
     console.log(error)
   }
