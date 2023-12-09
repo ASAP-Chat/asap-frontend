@@ -8,10 +8,10 @@ export const useFormRules = () => {
       return regex.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
     },
 
-    passwordLength: (value: string) =>
-      (!!value && value.length >= 8) ||
-      'รหัสผ่านควรมีความยาวอย่างน้อย 8 ตัวอักษร',
-
+    passwordLengthMin: (value: string) =>
+      (!!value && value.length >= 8) || 'รหัสผ่านควรมีความยาวอย่างน้อย 8 ตัวอักษร',
+    passwordLengthMax: (value: string) =>
+      (!!value && value.length <= 32) || 'รหัสผ่านควรมีความยาวไม่เกิน 32 ตัวอักษร',
     confirmPassword: (value?: string, password?: string) => {
       return value === password || 'รหัสผ่านไม่ตรงกัน โปรดลองอีกครั้ง'
     },

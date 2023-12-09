@@ -41,7 +41,7 @@
           </div>
           <div class="form-control tw-mt-2">
             <CommonTextField
-              :rules="[required, passwordLength]"
+              :rules="[required, passwordLengthMin, passwordLengthMax]"
               v-model="userInfo.password"
               id="password"
               name="password"
@@ -54,11 +54,7 @@
           </div>
           <div class="form-control tw-mt-2">
             <CommonTextField
-              :rules="[
-                required,
-                passwordLength,
-                confirmPassword(userInfo.confirmPassword, userInfo.password),
-              ]"
+              :rules="[required, confirmPassword(userInfo.confirmPassword, userInfo.password)]"
               v-model="userInfo.confirmPassword"
               id="confirm-password"
               name="confirm-password"
@@ -116,6 +112,8 @@
               name="bizName"
               type="text"
               label="ชื่อธุรกิจ"
+              maxlength="100"
+              counter
             />
           </div>
           <div class="form-control tw-mb-3">
@@ -131,11 +129,18 @@
             ></v-autocomplete>
           </div>
           <div class="form-controls tw-mb-3">
-            <CommonTextField
+            <v-textarea
               label="รายละเอียด (ไม่จำเป็น)"
               placeholder="เช่น ร้านขายเสื้อผ้า, ร้านเสริมสวย"
               v-model="userInfo.shop!.detail"
-            />
+              maxlength="300"
+              density="compact"
+              variant="outlined"
+              color="primary"
+              counter
+              auto-grow
+              rows="1"
+            ></v-textarea>
           </div>
           <v-form v-model="isSocialValid">
             <div class="form-control tw-mt-5">
@@ -223,8 +228,15 @@ useHead({
 definePageMeta({
   layout: false,
 })
-const { checkEmail, required, passwordLength, confirmPassword, facebookLink, instagramLink } =
-  useFormRules()
+const {
+  checkEmail,
+  required,
+  passwordLengthMin,
+  passwordLengthMax,
+  confirmPassword,
+  facebookLink,
+  instagramLink,
+} = useFormRules()
 
 const userInfo = ref<UserSignup>({
   displayName: '',
