@@ -8,7 +8,7 @@ export const useSignOut = () => {
   const user = useCookie('user')
   const refreshToken = useCookie('refreshToken')
   const storeSelectCus = useCookie('storeSelectCus')
-  socket.emit('leave-message ')
+  socket.emit('leave-message')
   accessToken.value = null
   user.value = null
   refreshToken.value = null
