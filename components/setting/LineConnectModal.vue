@@ -70,12 +70,18 @@
             :rules="[required]"
             v-model="lineInfo.socialData.channelSecret"
           />
-          <common-text-field
+          <v-textarea
             class="mt-2"
             label="Channel Access Token (long-lived)"
             :rules="[required]"
             v-model="lineInfo.socialData.channelAccessToken"
-          />
+            density="compact"
+            variant="outlined"
+            color="primary"
+            auto-grow
+            rows="1"
+            hide-details
+          ></v-textarea>
         </div>
       </v-form>
     </v-card-text>
@@ -156,7 +162,6 @@ const createLine = async (lineInfo: CreateLineInfo) => {
       isSuccessCreate.value = false
       showModal.value = true
       await useRefreshToken()
-      await createLine(lineInfo)
       console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {
