@@ -99,7 +99,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { CreateLineInfo } from '~/interfaces/social.interface'
+import { CreateLineInfo, SocialType } from '~/interfaces/social.interface'
 
 const emits = defineEmits(['back', 'created-success'])
 const { required } = useFormRules()

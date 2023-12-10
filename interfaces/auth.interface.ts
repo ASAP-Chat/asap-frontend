@@ -1,4 +1,4 @@
-import { SocialLinks } from './index.interface'
+import { SocialLinks } from '~/interfaces/social.interface'
 
 export default interface UserSignUp {
   displayName: string

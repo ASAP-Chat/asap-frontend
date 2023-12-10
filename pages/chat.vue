@@ -328,6 +328,8 @@
 <script setup lang="ts">
 import { Manager } from 'socket.io-client'
 import { useToast } from 'vue-toastification'
+import { SocialType } from '~/interfaces/social.interface'
+
 import ToastNoti from '~/components/chat/ToasNoti.vue'
 
 const toast = useToast()

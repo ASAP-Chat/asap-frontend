@@ -18,7 +18,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MsgType } from '~/composables/msgType'
+import { MsgType } from '~/interfaces/message.interface'
 
 const props = defineProps<{
   img?: string

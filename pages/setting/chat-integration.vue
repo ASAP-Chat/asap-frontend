@@ -193,6 +193,7 @@
 import SettingLineConnectModal from '~/components/setting/LineConnectModal.vue'
 import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
 import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
+import { SocialType } from '~/interfaces/social.interface'
 
 useHead({
   title: 'การตั้งค่า',
