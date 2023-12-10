@@ -326,12 +326,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Manager, io } from 'socket.io-client'
+import { Manager } from 'socket.io-client'
+import { useToast } from 'vue-toastification'
+import ToastNoti from '~/components/chat/ToasNoti.vue'
 
-const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
-  path: '/socketio',
-})
-const socket = manager.socket('/latest-message')
+const toast = useToast()
+
+// const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
+//   path: '/socketio',
+// })
+// const socket = manager.socket('/latest-message')
+const manager = new Manager(import.meta.env.VITE_SOCKET_URL)
+const socket = manager.socket('/socketio/latest-message')
 
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
@@ -357,10 +363,49 @@ onBeforeMount(() => {
         const existingIndex = latestMessages.value.data.findIndex(
           (item: any) => item.customerId === newMsg.value.data[0].customerId
         )
+        const content = {
+          component: ToastNoti,
+          props: {
+            img: newMsg.value.data[0].senderDetail.pictureUrl,
+            senderName: newMsg.value.data[0].senderDetail.displayName,
+            msg: newMsg.value.data[0].message,
+            type: newMsg.value.data[0].type,
+          },
+        }
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
+          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            toast.success(content, {
+              timeout: 2984,
+              closeOnClick: true,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: true,
+              draggablePercent: 0.4,
+              showCloseButtonOnHover: true,
+              hideProgressBar: true,
+              closeButton: 'button',
+              icon: 'fa-brands fa-line',
+              rtl: false,
+            })
+          }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
+          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            toast.success(content, {
+              timeout: 2984,
+              closeOnClick: true,
+              pauseOnFocusLoss: false,
+              pauseOnHover: false,
+              draggable: true,
+              draggablePercent: 0.4,
+              showCloseButtonOnHover: true,
+              hideProgressBar: true,
+              closeButton: 'button',
+              icon: 'fa-brands fa-line',
+              rtl: false,
+            })
+          }
         }
       }
 
