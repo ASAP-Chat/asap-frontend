@@ -14,12 +14,14 @@
     "
     :buttonText="isOwner ? 'ตั้งค่า' : 'ออกจากระบบ'"
     :isSuccess="false"
-    @btn-action="
-      isOwner ? navigateTo('/setting/chat-integration/') : useSignOut()
-    "
+    @btn-action="isOwner ? navigateTo('/setting/chat-integration/') : useSignOut()"
   />
   <div>
-    <v-navigation-drawer permanent width="145" color="#fafafa">
+    <v-navigation-drawer
+      permanent
+      width="145"
+      color="#fafafa"
+    >
       <v-list color="primary">
         <v-list-item
           title="ทั้งหมด"
@@ -98,7 +100,11 @@
     </v-navigation-drawer>
 
     <!-- drawer รายชื่อ -->
-    <v-navigation-drawer permanent width="280" app>
+    <v-navigation-drawer
+      permanent
+      width="280"
+      app
+    >
       <v-list
         class="tw-p-0"
         v-if="latestMessages"
@@ -109,23 +115,17 @@
           height="90"
           exact
           :title="
-            message.isOwner
-              ? message.receiverDetail.displayName
-              : message.senderDetail.displayName
+            message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
           "
           :value="message.customerId"
-          :active="
-            storeSelectCus && message.customerId === storeSelectCus.userId
-          "
+          :active="storeSelectCus && message.customerId === storeSelectCus.userId"
           @click="
             setSelectCustomer(
               message.customerId,
               message.isOwner
                 ? message.receiverDetail.displayName
                 : message.senderDetail.displayName,
-              message.isOwner
-                ? message.receiverDetail.pictureUrl
-                : message.senderDetail.pictureUrl,
+              message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
               message.source,
               message._id
             )
@@ -137,15 +137,14 @@
             </div>
           </template>
           <template v-slot:prepend>
-            <v-badge color="white" class="social_icon">
+            <v-badge
+              color="white"
+              class="social_icon"
+            >
               <template v-slot:badge>
                 <v-icon
                   color="#02c153"
-                  :icon="
-                    message.source === SocialType.LINE
-                      ? 'fa:fa-brands fa-line'
-                      : ''
-                  "
+                  :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
                   size="small"
                 ></v-icon>
               </template>
@@ -159,7 +158,12 @@
             </v-badge>
           </template>
           <template v-slot:append>
-            <v-badge dot floating color="error" v-if="message.isRead === false">
+            <v-badge
+              dot
+              floating
+              color="error"
+              v-if="message.isRead === false"
+            >
               <time class="tw-text-xs tw-opacity-50">
                 {{
                   ((timestamp) => {
@@ -177,15 +181,16 @@
                 }}
               </time>
             </v-badge>
-            <time class="tw-text-xs tw-opacity-50" v-else>
+            <time
+              class="tw-text-xs tw-opacity-50"
+              v-else
+            >
               {{
                 ((timestamp) => {
                   const messageTimestamp = useDayjs()(message.sourceTimestamp)
                   const currentTimestamp = useDayjs()()
 
-                  const hoursDifference = Math.abs(
-                    messageTimestamp.diff(currentTimestamp, 'hours')
-                  )
+                  const hoursDifference = Math.abs(messageTimestamp.diff(currentTimestamp, 'hours'))
 
                   return hoursDifference <= 24
                     ? messageTimestamp.fromNow()
@@ -231,7 +236,10 @@
           </v-app-bar-title>
         </v-app-bar>
       </div>
-      <div class="text-center mb-2" v-if="filteredMessages.total > totalChat">
+      <div
+        class="text-center mb-2"
+        v-if="filteredMessages.total > totalChat"
+      >
         <v-btn
           prepend-icon="mdi-cursor-default-click-outline"
           variant="flat"
@@ -311,16 +319,19 @@
       </v-form>
     </v-footer>
 
-    <CommonLoading class="tw-mt-[25%]" v-if="loading" />
+    <CommonLoading
+      class="tw-mt-[25%]"
+      v-if="loading"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { Manager } from 'socket.io-client'
+import { Manager, io } from 'socket.io-client'
 
 const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
   path: '/socketio',
 })
-const socket = manager.socket('/socketio/latest-message')
+const socket = manager.socket('/latest-message')
 
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
@@ -445,9 +456,7 @@ const setSelectCustomer = async (
 const sendMessage = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${
-        storeSelectCus.value.userId
-      }`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
       {
         method: 'POST',
         body: JSON.stringify({
@@ -525,8 +534,7 @@ const getMsgById = async (customerId: any, total: number) => {
     )
     if (response.status.value === 'success') {
       filteredMessages.value = await response.data.value
-      totalChat.value =
-        filteredMessages.value && filteredMessages.value.data.length
+      totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
       filteredMessages.value &&
         nextTick(() => {
@@ -547,9 +555,7 @@ const getMoreChat = async () => {
   loadingBtn.value = true
   try {
     const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${
-        storeSelectCus.value.userId
-      }`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
       {
         method: 'get',
         headers: {
@@ -586,9 +592,7 @@ const getMoreChat = async () => {
 
 const updateMsg = async (userId: string, msgId: string) => {
   const res = await useFetch(
-    `${
-      import.meta.env.VITE_BASE_URL
-    }/social-message/${name}/${userId}/${msgId}`,
+    `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`,
     {
       method: 'patch',
       headers: {
@@ -611,24 +615,19 @@ const updateMsg = async (userId: string, msgId: string) => {
 
 const getSocialAccount = async () => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-account`,
-      {
-        method: 'get',
-        headers: {
-          Authorization: 'Bearer ' + accessToken.value,
-        },
-        params: {
-          ownerId: _id,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + accessToken.value,
+      },
+      params: {
+        ownerId: _id,
+      },
+    })
     if (response.status.value === 'success') {
       socialInfo.value = await response.data.value
       if (Array.isArray(socialInfo.value.data)) {
-        socialTypes.value = socialInfo.value.data.map(
-          (info: any) => info.socialType
-        )
+        socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
       }
     } else {
       console.log('call - refresh token')
@@ -648,9 +647,7 @@ const selectItem = (item: string) => {
 
 const filteredMsg = computed(() => {
   const messages =
-    latestMessages.value && latestMessages.value.data
-      ? latestMessages.value.data
-      : []
+    latestMessages.value && latestMessages.value.data ? latestMessages.value.data : []
   const sortedMessages = messages
     .slice()
     .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
@@ -668,8 +665,7 @@ const filteredMsg = computed(() => {
 })
 
 onBeforeMount(async () => {
-  storeSelectCus.value &&
-    (await getMsgById(storeSelectCus.value.userId, totalChat.value))
+  storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
   await getSocialAccount()
   await getLatestMsg()
 })
