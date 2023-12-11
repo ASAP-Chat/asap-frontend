@@ -5,7 +5,7 @@ import { Manager } from 'socket.io-client'
 // })
 // const socket = manager.socket('/latest-message')
 const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
-  path: '/sockets/ws/'
+  path: '/ssa3/sockets/ws/'
 })
 const socket = manager.socket('/sockets/latest-message')
 
