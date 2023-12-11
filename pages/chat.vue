@@ -338,7 +338,9 @@ const toast = useToast()
 //   path: '/socketio',
 // })
 // const socket = manager.socket('/latest-message')
-const manager = new Manager(import.meta.env.VITE_SOCKET_URL)
+const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
+  path: '/sockets/ws/'
+})
 const socket = manager.socket('/socketio/latest-message')
 
 const { user } = useGetCookie()
