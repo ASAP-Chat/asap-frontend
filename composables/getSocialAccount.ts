@@ -6,18 +6,15 @@ export const useGetSocialAccount = async () => {
   const { _id } = user
 
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
       method: 'get',
       headers: {
         Authorization: 'Bearer ' + accessToken.value,
       },
-      params: {
-        ownerId: _id,
-      },
     })
-    if (response.status.value === 'success') {
-      socialInfo.value = await response.data.value
-    } else {
+    if (response.status === 200) {
+      socialInfo.value = await response.json()
+    } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
       await useGetSocialAccount()
@@ -25,5 +22,6 @@ export const useGetSocialAccount = async () => {
   } catch (error: any) {
     console.log(error)
   }
+
   return { socialInfo }
 }

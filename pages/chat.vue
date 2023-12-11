@@ -541,7 +541,7 @@ const socialTypes = ref()
 const getLatestMsg = async () => {
   if (isOwner) {
     try {
-      const response = await useFetch(
+      const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/social-message/${name}/latest`,
         {
           method: 'get',
@@ -550,9 +550,9 @@ const getLatestMsg = async () => {
           },
         }
       )
-      if (response.status.value === 'success') {
-        latestMessages.value = await response.data.value
-      } else {
+      if (response.status === 200) {
+        latestMessages.value = await response.json()
+      } else if (response.status === 401) {
         console.log('call - refresh token')
         await useRefreshToken()
         await getLatestMsg()
@@ -567,28 +567,24 @@ const getLatestMsg = async () => {
 const getMsgById = async (customerId: any, total: number) => {
   loading.value = true
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customerId}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customerId}?$skip=${total}`,
       {
         method: 'get',
         headers: {
           Authorization: 'Bearer ' + accessToken.value,
         },
-        params: {
-          $skip: total,
-        },
       }
     )
-    if (response.status.value === 'success') {
-      filteredMessages.value = await response.data.value
+    if (response.status === 200) {
+      filteredMessages.value = await response.json()
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
       filteredMessages.value &&
         nextTick(() => {
           window.scrollTo(0, document.body.scrollHeight)
         })
-    } else {
-      console.log(response.error.value)
+    } else if (response.status === 401) {
       await useRefreshToken()
       await getMsgById(customerId, totalChat.value)
       loading.value = false
@@ -662,21 +658,18 @@ const updateMsg = async (userId: string, msgId: string) => {
 
 const getSocialAccount = async () => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
       method: 'get',
       headers: {
         Authorization: 'Bearer ' + accessToken.value,
       },
-      params: {
-        ownerId: _id,
-      },
     })
-    if (response.status.value === 'success') {
-      socialInfo.value = await response.data.value
+    if (response.status === 200) {
+      socialInfo.value = await response.json()
       if (Array.isArray(socialInfo.value.data)) {
         socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
       }
-    } else {
+    } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
       await getSocialAccount()
