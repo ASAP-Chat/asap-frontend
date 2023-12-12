@@ -59,7 +59,7 @@
       <img :src="prop.msgSticker" />
     </div>
     <div
-      class="tw-chat-bubble tw-bg-transparent"
+      class="tw-chat-bubble tw-bg-transparent pa-0"
       v-if="prop.msgType === MsgType.IMAGE"
     >
       <v-hover v-slot="{ isHovering, props }">
@@ -82,7 +82,7 @@
       </v-hover>
     </div>
     <div
-      class="tw-chat-bubble tw-bg-transparent"
+      class="tw-chat-bubble tw-bg-transparent pa-0"
       v-if="prop.msgType === MsgType.VIDEO"
     >
       <video
