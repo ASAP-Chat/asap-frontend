@@ -340,7 +340,8 @@ const toast = useToast()
 // const socket = manager.socket('/latest-message')
 const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
   // path: '/ws/',
-  path: '/ssa3/sockets/ws/',
+  // path: '/ssa3/sockets/ws/',
+  path: '/ssa3/ws/',
 })
 const socket = manager.socket('/socketio/latest-message')
 
