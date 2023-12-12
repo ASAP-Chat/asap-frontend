@@ -339,11 +339,11 @@ const toast = useToast()
 // })
 // const socket = manager.socket('/latest-message')
 // const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
-const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
-  path: '/ssa3/ws/',
-  // path: '/ssa3/sockets/ws/',
-})
-const socket = manager.socket('/sockets/latest-message')
+// const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
+//   path: '/ssa3/ws/',
+//   // path: '/ssa3/sockets/ws/',
+// })
+// const socket = manager.socket('/sockets/latest-message')
 
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
@@ -355,91 +355,91 @@ const latestMessages = ref()
 const filteredMessages: any = ref()
 const socialInfo = ref()
 
-onBeforeMount(() => {
-  if (name) {
-    socket.emit('join-message', name)
-    socket.on('latest-message', (data: any) => {
-      newMsg.value = data
-      console.log('🍪🥛 ~ file: chat.vue:363 ~ socket.on ~ newMsg.value:', newMsg.value)
-      if (
-        latestMessages.value &&
-        Array.isArray(latestMessages.value.data) &&
-        newMsg.value.data &&
-        newMsg.value.data.length > 0
-      ) {
-        const existingIndex = latestMessages.value.data.findIndex(
-          (item: any) => item.customerId === newMsg.value.data[0].customerId
-        )
-        const content = {
-          component: ToastNoti,
-          props: {
-            img: newMsg.value.data[0].senderDetail.pictureUrl,
-            senderName: newMsg.value.data[0].senderDetail.displayName,
-            msg: newMsg.value.data[0].message,
-            type: newMsg.value.data[0].type,
-          },
-        }
-        if (existingIndex !== -1) {
-          latestMessages.value.data[existingIndex] = newMsg.value.data[0]
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
-            toast.success(content, {
-              timeout: 2984,
-              closeOnClick: true,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: true,
-              draggablePercent: 0.4,
-              showCloseButtonOnHover: true,
-              hideProgressBar: true,
-              closeButton: 'button',
-              icon: 'fa-brands fa-line',
-              rtl: false,
-            })
-          }
-        } else {
-          latestMessages.value.data.push(newMsg.value.data[0])
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
-            toast.success(content, {
-              timeout: 2984,
-              closeOnClick: true,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: true,
-              draggablePercent: 0.4,
-              showCloseButtonOnHover: true,
-              hideProgressBar: true,
-              closeButton: 'button',
-              icon: 'fa-brands fa-line',
-              rtl: false,
-            })
-          }
-        }
-      }
+// onBeforeMount(() => {
+//   if (name) {
+//     socket.emit('join-message', name)
+//     socket.on('latest-message', (data: any) => {
+//       newMsg.value = data
+//       console.log('🍪🥛 ~ file: chat.vue:363 ~ socket.on ~ newMsg.value:', newMsg.value)
+//       if (
+//         latestMessages.value &&
+//         Array.isArray(latestMessages.value.data) &&
+//         newMsg.value.data &&
+//         newMsg.value.data.length > 0
+//       ) {
+//         const existingIndex = latestMessages.value.data.findIndex(
+//           (item: any) => item.customerId === newMsg.value.data[0].customerId
+//         )
+//         const content = {
+//           component: ToastNoti,
+//           props: {
+//             img: newMsg.value.data[0].senderDetail.pictureUrl,
+//             senderName: newMsg.value.data[0].senderDetail.displayName,
+//             msg: newMsg.value.data[0].message,
+//             type: newMsg.value.data[0].type,
+//           },
+//         }
+//         if (existingIndex !== -1) {
+//           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
+//           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+//             toast.success(content, {
+//               timeout: 2984,
+//               closeOnClick: true,
+//               pauseOnFocusLoss: false,
+//               pauseOnHover: false,
+//               draggable: true,
+//               draggablePercent: 0.4,
+//               showCloseButtonOnHover: true,
+//               hideProgressBar: true,
+//               closeButton: 'button',
+//               icon: 'fa-brands fa-line',
+//               rtl: false,
+//             })
+//           }
+//         } else {
+//           latestMessages.value.data.push(newMsg.value.data[0])
+//           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+//             toast.success(content, {
+//               timeout: 2984,
+//               closeOnClick: true,
+//               pauseOnFocusLoss: false,
+//               pauseOnHover: false,
+//               draggable: true,
+//               draggablePercent: 0.4,
+//               showCloseButtonOnHover: true,
+//               hideProgressBar: true,
+//               closeButton: 'button',
+//               icon: 'fa-brands fa-line',
+//               rtl: false,
+//             })
+//           }
+//         }
+//       }
 
-      if (
-        storeSelectCus.value &&
-        filteredMessages.value &&
-        Array.isArray(filteredMessages.value.data) &&
-        newMsg.value.data &&
-        newMsg.value.data.length > 0
-      ) {
-        const isCustomerIdEqual = filteredMessages.value.data.every(
-          (item: any) => item.customerId === newMsg.value.data[0].customerId
-        )
-        const isIdNotPresent = !filteredMessages.value.data.some(
-          (item: any) => item._id === newMsg.value.data[0]._id
-        )
-        if (isCustomerIdEqual && isIdNotPresent) {
-          filteredMessages.value.data.push(newMsg.value.data[0])
-          updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
-          nextTick(() => {
-            window.scrollTo(0, document.body.scrollHeight)
-          })
-        }
-      }
-    })
-  }
-})
+//       if (
+//         storeSelectCus.value &&
+//         filteredMessages.value &&
+//         Array.isArray(filteredMessages.value.data) &&
+//         newMsg.value.data &&
+//         newMsg.value.data.length > 0
+//       ) {
+//         const isCustomerIdEqual = filteredMessages.value.data.every(
+//           (item: any) => item.customerId === newMsg.value.data[0].customerId
+//         )
+//         const isIdNotPresent = !filteredMessages.value.data.some(
+//           (item: any) => item._id === newMsg.value.data[0]._id
+//         )
+//         if (isCustomerIdEqual && isIdNotPresent) {
+//           filteredMessages.value.data.push(newMsg.value.data[0])
+//           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
+//           nextTick(() => {
+//             window.scrollTo(0, document.body.scrollHeight)
+//           })
+//         }
+//       }
+//     })
+//   }
+// })
 
 const loading = ref(false)
 const loadingBtn = ref(false)
@@ -569,6 +569,127 @@ const getLatestMsg = async () => {
   return { latestMessages }
 }
 
+const newLatestMsg = ref()
+const mockGetLatestMsg = async () => {
+  if (isOwner) {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/latest?$limit=1`,
+        {
+          method: 'get',
+          headers: {
+            Authorization: 'Bearer ' + accessToken.value,
+          },
+        }
+      )
+      if (response.status === 200) {
+        newLatestMsg.value = await response.json()
+      } else if (response.status === 401) {
+        console.log('call - refresh token')
+        await useRefreshToken()
+      }
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+}
+
+let intervalId
+mockGetLatestMsg()
+intervalId = setInterval(() => {
+  mockGetLatestMsg()
+
+  if (
+    latestMessages.value &&
+    Array.isArray(latestMessages.value.data) &&
+    newLatestMsg.value.data &&
+    newLatestMsg.value.data.length > 0
+  ) {
+    const existingIndex = latestMessages.value.data.findIndex(
+      (item: any) => item.customerId === newLatestMsg.value.data[0].customerId
+    )
+    const messageIdExists = latestMessages.value.data.some(
+      (msg: any) => msg.messageId === newLatestMsg.value.data[0].messageId
+    )
+    const content = {
+      component: ToastNoti,
+      props: {
+        img: newLatestMsg.value.data[0].senderDetail.pictureUrl,
+        senderName: newLatestMsg.value.data[0].senderDetail.displayName,
+        msg: newLatestMsg.value.data[0].message,
+        type: newLatestMsg.value.data[0].type,
+      },
+    }
+    if (existingIndex !== -1 && !messageIdExists) {
+      latestMessages.value.data[existingIndex] = newLatestMsg.value.data[0]
+
+      if (
+        newLatestMsg.value.data[0].isOwner === false &&
+        newLatestMsg.value.data[0].isRead === false &&
+        !messageIdExists
+      ) {
+        toast.success(content, {
+          timeout: 2984,
+          closeOnClick: true,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          draggable: true,
+          draggablePercent: 0.4,
+          showCloseButtonOnHover: true,
+          hideProgressBar: true,
+          closeButton: 'button',
+          icon: 'fa-brands fa-line',
+          rtl: false,
+        })
+      }
+    } else if (existingIndex === -1 && !messageIdExists) {
+      latestMessages.value.data.push(newLatestMsg.value.data[0])
+      if (
+        newLatestMsg.value.data[0].isOwner === false &&
+        newLatestMsg.value.data[0].isRead === false
+      ) {
+        toast.success(content, {
+          timeout: 2984,
+          closeOnClick: true,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          draggable: true,
+          draggablePercent: 0.4,
+          showCloseButtonOnHover: true,
+          hideProgressBar: true,
+          closeButton: 'button',
+          icon: 'fa-brands fa-line',
+          rtl: false,
+        })
+      }
+    }
+  }
+
+  if (
+    storeSelectCus.value &&
+    filteredMessages.value &&
+    Array.isArray(filteredMessages.value.data) &&
+    newLatestMsg.value.data &&
+    newLatestMsg.value.data.length > 0
+  ) {
+    const isCustomerIdEqual = filteredMessages.value.data.every(
+      (item: any) => item.customerId === newLatestMsg.value.data[0].customerId
+    )
+    const isIdNotPresent = !filteredMessages.value.data.some(
+      (item: any) => item._id === newLatestMsg.value.data[0]._id
+    )
+    if (isCustomerIdEqual && isIdNotPresent) {
+      console.log('eiei')
+      filteredMessages.value.data.push(newLatestMsg.value.data[0])
+      updateMsg(storeSelectCus.value.userId, newLatestMsg.value.data[0]._id)
+      nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight)
+      })
+      getLatestMsg()
+    }
+  }
+}, 1000)
+
 const getMsgById = async (customerId: any, total: number) => {
   loading.value = true
   try {
@@ -655,6 +776,9 @@ const updateMsg = async (userId: string, msgId: string) => {
   if (res.status.value === 'error') {
     await useRefreshToken()
     await updateMsg(userId, msgId)
+  }
+  if (res.status.value === 'success') {
+    await getLatestMsg()
   }
   nextTick(() => {
     window.scrollTo(0, document.body.scrollHeight)
