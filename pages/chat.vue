@@ -334,12 +334,13 @@ import ToastNoti from '~/components/chat/ToasNoti.vue'
 
 const toast = useToast()
 
-// const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
-//   path: '/socketio',
+// const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
+//   path: '/socket.io',
 // })
 // const socket = manager.socket('/latest-message')
-const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
-  path: '/ssa3/sockets/ws/'
+const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
+  // path: '/ws/',
+  path: '/ssa3/sockets/ws/',
 })
 const socket = manager.socket('/socketio/latest-message')
 
