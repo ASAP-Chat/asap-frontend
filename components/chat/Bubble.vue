@@ -19,12 +19,12 @@
     class="tw-chat"
     :class="[
       isOwner ? 'tw-chat-end' : 'tw-chat-start',
-      prop.msgType !== 'text' ? '' : 'tw-drop-shadow-lg',
+      prop.msgType !== MsgType.TEXT ? '' : 'tw-drop-shadow-lg',
     ]"
   >
     <div
       class="tw-chat-image tw-avatar"
-      :class="prop.msgType !== 'text' ? 'tw-row-auto' : ''"
+      :class="prop.msgType !== MsgType.TEXT ? 'tw-row-auto' : ''"
     >
       <div
         class="tw-w-10 tw-rounded-full"
@@ -47,20 +47,20 @@
     <div
       class="tw-chat-bubble text-secondary"
       :class="isOwner ? 'tw-bg-[#d4caff]' : 'tw-bg-[#fff]'"
-      v-if="prop.msgType === 'text'"
+      v-if="prop.msgType === MsgType.TEXT"
     >
       {{ prop.msgText }}
     </div>
 
     <div
       class="tw-chat-bubble tw-bg-transparent"
-      v-if="prop.msgType === 'sticker'"
+      v-if="prop.msgType === MsgType.STICKER"
     >
       <img :src="prop.msgSticker" />
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent"
-      v-if="prop.msgType === 'image'"
+      v-if="prop.msgType === MsgType.IMAGE"
     >
       <v-hover v-slot="{ isHovering, props }">
         <v-card
@@ -69,28 +69,44 @@
           variant="flat"
         >
           <a
-            :href="prop.msgImg"
+            :href="prop.msgLink"
             target="_blank"
           >
             <v-img
               :width="266"
               cover
-              :src="prop.msgImg"
+              :src="prop.msgLink"
             ></v-img>
           </a>
         </v-card>
       </v-hover>
     </div>
+    <div
+      class="tw-chat-bubble tw-bg-transparent"
+      v-if="prop.msgType === MsgType.VIDEO"
+    >
+      <video
+        width="200"
+        controls
+      >
+        <source
+          :src="prop.msgLink"
+          type="video/mp4"
+        />
+      </video>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
+import { MsgType } from '~/interfaces/message.interface'
+
 const prop = defineProps<{
   name?: string
   img?: string
   msgType: string
   msgText?: string
   msgSticker?: string
-  msgImg?: string
+  msgLink?: string
   date?: any
   time?: number
   isOwner?: boolean

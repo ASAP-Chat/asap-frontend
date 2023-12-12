@@ -257,10 +257,10 @@
         v-for="(message, index) in filteredMessages.data.sort((a:any, b:any) => a.sourceTimestamp - b.sourceTimestamp)"
       >
         <ChatBubble
-          :msgType="message.messageObject.type"
+          :msgType="message.type"
           :msg-text="message.messageObject.text"
           :msg-sticker="message.messageObject.link"
-          :msg-img="message.link[0]"
+          :msg-link="message.link[0]"
           :name="message.senderDetail.displayName"
           :img="message.senderDetail.pictureUrl"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
