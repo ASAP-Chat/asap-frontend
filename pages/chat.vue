@@ -338,12 +338,12 @@ const toast = useToast()
 //   path: '/socket.io',
 // })
 // const socket = manager.socket('/latest-message')
+// const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
 const manager = new Manager('https://' + import.meta.env.VITE_SOCKET_URL, {
-  // path: '/ws/',
-  // path: '/ssa3/sockets/ws/',
   path: '/ssa3/ws/',
+  // path: '/ssa3/sockets/ws/',
 })
-const socket = manager.socket('/socketio/latest-message')
+const socket = manager.socket('/sockets/latest-message')
 
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
@@ -360,6 +360,7 @@ onBeforeMount(() => {
     socket.emit('join-message', name)
     socket.on('latest-message', (data: any) => {
       newMsg.value = data
+      console.log('🍪🥛 ~ file: chat.vue:363 ~ socket.on ~ newMsg.value:', newMsg.value)
       if (
         latestMessages.value &&
         Array.isArray(latestMessages.value.data) &&
