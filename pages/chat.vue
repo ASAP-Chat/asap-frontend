@@ -331,6 +331,7 @@ import { useToast } from 'vue-toastification'
 import { SocialType } from '~/interfaces/social.interface'
 
 import ToastNoti from '~/components/chat/ToasNoti.vue'
+import { MsgType } from '~/interfaces/message.interface'
 
 const toast = useToast()
 
@@ -462,10 +463,12 @@ const shouldDisplayTime = (index: number) => {
 
 const getMessageSubtitle = (message: any) => {
   switch (message.type) {
-    case 'STICKER':
+    case MsgType.STICKER:
       return `${message.senderDetail.displayName} ส่งสติกเกอร์`
-    case 'IMAGE':
+    case MsgType.IMAGE:
       return `${message.senderDetail.displayName} ส่งรูปภาพ`
+    case MsgType.VIDEO:
+      return `${message.senderDetail.displayName} ส่งวิดิโอ`
     default:
       return message.message
   }
