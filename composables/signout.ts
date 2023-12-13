@@ -15,10 +15,13 @@ export const useSignOut = () => {
   const user = useCookie('user')
   const refreshToken = useCookie('refreshToken')
   const storeSelectCus = useCookie('storeSelectCus')
+  const intervalId = useCookie('intervalId')
   // socket.emit('leave-message')
+  clearInterval(Number(intervalId.value))
   accessToken.value = null
   user.value = null
   refreshToken.value = null
   storeSelectCus.value = null
+  intervalId.value = null
   navigateTo('/login/')
 }

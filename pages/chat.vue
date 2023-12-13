@@ -349,7 +349,7 @@ const toast = useToast()
 const { user } = useGetCookie()
 const accessToken = useCookie('accessToken')
 
-const { shop, isOwner, _id } = user
+const { shop, isOwner, _id } = user && user
 const { name } = shop
 const newMsg = ref()
 const latestMessages = ref()
@@ -596,12 +596,13 @@ const mockGetLatestMsg = async () => {
     }
   }
 }
+let intervalId: any
 
-let intervalId
 mockGetLatestMsg()
 intervalId = setInterval(() => {
-  mockGetLatestMsg()
-
+  const interval = useCookie('intervalId', cookieOptions)
+  interval.value = intervalId
+  socialInfo.value.data.length !== 0 && mockGetLatestMsg()
   if (
     latestMessages.value &&
     Array.isArray(latestMessages.value.data) &&
