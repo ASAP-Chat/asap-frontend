@@ -3,4 +3,5 @@ export enum MsgType {
   IMAGE = 'IMAGE',
   STICKER = 'STICKER',
   VIDEO = 'VIDEO',
+  AUDIO = 'AUDIO',
 }

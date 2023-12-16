@@ -95,6 +95,17 @@
         />
       </video>
     </div>
+    <div
+      class="tw-chat-bubble tw-bg-transparent pa-0"
+      v-if="prop.msgType === MsgType.AUDIO"
+    >
+      <audio controls>
+        <source
+          :src="prop.msgLink"
+          type="audio/mp4"
+        />
+      </audio>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
