@@ -439,6 +439,9 @@ onBeforeMount(() => {
     })
   }
 })
+onBeforeUnmount(() => {
+  socket.emit('leave-message', name)
+})
 
 const loading = ref(false)
 const loadingBtn = ref(false)
