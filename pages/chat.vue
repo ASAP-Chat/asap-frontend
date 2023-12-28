@@ -334,7 +334,7 @@ import { MsgType } from '~/interfaces/message.interface'
 
 const toast = useToast()
 
-const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
+const manager = new Manager("wss://" + import.meta.env.VITE_SOCKET_URL, {
   path: '/ssa3-socket',
   forceNew: true,
 })
