@@ -153,14 +153,12 @@
                         v-else
                         variant="outlined"
                         class="font-weight-bold text-secondary-lighten"
-                        @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
+                        @click="(connectSocialDialog = true), (selectSocial = item.socialType)"
                         :disabled="
-                          item.socialType === SocialType.FACEBOOK ||
                           item.socialType === SocialType.INSTAGRAM
                         "
                       >
                         {{
-                          item.socialType === SocialType.FACEBOOK ||
                           item.socialType === SocialType.INSTAGRAM
                             ? 'เร็วๆ นี้'
                             : 'เชื่อมต่อ'
