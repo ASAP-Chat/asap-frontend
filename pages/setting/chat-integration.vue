@@ -37,7 +37,7 @@
             >
               {{ getSocialIcon(item?.socialType) }}
             </v-icon>
-            {{ item?.shopName }}
+            {{ item?.profile?.displayName }}
           </td>
           <td :class="item?.status?.isAvailable ? 'text-info' : 'text-error'">
             <span>
