@@ -44,5 +44,7 @@ const loading = ref(false)
 
 const connect = async () => {
   loading.value = true
+  const oauthURL = oauthFacebook()
+  window.location.href = oauthURL
 }
 </script>

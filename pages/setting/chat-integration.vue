@@ -33,29 +33,29 @@
             <v-icon
               class="mr-3 mb-1"
               size="x-large"
-              :color="getSocialColor(item.socialType)"
+              :color="getSocialColor(item?.socialType)"
             >
-              {{ getSocialIcon(item.socialType) }}
+              {{ getSocialIcon(item?.socialType) }}
             </v-icon>
-            {{ item.shopName }}
+            {{ item?.shopName }}
           </td>
-          <td :class="item.status.isAvailable ? 'text-info' : 'text-error'">
+          <td :class="item?.status?.isAvailable ? 'text-info' : 'text-error'">
             <span>
               <v-tooltip
-                v-if="!item.status.isAvailable"
+                v-if="!item?.status?.isAvailable"
                 activator="parent"
                 location="top"
                 >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
               </v-tooltip>
 
               <v-icon
-                :color="item.status.isAvailable ? 'info' : 'error'"
+                :color="item?.status?.isAvailable ? 'info' : 'error'"
                 size="sm"
                 class="mr-1"
               >
-                {{ item.status.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
+                {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
               </v-icon>
-              {{ item.status.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
+              {{ item?.status?.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
             </span>
           </td>
           <td class="text-center">
@@ -200,6 +200,8 @@ definePageMeta({
   layout: 'setting',
 })
 
+const route = useRoute()
+
 const connectDialog = ref(false)
 const connectSocialDialog = ref(false)
 const deleteModal = ref(false)
@@ -295,6 +297,11 @@ const getSocialIcon = (socialType: string) => {
 
 onBeforeMount(async () => {
   await useGetSocialAccount()
+  
+  if (route.query.state === 'integrate-facebook') {
+    const code = route.query.code as string
+    await creatFacebook(code)
+  }
 })
 </script>
 <style>
