@@ -1,6 +1,13 @@
 import { Manager } from 'socket.io-client'
 
-const manager = new Manager(import.meta.env.VITE_SOCKET_URL, {
+let socketURL
+if (process.env.NODE_ENV === 'development') {
+  socketURL = import.meta.env.VITE_SOCKET_URL
+} else {
+  socketURL = 'wss://' + import.meta.env.VITE_SOCKET_URL
+}
+
+const manager = new Manager(socketURL, {
   path: '/ssa3-socket',
   forceNew: true,
 })

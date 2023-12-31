@@ -334,7 +334,15 @@ import { MsgType } from '~/interfaces/message.interface'
 
 const toast = useToast()
 
-const manager = new Manager("wss://" + import.meta.env.VITE_SOCKET_URL, {
+let socketURL
+console.log(process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'development') {
+  socketURL = import.meta.env.VITE_SOCKET_URL
+} else {
+  socketURL = 'wss://' + import.meta.env.VITE_SOCKET_URL
+}
+
+const manager = new Manager(socketURL, {
   path: '/ssa3-socket',
   forceNew: true,
 })
