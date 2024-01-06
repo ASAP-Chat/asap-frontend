@@ -114,18 +114,14 @@
           class="tw-gap-x-3"
           height="90"
           exact
-          :title="
-            message.isOwner ? message.receiverDetail.displayName : message.senderDetail.displayName
-          "
+          :title="generateName(message)"
           :value="message.customerId"
           :active="storeSelectCus && message.customerId === storeSelectCus.userId"
           @click="
             setSelectCustomer(
               message.customerId,
-              message.isOwner
-                ? message.receiverDetail.displayName
-                : message.senderDetail.displayName,
-              message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
+              generateName(message),
+              generateCustomerImg(message),
               message.source,
               message._id
             )
@@ -133,7 +129,7 @@
         >
           <template v-slot:subtitle>
             <div :class="message.isRead ? '' : 'font-weight-bold'">
-              {{ getMessageSubtitle(message) }}
+              {{ generateMessageSubtitle(message) }}
             </div>
           </template>
           <template v-slot:prepend>
@@ -143,18 +139,12 @@
             >
               <template v-slot:badge>
                 <v-icon
-                  color="#02c153"
-                  :icon="message.source === SocialType.LINE ? 'fa:fa-brands fa-line' : ''"
+                  :color="generateSocialColor(message.source)"
+                  :icon="generateSocialIcon(message.source)"
                   size="small"
                 ></v-icon>
               </template>
-              <v-avatar
-                :image="
-                  message.isOwner
-                    ? message.receiverDetail.pictureUrl
-                    : message.senderDetail.pictureUrl
-                "
-              />
+              <v-avatar :image="generateCustomerImg(message)" />
             </v-badge>
           </template>
           <template v-slot:append>
@@ -214,11 +204,7 @@
   <div id="test">
     <div v-if="filteredMessages">
       <div
-        v-if="
-          storeSelectCus &&
-          storeSelectCus.userId.trim() !== '' &&
-          storeSelectCus.displayName.trim() !== ''
-        "
+        v-if="storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''"
       >
         <v-app-bar>
           <template v-slot:prepend>
@@ -259,10 +245,10 @@
         <ChatBubble
           :msgType="message.type"
           :msg-text="message.messageObject.text"
-          :msg-sticker="message.messageObject.link"
+          :msg-sticker="message.link[0]"
           :msg-link="message.link[0]"
-          :name="message.senderDetail.displayName"
-          :img="message.senderDetail.pictureUrl"
+          :name="generateName(message)"
+          :img="generateCustomerImg(message)"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
           :time="message.sourceTimestamp"
           :is-owner="message.isOwner"
@@ -274,18 +260,14 @@
       app
       name="footer"
       :class="
-        storeSelectCus &&
-        storeSelectCus.userId.trim() !== '' &&
-        storeSelectCus.displayName.trim() !== ''
+        storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
           ? ''
           : 'tw-bg-[#f2f2f2]'
       "
     >
       <v-form
         :class="
-          storeSelectCus &&
-          storeSelectCus.userId.trim() !== '' &&
-          storeSelectCus.displayName.trim() !== ''
+          storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
             ? ''
             : 'tw-invisible'
         "
@@ -330,7 +312,6 @@ import { useToast } from 'vue-toastification'
 import { SocialType } from '~/interfaces/social.interface'
 import { Manager } from 'socket.io-client'
 import ToastNoti from '~/components/chat/ToasNoti.vue'
-import { MsgType } from '~/interfaces/message.interface'
 
 const toast = useToast()
 
@@ -468,21 +449,6 @@ const shouldDisplayTime = (index: number) => {
   const isDifferentDay = currentDate.getDate() !== previousDate.getDate()
 
   return isDifferentDay
-}
-
-const getMessageSubtitle = (message: any) => {
-  switch (message.type) {
-    case MsgType.STICKER:
-      return `${message.senderDetail.displayName} ส่งสติกเกอร์`
-    case MsgType.IMAGE:
-      return `${message.senderDetail.displayName} ส่งรูปภาพ`
-    case MsgType.VIDEO:
-      return `${message.senderDetail.displayName} ส่งวิดิโอ`
-    case MsgType.AUDIO:
-      return `${message.senderDetail.displayName} ส่งข้อความเสียง`
-    default:
-      return message.message
-  }
 }
 
 useHead({
