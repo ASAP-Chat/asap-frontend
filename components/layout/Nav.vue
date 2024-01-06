@@ -88,6 +88,7 @@
             variant="outlined"
             color="primary"
             class="font-weight-bold"
+            @click="navigateTo('/login/')"
             >เข้าสู่ระบบ</v-btn
           >
         </div>
@@ -97,6 +98,7 @@
             variant="flat"
             color="primary"
             class="font-weight-bold"
+            @click="navigateTo('/signup/')"
             >สมัครใช้งาน</v-btn
           >
         </div>
