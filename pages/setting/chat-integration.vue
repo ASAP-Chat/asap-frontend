@@ -33,9 +33,9 @@
             <v-icon
               class="mr-3 mb-1"
               size="x-large"
-              :color="getSocialColor(item?.socialType)"
+              :color="generateSocialColor(item?.socialType)"
             >
-              {{ getSocialIcon(item?.socialType) }}
+              {{ generateSocialIcon(item?.socialType) }}
             </v-icon>
             {{ item?.profile?.displayName }}
           </td>
@@ -135,9 +135,9 @@
                       <v-icon
                         class="mr-3 mb-1"
                         size="x-large"
-                        :color="getSocialColor(item.socialType)"
+                        :color="generateSocialColor(item.socialType)"
                       >
-                        {{ getSocialIcon(item.socialType) }}
+                        {{ generateSocialIcon(item.socialType) }}
                       </v-icon>
                       {{ item.name }}
                     </td>
@@ -264,29 +264,6 @@ const getSocialConnectModalComponent = (socialType: string) => {
       return SettingIgConnectModal
     default:
       return null
-  }
-}
-const getSocialColor = (socialType: string) => {
-  switch (socialType) {
-    case SocialType.LINE:
-      return '#02c153'
-    case SocialType.FACEBOOK:
-      return '#0765FF'
-    default:
-      return ''
-  }
-}
-
-const getSocialIcon = (socialType: string) => {
-  switch (socialType) {
-    case SocialType.LINE:
-      return 'fa:fa-brands fa-line'
-    case SocialType.FACEBOOK:
-      return 'fa:fa-brands fa-square-facebook'
-    case SocialType.INSTAGRAM:
-      return 'mdi-instagram'
-    default:
-      return ''
   }
 }
 
