@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     ],
   ],
   css: ['vuetify/lib/styles/main.sass', '~/assets/global.css'],
+  plugins: [{ src: '~/plugins/aos', mode: 'client' }],
   build: {
     transpile: ['vuetify'],
   },

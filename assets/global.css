@@ -27,3 +27,21 @@ button {
 .Vue-Toastification__icon {
   font-size: 25px !important;
 }
+
+.gradient {
+  background: linear-gradient(90deg, #674ae7 0%, #d4c9ff 100%);
+}
+@media (max-width: 768px) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+}
+html {
+  scroll-behavior: smooth;
+}
+#customers,
+#pricing {
+  scroll-margin-top: 100px;
+}
