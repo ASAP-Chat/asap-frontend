@@ -63,11 +63,11 @@
               variant="flat"
               class="font-weight-bold"
               color="error"
-              @click="confirmDeleteModal = true"
+              @click=";(confirmDeleteModal = true), (cancelItemId = item?._id)"
               >ยกเลิกการเชื่อมต่อ</v-btn
             >
             <CommonConfirmModal
-              v-if="confirmDeleteModal"
+              v-if="confirmDeleteModal && cancelItemId === item?._id"
               :header="`คุณต้องการยกเลิกการเชื่อมต่อ ${item.socialType} ใช่หรือไม่ ?`"
               content="หากยืนยัน, การเชื่อมต่อจะถูกยกเลิก และคุณจะต้องทำการเชื่อมต่อใหม่เมื่อต้องการใช้บริการอีกครั้ง"
               buttonText="ปิด"
@@ -153,16 +153,10 @@
                         v-else
                         variant="outlined"
                         class="font-weight-bold text-secondary-lighten"
-                        @click="(connectSocialDialog = true), (selectSocial = item.socialType)"
-                        :disabled="
-                          item.socialType === SocialType.INSTAGRAM
-                        "
+                        @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
+                        :disabled="item.socialType === SocialType.INSTAGRAM"
                       >
-                        {{
-                          item.socialType === SocialType.INSTAGRAM
-                            ? 'เร็วๆ นี้'
-                            : 'เชื่อมต่อ'
-                        }}
+                        {{ item.socialType === SocialType.INSTAGRAM ? 'เร็วๆ นี้' : 'เชื่อมต่อ' }}
                       </v-btn>
                     </td>
                   </tr>
@@ -207,6 +201,7 @@ const connectSocialDialog = ref(false)
 const deleteModal = ref(false)
 const isSuccessDelete = ref()
 const confirmDeleteModal = ref(false)
+const cancelItemId = ref()
 
 const closeModal = () => {
   deleteModal.value = false
@@ -297,7 +292,7 @@ const getSocialIcon = (socialType: string) => {
 
 onBeforeMount(async () => {
   await useGetSocialAccount()
-  
+
   if (route.query.state === 'integrate-facebook') {
     const code = route.query.code as string
     await creatFacebook(code)
