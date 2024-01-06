@@ -54,6 +54,12 @@
                   class="tw-justify-center tw-flex"
                 >
                   <v-icon size="large">{{ item.prependIcon }}</v-icon>
+                  <v-tooltip
+                    activator="parent"
+                    location="start"
+                  >
+                    {{ item.title }}
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </template>
