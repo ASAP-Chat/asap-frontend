@@ -1,7 +1,7 @@
 <template>
   <CommonModal
     v-if="showModal"
-    :header="isSuccessCreate ? 'เชื่อมต่อสำเร็จ!' : 'เชื่อมต่อไม่สำเร็จ!'"
+    :header="isSuccessCreate ? 'คุณเชื่อมต่อ Line สำเร็จ!' : 'คุณเชื่อมต่อ Line ไม่สำเร็จ!'"
     :content="
       isSuccessCreate ? 'การเชื่อมต่อเรียบร้อยแล้ว' : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'
     "
