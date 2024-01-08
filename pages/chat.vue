@@ -209,6 +209,7 @@
         <v-app-bar>
           <template v-slot:prepend>
             <v-img
+              v-if="storeSelectCus.pictureUrl"
               :width="40"
               :height="40"
               aspect-ratio="1/1"
@@ -216,6 +217,11 @@
               class="tw-rounded-full"
               :src="storeSelectCus.pictureUrl"
             ></v-img>
+            <v-icon
+              size="x-large"
+              v-else
+              >mdi-account-circle-outline</v-icon
+            >
           </template>
           <v-app-bar-title class="font-weight-bold">
             {{ storeSelectCus.displayName }}

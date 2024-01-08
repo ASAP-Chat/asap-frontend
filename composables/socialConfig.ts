@@ -60,19 +60,24 @@ export const generateMessageSubtitle = (message: any) => {
 }
 
 export const generateCustomerImg = (message: any) => {
-  const isOwner = message.isOwner
-  const socialType = message.source
+  const isOwner = message?.isOwner
+  const socialType = message?.source
+
+  // Check if message, receiverDetail, and senderDetail exist before accessing properties
+  const receiverDetail = message?.receiverDetail
+  const senderDetail = message?.senderDetail
+
   const detailName = isOwner
-    ? message.receiverDetail.picture.data.url
-    : message.senderDetail.picture.data.url
+    ? receiverDetail?.picture?.data?.url || ''
+    : senderDetail?.picture?.data?.url || ''
 
   switch (socialType) {
     case SocialType.LINE:
-      return isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl
+      return isOwner ? receiverDetail?.pictureUrl || '' : senderDetail?.pictureUrl || ''
 
     case SocialType.FACEBOOK:
     case SocialType.INSTAGRAM:
-      return detailName
+      return ''
 
     default:
       return ''

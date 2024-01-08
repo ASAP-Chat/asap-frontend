@@ -7,7 +7,14 @@
     :isSuccess="isSuccessDelete"
     @btn-action="closeModal"
   />
-
+  <CommonModal
+    v-if="createModalFacebook"
+    :header="fbStatus ? 'คุณเชื่อมต่อ Facebook สำเร็จ!' : 'คุณเชื่อมต่อ Facebook ไม่สำเร็จ!'"
+    :content="fbStatus ? 'การเชื่อมต่อเรียบร้อยแล้ว' : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'"
+    :buttonText="fbStatus ? 'ปิด' : 'ลองอีกครั้ง'"
+    :isSuccess="fbStatus"
+    @btn-action="closeModal"
+  />
   <div class="mt-6 mx-auto">
     <v-table
       v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
@@ -206,6 +213,7 @@ const cancelItemId = ref()
 const closeModal = () => {
   deleteModal.value = false
   confirmDeleteModal.value = false
+  createModalFacebook.value = false
 }
 
 const selectSocial = ref('')
@@ -266,13 +274,21 @@ const getSocialConnectModalComponent = (socialType: string) => {
       return null
   }
 }
+const createModalFacebook = ref(false)
+const fbStatus = ref()
 
 onBeforeMount(async () => {
   await useGetSocialAccount()
+  const facebookEntry = socialInfo.value.data.find((entry: any) => entry.socialType === 'FACEBOOK')
+
+  if (facebookEntry) {
+    fbStatus.value = facebookEntry.status.isAvailable
+  }
 
   if (route.query.state === 'integrate-facebook') {
+    createModalFacebook.value = true
     const code = route.query.code as string
-    await creatFacebook(code)
+    await createFacebook(code)
   }
 })
 </script>
