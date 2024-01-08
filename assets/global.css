@@ -21,13 +21,19 @@ button {
   transform: scale(1.3);
 }
 
-.Vue-Toastification__toast--default {
-  background-color: #53b389 !important;
-}
 .Vue-Toastification__icon {
   font-size: 25px !important;
 }
 
+.Vue-Toastification__toast--default.line-custom-toast-class {
+  background-color: #02c755 !important;
+}
+.Vue-Toastification__toast--default.fb-custom-toast-class {
+  background-color: #0765ff !important;
+}
+.Vue-Toastification__toast--default.ig-custom-toast-class {
+  background-color: #8204fc !important;
+}
 .gradient {
   background: linear-gradient(90deg, #674ae7 0%, #d4c9ff 100%);
 }

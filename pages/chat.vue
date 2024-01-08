@@ -350,7 +350,6 @@ onBeforeMount(() => {
     socket.emit('join-message', name)
     socket.on('latest-message', (data: any) => {
       newMsg.value = data
-      console.log('🍪🥛 ~ file: chat.vue:363 ~ socket.on ~ newMsg.value:', newMsg.value)
       if (
         latestMessages.value &&
         Array.isArray(latestMessages.value.data) &&
@@ -372,9 +371,8 @@ onBeforeMount(() => {
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
-            console.log('in')
-
-            toast.success(content, {
+            toast(content, {
+              toastClassName: generateToastClass(newMsg.value.data[0].source),
               timeout: 2984,
               closeOnClick: true,
               pauseOnFocusLoss: false,
@@ -384,16 +382,15 @@ onBeforeMount(() => {
               showCloseButtonOnHover: true,
               hideProgressBar: true,
               closeButton: 'button',
-              icon: 'fa-brands fa-line',
+              icon: generateToastIcon(newMsg.value.data[0].source),
               rtl: false,
             })
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
-            console.log('2')
-
-            toast.success(content, {
+            toast(content, {
+              toastClassName: generateToastClass(newMsg.value.data[0].source),
               timeout: 2984,
               closeOnClick: true,
               pauseOnFocusLoss: false,
@@ -403,7 +400,7 @@ onBeforeMount(() => {
               showCloseButtonOnHover: true,
               hideProgressBar: true,
               closeButton: 'button',
-              icon: 'fa-brands fa-line',
+              icon: generateToastIcon(newMsg.value.data[0].source),
               rtl: false,
             })
           }

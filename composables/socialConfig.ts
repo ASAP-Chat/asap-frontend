@@ -12,6 +12,17 @@ export const generateSocialColor = (type: string) => {
   }
 }
 
+export const generateToastClass = (type: string) => {
+  switch (type) {
+    case SocialType.LINE:
+      return 'line-custom-toast-class'
+    case SocialType.FACEBOOK:
+      return 'fb-custom-toast-class'
+    default:
+      return 'ig-custom-toast-class'
+  }
+}
+
 export const generateSocialIcon = (type: string) => {
   switch (type) {
     case SocialType.LINE:
@@ -20,6 +31,19 @@ export const generateSocialIcon = (type: string) => {
       return 'fa:fa-brands fa-square-facebook'
     case SocialType.INSTAGRAM:
       return 'mdi-instagram'
+    default:
+      return ''
+  }
+}
+
+export const generateToastIcon = (type: string) => {
+  switch (type) {
+    case SocialType.LINE:
+      return 'fa-brands fa-line'
+    case SocialType.FACEBOOK:
+      return 'fa-brands fa-square-facebook'
+    case SocialType.INSTAGRAM:
+      return 'fa-brands fa-square-instagram'
     default:
       return ''
   }
