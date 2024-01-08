@@ -317,7 +317,7 @@
 import { useToast } from 'vue-toastification'
 import { SocialType } from '~/interfaces/social.interface'
 import { Manager } from 'socket.io-client'
-import ToastNoti from '~/components/chat/ToasNoti.vue'
+import ToastNoti from '~/components/chat/ToastNoti.vue'
 
 const toast = useToast()
 
