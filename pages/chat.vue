@@ -252,7 +252,9 @@
           :msgType="message.type"
           :msg-text="message.messageObject.text"
           :msg-sticker="message.link[0]"
-          :msg-link="message.link[0]"
+          :msg-link="
+            message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
+          "
           :name="generateName(message)"
           :img="generateCustomerImg(message)"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
@@ -318,6 +320,7 @@ import { useToast } from 'vue-toastification'
 import { SocialType } from '~/interfaces/social.interface'
 import { Manager } from 'socket.io-client'
 import ToastNoti from '~/components/chat/ToastNoti.vue'
+import { MsgType } from '~/interfaces/message.interface'
 
 const toast = useToast()
 
