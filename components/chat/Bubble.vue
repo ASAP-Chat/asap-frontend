@@ -32,12 +32,6 @@
       >
         <img :src="prop.img" />
       </div>
-      <div
-        class="tw-w-10 tw-rounded-full"
-        v-else
-      >
-        <v-icon size="x-large">mdi-account-circle-outline</v-icon>
-      </div>
     </div>
     <div class="tw-chat-header">
       <time class="tw-text-xs tw-opacity-50 tw-ms-2">

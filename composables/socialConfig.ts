@@ -101,7 +101,7 @@ export const generateCustomerImg = (message: any) => {
 
     case SocialType.FACEBOOK:
     case SocialType.INSTAGRAM:
-      return ''
+      return 'https://i.stack.imgur.com/l60Hf.png'
 
     default:
       return ''
