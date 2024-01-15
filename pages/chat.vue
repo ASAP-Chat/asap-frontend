@@ -123,6 +123,7 @@
               generateName(message),
               generateCustomerImg(message),
               message.source,
+              message.sourceTimestamp,
               message._id
             )
           "
@@ -250,8 +251,8 @@
       >
         <ChatBubble
           :msgType="message.type"
-          :msg-text="message.messageObject.text"
-          :msg-sticker="message.link[0]"
+          :msg-text="message.message"
+          :msg-sticker="message.type === MsgType.STICKER ? message.link[0] : ''"
           :msg-link="
             message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
           "
@@ -267,6 +268,7 @@
     <v-footer
       app
       name="footer"
+      class="tw-grid"
       :class="
         storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
           ? ''
@@ -293,6 +295,7 @@
                 density="compact"
                 variant="outlined"
                 color="primary"
+                :disabled="storeSelectCus.source === SocialType.FACEBOOK && disabledMoreThan24"
               >
                 <template v-slot:append>
                   <v-btn
@@ -325,7 +328,6 @@ import { MsgType } from '~/interfaces/message.interface'
 const toast = useToast()
 
 let socketURL
-console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV === 'development') {
   socketURL = import.meta.env.VITE_SOCKET_URL
 } else {
@@ -461,34 +463,41 @@ useHead({
   title: 'แชต',
 })
 
-const sendMsg = ref()
+const sendMsg = ref('')
+
+const totalChat = ref(0)
 
 const selectCustomer = ref<any>({
   userId: '',
   displayName: '',
   pictureUrl: '',
   source: '',
+  time: '',
 })
 
 const storeSelectCus: any = useCookie('storeSelectCus', cookieOptions)
-
-const totalChat = ref(0)
+const disabledMoreThan24 = ref(false)
 
 const setSelectCustomer = async (
   userId: string,
   displayName: string,
   pictureUrl: string,
   source: string,
+  time: string,
   msgId: string
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
   await updateMsg(userId, msgId)
-  selectCustomer.value = { userId, displayName, pictureUrl, source }
+
+  const messageTimestamp = useDayjs()(time)
+  selectCustomer.value = { userId, displayName, pictureUrl, source, messageTimestamp }
   storeSelectCus.value = selectCustomer.value
-  nextTick(() => {
-    window.scrollTo(0, document.body.scrollHeight)
-  })
+
+  const hoursDifference = Math.abs(messageTimestamp.diff(useDayjs()(), 'hours'))
+  disabledMoreThan24.value = hoursDifference >= 24
+
+  nextTick(() => window.scrollTo(0, document.body.scrollHeight))
 }
 
 const sendMessage = async () => {
@@ -529,31 +538,7 @@ const sendMessage = async () => {
 }
 const socialTypes = ref()
 
-const getLatestMsg = async () => {
-  if (isOwner) {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/latest`,
-        {
-          method: 'get',
-          headers: {
-            Authorization: 'Bearer ' + accessToken.value,
-          },
-        }
-      )
-      if (response.status === 200) {
-        latestMessages.value = await response.json()
-      } else if (response.status === 401) {
-        console.log('call - refresh token')
-        await useRefreshToken()
-        await getLatestMsg()
-      }
-    } catch (error: any) {
-      console.log(error)
-    }
-  }
-  return { latestMessages }
-}
+latestMessages.value = await getLatestMsg()
 
 const getMsgById = async (customerId: any, total: number) => {
   loading.value = true
@@ -708,9 +693,6 @@ onBeforeMount(async () => {
 .v-list-item--one-line .v-list-item-subtitle {
   -webkit-line-clamp: 2;
   line-height: 1.5rem;
-}
-.v-footer {
-  display: grid;
 }
 
 .social_icon .v-badge__badge {
