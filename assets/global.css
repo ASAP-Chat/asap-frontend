@@ -51,3 +51,9 @@ html {
 #pricing {
   scroll-margin-top: 100px;
 }
+
+.v-btn--disabled.v-btn--variant-elevated {
+  background-color: #d0d0d0 !important;
+  color: black !important;
+  opacity: 0.5 !important;
+}
