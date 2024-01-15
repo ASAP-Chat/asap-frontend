@@ -15,16 +15,15 @@ const socket = manager.socket('/sockets/latest-message')
 const { user } = useGetCookie()
 const { shop } = user && user
 const { name } = shop
-
+const resetCookie = (cookieName: string) => {
+  const cookie = useCookie(cookieName)
+  cookie.value = null
+}
 export const useSignOut = () => {
-  const accessToken = useCookie('accessToken')
-  const user = useCookie('user')
-  const refreshToken = useCookie('refreshToken')
-  const storeSelectCus = useCookie('storeSelectCus')
+  resetCookie('accessToken')
+  resetCookie('user')
+  resetCookie('refreshToken')
+  resetCookie('storeSelectCus')
   socket.emit('leave-message', name)
-  accessToken.value = null
-  user.value = null
-  refreshToken.value = null
-  storeSelectCus.value = null
-  navigateTo('/login/')
+  navigateTo('/')
 }
