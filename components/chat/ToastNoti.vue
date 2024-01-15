@@ -1,11 +1,8 @@
 <template>
   <div class="container tw-flex tw-items-center tw-font-[Anuphan]">
     <div class="tw-chat-image tw-avatar">
-      <div
-        class="tw-w-10 tw-rounded-full"
-        v-if="props.img"
-      >
-        <img :src="props.img" />
+      <div class="tw-w-10 tw-rounded-full">
+        <img :src="props.img ? props.img : 'https://i.stack.imgur.com/l60Hf.png'" />
       </div>
     </div>
 
