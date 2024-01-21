@@ -295,7 +295,7 @@
                 density="compact"
                 variant="outlined"
                 color="primary"
-                :disabled="storeSelectCus.source === SocialType.FACEBOOK && disabledMoreThan24"
+                :disabled="storeSelectCus?.source === SocialType.FACEBOOK && disabledMoreThan24"
               >
                 <template v-slot:append>
                   <v-btn
@@ -657,8 +657,7 @@ const getSocialAccount = async () => {
     console.log(error)
   }
 }
-await getSocialAccount()
-await getLatestMsg()
+
 const selectedItem = ref('all')
 const selectItem = (item: string) => {
   selectedItem.value = item
@@ -670,8 +669,8 @@ const filteredMsg = computed(() => {
   const sortedMessages = messages
     .slice()
     .sort((a: any, b: any) => b.sourceTimestamp - a.sourceTimestamp)
-  const filteredBySocialTypes = sortedMessages.filter((msg: any) =>
-    socialTypes.value.includes(msg.source)
+  const filteredBySocialTypes = sortedMessages?.filter((msg: any) =>
+    socialTypes?.value?.includes(msg.source)
   )
   const filteredBySelectedItem = filteredBySocialTypes.filter((msg: any) => {
     if (selectedItem.value === 'all') {
