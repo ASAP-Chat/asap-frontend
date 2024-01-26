@@ -1,4 +1,5 @@
 import { Manager } from 'socket.io-client'
+import { USER, REFRESH_TOKEN, ACCESS_TOKEN } from '~/constants/Token'
 
 let socketURL
 if (process.env.NODE_ENV === 'development') {
@@ -12,17 +13,19 @@ const manager = new Manager(socketURL, {
   forceNew: true,
 })
 const socket = manager.socket('/sockets/latest-message')
-const { user } = useGetCookie()
-const { shop } = user && user
+const user: any = useCookie(USER)
+
+const { shop } = user.value
 const { name } = shop
+
 const resetCookie = (cookieName: string) => {
   const cookie = useCookie(cookieName)
   cookie.value = null
 }
 export const useSignOut = () => {
-  resetCookie('accessToken')
-  resetCookie('user')
-  resetCookie('refreshToken')
+  resetCookie(ACCESS_TOKEN)
+  resetCookie(USER)
+  resetCookie(REFRESH_TOKEN)
   resetCookie('storeSelectCus')
   socket.emit('leave-message', name)
   navigateTo('/')

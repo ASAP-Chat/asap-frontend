@@ -192,6 +192,7 @@ import SettingLineConnectModal from '~/components/setting/LineConnectModal.vue'
 import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
 import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
 import { SocialType } from '~/interfaces/social.interface'
+import { ACCESS_TOKEN } from '~/constants/Token'
 
 useHead({
   title: 'การตั้งค่า',
@@ -232,7 +233,8 @@ const socialList = [
   },
 ]
 const { socialInfo } = await useGetSocialAccount()
-const { accessToken } = useGetCookie()
+const access_token = useCookie(ACCESS_TOKEN)
+
 const storeSelectCus = useCookie('storeSelectCus')
 
 const cancelSocialAccount = async (id: string) => {
@@ -240,7 +242,7 @@ const cancelSocialAccount = async (id: string) => {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
       method: 'delete',
       headers: {
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + access_token.value,
       },
     })
 

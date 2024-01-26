@@ -1,7 +1,9 @@
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
+
 const socialInfo = ref()
-const { user } = useGetCookie()
-const accessToken = useCookie('accessToken')
-const { shop, isOwner, _id } = user && user
+const user: any = useCookie(USER)
+const access_token = useCookie(ACCESS_TOKEN)
+const { shop, isOwner, _id } = user.value && user.value
 const { name } = shop
 
 export const useGetSocialAccount = async () => {
@@ -9,7 +11,7 @@ export const useGetSocialAccount = async () => {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
       method: 'get',
       headers: {
-        Authorization: 'Bearer ' + accessToken.value,
+        Authorization: 'Bearer ' + access_token.value,
       },
     })
     if (response.status === 200) {
@@ -34,7 +36,7 @@ export const getLatestMsg = async () => {
         {
           method: 'get',
           headers: {
-            Authorization: 'Bearer ' + accessToken.value,
+            Authorization: 'Bearer ' + access_token.value,
           },
         }
       )

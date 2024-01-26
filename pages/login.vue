@@ -76,6 +76,7 @@
 <script setup lang="ts">
 import { UserLogin } from '~/interfaces/auth.interface'
 import imageSrc from '~/assets/images/logo.png'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Token'
 
 const router = useRouter()
 
@@ -98,8 +99,8 @@ const userInfo = ref<UserLogin>({
   password: '',
 })
 
-const accessToken = useCookie('accessToken', cookieOptions)
-const refreshToken = useCookie('refreshToken', cookieOptions)
+const access_token = useCookie(ACCESS_TOKEN, cookieOptions)
+const refresh_token = useCookie(REFRESH_TOKEN, cookieOptions)
 const user = useCookie('user', cookieOptions)
 
 const login = async (userData: UserLogin) => {
@@ -130,8 +131,8 @@ const login = async (userData: UserLogin) => {
         isOwner: responseData.user.isOwner,
         shop: responseData.user.shop,
       }
-      accessToken.value = responseData.accessToken
-      refreshToken.value = responseData.refreshToken
+      access_token.value = responseData.accessToken
+      refresh_token.value = responseData.refreshToken
       user.value = JSON.stringify(userData)
       router.push('/chat/')
     } else {

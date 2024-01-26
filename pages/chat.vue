@@ -145,7 +145,13 @@
                   size="small"
                 ></v-icon>
               </template>
-              <v-avatar :image="generateCustomerImg(message)" />
+              <v-avatar
+                :image="
+                  message.isOwner
+                    ? message.receiverDetail.pictureUrl
+                    : message.senderDetail.pictureUrl
+                "
+              />
             </v-badge>
           </template>
           <template v-slot:append>
@@ -257,7 +263,7 @@
             message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
           "
           :name="generateName(message)"
-          :img="generateCustomerImg(message)"
+          :img="message.senderDetail.pictureUrl"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
           :time="message.sourceTimestamp"
           :is-owner="message.isOwner"
@@ -324,6 +330,7 @@ import { SocialType } from '~/interfaces/social.interface'
 import { Manager } from 'socket.io-client'
 import ToastNoti from '~/components/chat/ToastNoti.vue'
 import { MsgType } from '~/interfaces/message.interface'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
 
 const toast = useToast()
 
@@ -340,10 +347,10 @@ const manager = new Manager(socketURL, {
 })
 const socket = manager.socket('/sockets/latest-message')
 
-const { user } = useGetCookie()
-const accessToken = useCookie('accessToken')
+const user: any = useCookie(USER)
+const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner, _id } = user && user
+const { shop, isOwner, _id } = user.value && user.value
 const { name } = shop
 const newMsg = ref()
 const latestMessages = ref()
@@ -514,7 +521,7 @@ const sendMessage = async () => {
         }),
         headers: {
           'content-Type': 'application/json',
-          Authorization: 'Bearer ' + accessToken.value,
+          Authorization: 'Bearer ' + access_token.value,
         },
       }
     )
@@ -548,7 +555,7 @@ const getMsgById = async (customerId: any, total: number) => {
       {
         method: 'get',
         headers: {
-          Authorization: 'Bearer ' + accessToken.value,
+          Authorization: 'Bearer ' + access_token.value,
         },
       }
     )
@@ -578,7 +585,7 @@ const getMoreChat = async () => {
       {
         method: 'get',
         headers: {
-          Authorization: 'Bearer ' + accessToken.value,
+          Authorization: 'Bearer ' + access_token.value,
         },
         params: {
           $skip: totalChat.value,
@@ -616,7 +623,7 @@ const updateMsg = async (userId: string, msgId: string) => {
       method: 'patch',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken.value,
+        Authorization: 'Bearer ' + access_token.value,
       },
       body: JSON.stringify({
         isRead: true,
@@ -640,7 +647,7 @@ const getSocialAccount = async () => {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
       method: 'get',
       headers: {
-        Authorization: 'Bearer ' + accessToken.value,
+        Authorization: 'Bearer ' + access_token.value,
       },
     })
     if (response.status === 200) {

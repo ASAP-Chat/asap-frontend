@@ -100,6 +100,7 @@
 </template>
 <script setup lang="ts">
 import { CreateLineInfo, SocialType } from '~/interfaces/social.interface'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
 
 const emits = defineEmits(['back', 'created-success'])
 const { required } = useFormRules()
@@ -125,9 +126,10 @@ const lineInfo = ref<CreateLineInfo>({
   ownerId: '',
 })
 
-const { accessToken, user } = useGetCookie()
+const user: any = useCookie(USER)
+const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, _id } = user
+const { shop, _id } = user.value && user.value
 const { name } = shop
 
 const showModal = ref(false)
@@ -149,7 +151,7 @@ const createLine = async (lineInfo: CreateLineInfo) => {
       }),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + access_token.value,
       },
     })
     if (response.status.value === 'success') {

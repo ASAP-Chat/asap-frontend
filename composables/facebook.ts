@@ -1,4 +1,5 @@
 import { SocialType } from '~/interfaces/social.interface'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
 
 export const oauthFacebook = () => {
   const appId = '1232305677642740'
@@ -15,9 +16,12 @@ export const oauthFacebook = () => {
 }
 
 export const createFacebook = async (code: string) => {
-  const { accessToken, user } = useGetCookie()
-  const { shop, _id } = user
+  const user: any = useCookie(USER)
+  const access_token = useCookie(ACCESS_TOKEN)
+
+  const { shop, _id } = user.value && user.value
   const { name } = shop
+
   try {
     const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account`, {
       method: 'post',
@@ -31,7 +35,7 @@ export const createFacebook = async (code: string) => {
       }),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + access_token.value,
       },
     })
     if (response.status.value === 'success') {

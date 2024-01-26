@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.VITE_BASE_URL,
+    },
+  },
   ssr: false,
   devServer: {
     port: 4000,

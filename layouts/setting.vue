@@ -136,12 +136,13 @@
 </template>
 <script setup lang="ts">
 import imageSrc from '~/assets/images/logo.png'
+import { USER } from '~/constants/Token'
 
 const route = useRoute()
 const confirmLogout = ref(false)
 
-const { user } = useGetCookie()
-const { isOwner } = user
+const user: any = useCookie(USER)
+const { isOwner } = user.value
 
 const sidebarList = [
   {
