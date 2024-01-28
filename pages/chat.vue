@@ -147,8 +147,10 @@
               </template>
               <v-avatar
                 :image="
-                  message.isOwner
+                  message.isOwner && message.source === SocialType.LINE
                     ? message.receiverDetail.pictureUrl
+                    : message.source === SocialType.FACEBOOK
+                    ? 'https://i.stack.imgur.com/l60Hf.png'
                     : message.senderDetail.pictureUrl
                 "
               />
@@ -263,7 +265,11 @@
             message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
           "
           :name="generateName(message)"
-          :img="message.senderDetail.pictureUrl"
+          :img="
+            message.senderDetail.pictureUrl
+              ? message.senderDetail.pictureUrl
+              : 'https://i.stack.imgur.com/l60Hf.png'
+          "
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
           :time="message.sourceTimestamp"
           :is-owner="message.isOwner"
