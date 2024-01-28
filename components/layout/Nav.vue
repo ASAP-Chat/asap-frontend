@@ -46,31 +46,39 @@
               class="tw-inline-block tw-uppercase tw-py-2 tw-px-4 tw-font-medium tw-no-underline"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
               href="#"
-              >Home</a
+              >หน้าหลัก</a
             >
           </li>
           <li class="tw-mr-3">
             <a
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
-              href="#about"
+              href="#chat"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >About</a
+              >แชท</a
             >
           </li>
           <li class="tw-mr-3">
             <a
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
-              href="#customers"
+              href="#chatbot"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >Customers</a
+              >แชทบอท</a
             >
           </li>
           <li class="tw-mr-3">
             <a
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
-              href="#pricing"
+              href="#chattemplate"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >Pricing</a
+              >แชทเทมเพลต</a
+            >
+          </li>
+          <li class="tw-mr-3">
+            <a
+              class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
+              href="#teammanagement"
+              :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
+              >ระบบจัดการทีม</a
             >
           </li>
           <li class="tw-mr-3">
@@ -82,12 +90,13 @@
             >
           </li>
         </ul>
-        <div :class="mobileSidebar ? 'mb-3' : 'mr-3'">
+        <div :class="mobileSidebar ? 'mb-3' : 'mr-3' ">
           <v-btn
             :block="mobileSidebar ? true : false"
             variant="outlined"
-            color="primary"
-            class="font-weight-bold"
+            color="white"
+            :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
+            class="font-weight-bold hover:tw-text-[#000000] hover:tw-border-[#000000]"
             @click="navigateTo('/login/')"
             >เข้าสู่ระบบ</v-btn
           >
