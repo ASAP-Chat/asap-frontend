@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const isOwner = user?.value?.isOwner
 
   const allowedRoutes = ['/login/', '/signup/', '/']
-  const chatRedirectRoutes = ['/chat/']
+  const chatRedirectRoutes = '/chat/'
   const profileRedirectRoute = '/setting/profile/'
   const chatIntegrationRoute = '/setting/chat-integration/'
 
@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else {
     // If user is authenticated, redirect to appropriate routes
     if (allowedRoutes.includes(to.path)) {
-      return navigateTo(chatRedirectRoutes.includes(to.path) ? '/chat/' : '/')
+      return navigateTo(chatRedirectRoutes)
     }
 
     // Redirect non-owners trying to access chat integration to profile
