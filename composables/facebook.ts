@@ -40,6 +40,7 @@ export const createFacebook = async (code: string) => {
     })
     if (response.status.value === 'success') {
       useGetSocialAccount()
+      return response.data.value
     } else {
       await useRefreshToken()
       console.log(`Request failed with status: ${response.error.value}`)
