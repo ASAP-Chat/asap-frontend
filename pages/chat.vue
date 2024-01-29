@@ -221,7 +221,10 @@
       <div
         v-if="storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''"
       >
-        <v-app-bar>
+        <v-app-bar
+          :elevation="0"
+          class="tw-border-b"
+        >
           <template v-slot:prepend>
             <v-img
               :width="40"
@@ -233,6 +236,12 @@
             ></v-img>
           </template>
           <v-app-bar-title class="font-weight-bold">
+            <v-icon
+              :color="generateSocialColor(storeSelectCus.source)"
+              class="pb-6"
+              size="x-small"
+              >{{ generateSocialIcon(storeSelectCus.source) }}</v-icon
+            >
             {{ storeSelectCus.displayName }}
           </v-app-bar-title>
         </v-app-bar>
@@ -338,6 +347,7 @@ import ToastNoti from '~/components/chat/ToastNoti.vue'
 import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import profileSrc from '~/assets/images/profile.png'
+import buttonSfx from '~/assets/sounds/noti-sound.mp3'
 
 const toast = useToast()
 
@@ -357,12 +367,15 @@ const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner, _id } = user.value && user.value
+const { shop, isOwner } = user.value && user.value
 const { name } = shop
 const newMsg = ref()
-const latestMessages = ref()
 const filteredMessages: any = ref()
-const socialInfo = ref()
+const audio = new Audio(buttonSfx)
+
+function play() {
+  audio.play()
+}
 
 onBeforeMount(() => {
   if (name) {
@@ -390,6 +403,7 @@ onBeforeMount(() => {
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            play()
             toast(content, {
               toastClassName: generateToastClass(newMsg.value.data[0].source),
               timeout: 2984,
@@ -408,6 +422,7 @@ onBeforeMount(() => {
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            play()
             toast(content, {
               toastClassName: generateToastClass(newMsg.value.data[0].source),
               timeout: 2984,
@@ -440,6 +455,7 @@ onBeforeMount(() => {
           (item: any) => item._id === newMsg.value.data[0]._id
         )
         if (isCustomerIdEqual && isIdNotPresent) {
+          play()
           filteredMessages.value.data.push(newMsg.value.data[0])
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
           nextTick(() => {
@@ -505,7 +521,9 @@ const setSelectCustomer = async (
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
-  await updateMsg(userId, msgId)
+  if (!filteredMessages.value.data[filteredMessages.value.data.length - 1].isRead) {
+    await updateMsg(userId, msgId)
+  }
 
   const messageTimestamp = useDayjs()(time)
   selectCustomer.value = { userId, displayName, pictureUrl, source, messageTimestamp }
@@ -554,8 +572,7 @@ const sendMessage = async () => {
   }
 }
 const socialTypes = ref()
-
-latestMessages.value = await getLatestMsg()
+const { latestMessages } = await getLatestMsg()
 
 const getMsgById = async (customerId: any, total: number) => {
   loading.value = true
@@ -652,27 +669,9 @@ const updateMsg = async (userId: string, msgId: string) => {
   })
 }
 
-const getSocialAccount = async () => {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
-      method: 'get',
-      headers: {
-        Authorization: 'Bearer ' + access_token.value,
-      },
-    })
-    if (response.status === 200) {
-      socialInfo.value = await response.json()
-      if (Array.isArray(socialInfo.value.data)) {
-        socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
-      }
-    } else if (response.status === 401) {
-      console.log('call - refresh token')
-      await useRefreshToken()
-      await getSocialAccount()
-    }
-  } catch (error: any) {
-    console.log(error)
-  }
+const { socialInfo } = await useGetSocialAccount()
+if (Array.isArray(socialInfo.value.data)) {
+  socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
 }
 
 const selectedItem = ref('all')
@@ -701,7 +700,7 @@ const filteredMsg = computed(() => {
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
-  await getSocialAccount()
+  await useGetSocialAccount()
   await getLatestMsg()
 })
 </script>
