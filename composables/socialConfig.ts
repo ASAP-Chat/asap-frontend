@@ -1,5 +1,6 @@
 import { MsgType } from '~/interfaces/message.interface'
 import { SocialType } from '~/interfaces/social.interface'
+import profileSrc from '~/assets/images/profile.png'
 
 export const generateSocialColor = (type: string) => {
   switch (type) {
@@ -88,20 +89,21 @@ export const generateCustomerImg = (message: any) => {
   const socialType = message?.source
 
   // Check if message, receiverDetail, and senderDetail exist before accessing properties
-  const receiverDetail = message?.receiverDetail
   const senderDetail = message?.senderDetail
-
-  const detailName = isOwner
-    ? receiverDetail?.picture?.data?.url || ''
-    : senderDetail?.picture?.data?.url || ''
 
   switch (socialType) {
     case SocialType.LINE:
-      return isOwner ? receiverDetail?.pictureUrl || '' : senderDetail?.pictureUrl || ''
+      return senderDetail?.pictureUrl
 
     case SocialType.FACEBOOK:
+      return isOwner
+        ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png'
+        : profileSrc
+
     case SocialType.INSTAGRAM:
-      return 'https://i.stack.imgur.com/l60Hf.png'
+      return isOwner
+        ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/768px-Instagram_logo_2022.svg.png'
+        : profileSrc
 
     default:
       return ''

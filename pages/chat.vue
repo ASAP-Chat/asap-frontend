@@ -121,7 +121,7 @@
             setSelectCustomer(
               message.customerId,
               generateName(message),
-              generateCustomerImg(message),
+              message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
               message.source,
               message.sourceTimestamp,
               message._id
@@ -150,7 +150,7 @@
                   message.isOwner && message.source === SocialType.LINE
                     ? message.receiverDetail.pictureUrl
                     : message.source === SocialType.FACEBOOK
-                    ? 'https://i.stack.imgur.com/l60Hf.png'
+                    ? profileSrc
                     : message.senderDetail.pictureUrl
                 "
               />
@@ -172,10 +172,13 @@
                     const hoursDifference = Math.abs(
                       messageTimestamp.diff(currentTimestamp, 'hours')
                     )
+                    const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
 
                     return hoursDifference <= 24
                       ? messageTimestamp.fromNow()
-                      : messageTimestamp.format('DD/MM/YYYY HH:mm')
+                      : sameYear
+                      ? messageTimestamp.format('DD/M')
+                      : messageTimestamp.format('DD/M/YY HH:mm')
                   })(message.sourceTimestamp)
                 }}
               </time>
@@ -190,10 +193,13 @@
                   const currentTimestamp = useDayjs()()
 
                   const hoursDifference = Math.abs(messageTimestamp.diff(currentTimestamp, 'hours'))
+                  const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
 
                   return hoursDifference <= 24
                     ? messageTimestamp.fromNow()
-                    : messageTimestamp.format('DD/MM/YYYY HH:mm')
+                    : sameYear
+                    ? messageTimestamp.format('DD/M')
+                    : messageTimestamp.format('DD/M/YY HH:mm')
                 })(message.sourceTimestamp)
               }}
             </time>
@@ -218,19 +224,13 @@
         <v-app-bar>
           <template v-slot:prepend>
             <v-img
-              v-if="storeSelectCus.pictureUrl"
               :width="40"
               :height="40"
               aspect-ratio="1/1"
               cover
               class="tw-rounded-full"
-              :src="storeSelectCus.pictureUrl"
+              :src="storeSelectCus.pictureUrl ? storeSelectCus.pictureUrl : profileSrc"
             ></v-img>
-            <v-icon
-              size="x-large"
-              v-else
-              >mdi-account-circle-outline</v-icon
-            >
           </template>
           <v-app-bar-title class="font-weight-bold">
             {{ storeSelectCus.displayName }}
@@ -265,11 +265,7 @@
             message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
           "
           :name="generateName(message)"
-          :img="
-            message.senderDetail.pictureUrl
-              ? message.senderDetail.pictureUrl
-              : 'https://i.stack.imgur.com/l60Hf.png'
-          "
+          :img="generateCustomerImg(message)"
           :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
           :time="message.sourceTimestamp"
           :is-owner="message.isOwner"
@@ -302,12 +298,16 @@
                 rounded
                 type="text"
                 hide-details
-                placeholder="พิมพ์ข้อความ ..."
+                :placeholder="
+                  disabledChatInput
+                    ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามขอกำหนดของ Facebook'
+                    : 'พิมพ์ข้อความ ...'
+                "
                 @keydown.prevent.enter="sendMessage()"
                 density="compact"
                 variant="outlined"
                 color="primary"
-                :disabled="storeSelectCus?.source === SocialType.FACEBOOK && disabledMoreThan24"
+                :disabled="Boolean(disabledChatInput)"
               >
                 <template v-slot:append>
                   <v-btn
@@ -337,6 +337,7 @@ import { Manager } from 'socket.io-client'
 import ToastNoti from '~/components/chat/ToastNoti.vue'
 import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import profileSrc from '~/assets/images/profile.png'
 
 const toast = useToast()
 
@@ -490,6 +491,9 @@ const selectCustomer = ref<any>({
 
 const storeSelectCus: any = useCookie('storeSelectCus', cookieOptions)
 const disabledMoreThan24 = ref(false)
+const disabledChatInput = computed(() => {
+  return storeSelectCus?.value?.source === SocialType.FACEBOOK && disabledMoreThan24.value
+})
 
 const setSelectCustomer = async (
   userId: string,

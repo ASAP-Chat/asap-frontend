@@ -2,14 +2,16 @@
   <div
     class="text-center"
     :class="{
-      'tw-hidden': useDayjs()(prop.date).format('ddd, DD/MM/YYYY') === 'Invalid Date',
+      'tw-hidden': useDayjs()(prop.date).format('ddd, DD MMM YYYY') === 'Invalid Date',
     }"
   >
     <v-chip color="info">
       <span class="tw-text-xs">
         {{
-          useDayjs()(prop.date).format('ddd, DD/MM/YYYY') !== 'Invalid Date'
-            ? useDayjs()(prop.date).format('ddd, DD/MM/YYYY')
+          useDayjs()(prop.date).format('ddd, DD MMM YYYY') !== 'Invalid Date'
+            ? useDayjs()(prop.date).isSame(useDayjs()(), 'day')
+              ? 'วันนี้'
+              : useDayjs()(prop.date).format('ddd, DD MMM YYYY')
             : null
         }}
       </span>
@@ -108,7 +110,7 @@ import { MsgType } from '~/interfaces/message.interface'
 const prop = defineProps<{
   name?: string
   img?: string
-  msgType: string
+  msgType?: string
   msgText?: string
   msgSticker?: string
   msgLink?: string
