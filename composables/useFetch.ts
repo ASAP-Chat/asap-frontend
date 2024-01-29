@@ -1,6 +1,7 @@
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 
 const socialInfo = ref()
+const latestMessages = ref()
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 const { shop, isOwner, _id } = user.value && user.value
@@ -41,7 +42,7 @@ export const getLatestMsg = async () => {
         }
       )
       if (response.status === 200) {
-        return await response.json()
+        latestMessages.value = await response.json()
       } else if (response.status === 401) {
         console.log('call - refresh token')
         await useRefreshToken()
@@ -51,4 +52,5 @@ export const getLatestMsg = async () => {
       console.log(error)
     }
   }
+  return { latestMessages }
 }
