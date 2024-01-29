@@ -1,32 +1,16 @@
 <template>
   <CommonModal
     v-if="deleteModal"
-    :header="
-      isSuccessDelete
-        ? 'ยกเลิกการเชื่อมต่อสำเร็จ!'
-        : 'ยกเลิกการเชื่อมต่อไม่สำเร็จ!'
-    "
-    :content="
-      isSuccessDelete
-        ? 'การเชื่อมต่อได้ถูกยกเลิกเรียบร้อยแล้ว'
-        : 'ขออภัย, โปรดลองอีกครั้ง'
-    "
+    :header="isSuccessDelete ? 'ยกเลิกการเชื่อมต่อสำเร็จ!' : 'ยกเลิกการเชื่อมต่อไม่สำเร็จ!'"
+    :content="isSuccessDelete ? 'การเชื่อมต่อได้ถูกยกเลิกเรียบร้อยแล้ว' : 'ขออภัย, โปรดลองอีกครั้ง'"
     buttonText="ปิด"
     :isSuccess="isSuccessDelete"
     @btn-action="closeModal"
   />
   <CommonModal
     v-if="createModalFacebook"
-    :header="
-      fbStatus
-        ? 'คุณเชื่อมต่อ Facebook สำเร็จ!'
-        : 'คุณเชื่อมต่อ Facebook ไม่สำเร็จ!'
-    "
-    :content="
-      fbStatus
-        ? 'การเชื่อมต่อเรียบร้อยแล้ว'
-        : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'
-    "
+    :header="fbStatus ? 'คุณเชื่อมต่อ Facebook สำเร็จ!' : 'คุณเชื่อมต่อ Facebook ไม่สำเร็จ!'"
+    :content="fbStatus ? 'การเชื่อมต่อเรียบร้อยแล้ว' : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'"
     :buttonText="fbStatus ? 'ปิด' : 'ลองอีกครั้ง'"
     :isSuccess="fbStatus"
     @btn-action="closeModal"
@@ -76,11 +60,7 @@
                 size="sm"
                 class="mr-1"
               >
-                {{
-                  item?.status?.isAvailable
-                    ? 'mdi-check-circle'
-                    : 'mdi-alert-circle'
-                }}
+                {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
               </v-icon>
               {{ item?.status?.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
             </span>
@@ -126,25 +106,38 @@
 
     <div>
       <v-row justify="center">
-        <v-dialog v-model="connectDialog" width="auto">
-          <v-card :width="400" class="text-center pt-3">
+        <v-dialog
+          v-model="connectDialog"
+          width="auto"
+        >
+          <v-card
+            :width="400"
+            class="text-center pt-3"
+          >
             <v-card-text>
               <v-btn
                 class="tw-absolute tw-top-2.5 tw-right-2.5"
                 @click="connectDialog = false"
                 variant="text"
               >
-                <v-icon icon="mdi-close" color="secondary-lighten"></v-icon>
+                <v-icon
+                  icon="mdi-close"
+                  color="secondary-lighten"
+                ></v-icon>
               </v-btn>
               <div class="text-center mx-auto">
                 <h3 class="tw-text-xl">เลือกช่องทาง</h3>
-                <p class="tw-text-sm tw-opacity-60">
-                  เลือกช่องทางที่ต้องการเชื่อมต่อ
-                </p>
+                <p class="tw-text-sm tw-opacity-60">เลือกช่องทางที่ต้องการเชื่อมต่อ</p>
               </div>
-              <v-table fixed-header class="tw-bg-white pt-4">
+              <v-table
+                fixed-header
+                class="tw-bg-white pt-4"
+              >
                 <tbody>
-                  <tr class="tw-text-sm" v-for="item in socialList">
+                  <tr
+                    class="tw-text-sm"
+                    v-for="item in socialList"
+                  >
                     <td class="font-weight-bold text-left">
                       <v-icon
                         class="mr-3 mb-1"
@@ -167,10 +160,7 @@
                         v-else
                         variant="outlined"
                         class="font-weight-bold text-secondary-lighten"
-                        @click="
-                          ;(connectSocialDialog = true),
-                            (selectSocial = item.socialType)
-                        "
+                        @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
                       >
                         {{ 'เชื่อมต่อ' }}
                       </v-btn>
@@ -182,13 +172,14 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="connectSocialDialog" width="auto">
+        <v-dialog
+          v-model="connectSocialDialog"
+          width="auto"
+        >
           <component
             :is="getSocialConnectModalComponent(selectSocial)"
             @back="connectSocialDialog = false"
-            @created-success="
-              ;(connectSocialDialog = false), (connectDialog = false)
-            "
+            @created-success=";(connectSocialDialog = false), (connectDialog = false)"
           />
         </v-dialog>
       </v-row>
@@ -202,6 +193,7 @@ import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
 import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
 import { SocialType } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN } from '~/constants/Token'
+import { getSocialAccount } from '~/services/message.service'
 
 useHead({
   title: 'การตั้งค่า',
@@ -242,27 +234,22 @@ const socialList = [
     socialType: SocialType.INSTAGRAM,
   },
 ]
-const { socialInfo } = await useGetSocialAccount()
+const { socialInfo } = await getSocialAccount()
 const access_token = useCookie(ACCESS_TOKEN)
 
 const storeSelectCus = useCookie('storeSelectCus')
 
 const cancelSocialAccount = async (id: string) => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-account/${id}`,
-      {
-        method: 'delete',
-        headers: {
-          Authorization: 'Bearer ' + access_token.value,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/social-account/${id}`, {
+      method: 'delete',
+      headers: {
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
 
     if (response.status.value === 'success') {
-      socialInfo.value.data = socialInfo.value.data.filter(
-        (social: any) => social._id !== id
-      )
+      socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
       isSuccessDelete.value = true
       deleteModal.value = true
       storeSelectCus.value = null
@@ -293,15 +280,12 @@ const createModalFacebook = ref(false)
 const fbStatus = ref()
 
 onBeforeMount(async () => {
-  await useGetSocialAccount()
+  await getSocialAccount()
 
   if (route.query.state === 'integrate-facebook') {
     const code = route.query.code as string
     const facebookResponse: any = await createFacebook(code)
-    if (
-      facebookResponse?.status?.isAvailable &&
-      facebookResponse?.status?.isInitialized
-    ) {
+    if (facebookResponse?.status?.isAvailable && facebookResponse?.status?.isInitialized) {
       fbStatus.value = true
       await router.replace({
         query: {},

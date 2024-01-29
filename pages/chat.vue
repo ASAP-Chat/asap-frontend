@@ -348,6 +348,7 @@ import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import profileSrc from '~/assets/images/profile.png'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
+import { getSocialAccount, getLatestMsg } from '~/services/message.service'
 
 const toast = useToast()
 
@@ -669,7 +670,7 @@ const updateMsg = async (userId: string, msgId: string) => {
   })
 }
 
-const { socialInfo } = await useGetSocialAccount()
+const { socialInfo } = await getSocialAccount()
 if (Array.isArray(socialInfo.value.data)) {
   socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
 }
@@ -700,7 +701,7 @@ const filteredMsg = computed(() => {
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
-  await useGetSocialAccount()
+  await getSocialAccount()
   await getLatestMsg()
 })
 </script>

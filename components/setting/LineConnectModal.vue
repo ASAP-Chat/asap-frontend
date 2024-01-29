@@ -101,6 +101,7 @@
 <script setup lang="ts">
 import { CreateLineInfo, SocialType } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { getSocialAccount } from '~/services/message.service'
 
 const emits = defineEmits(['back', 'created-success'])
 const { required } = useFormRules()
@@ -158,7 +159,7 @@ const createLine = async (lineInfo: CreateLineInfo) => {
       isSuccessCreate.value = true
       showModal.value = true
       loading.value = false
-      useGetSocialAccount()
+      getSocialAccount()
     } else {
       loading.value = false
       isSuccessCreate.value = false

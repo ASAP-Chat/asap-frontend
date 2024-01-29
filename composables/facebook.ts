@@ -1,5 +1,6 @@
 import { SocialType } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { getSocialAccount } from '~/services/message.service'
 
 export const oauthFacebook = () => {
   const appId = '1232305677642740'
@@ -39,7 +40,7 @@ export const createFacebook = async (code: string) => {
       },
     })
     if (response.status.value === 'success') {
-      useGetSocialAccount()
+      getSocialAccount()
       return response.data.value
     } else {
       await useRefreshToken()

@@ -1,13 +1,39 @@
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 
-const socialInfo = ref()
-const latestMessages = ref()
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
-const { shop, isOwner, _id } = user.value && user.value
+
+const { shop, _id, isOwner } = user.value && user.value
 const { name } = shop
 
-export const useGetSocialAccount = async () => {
+const chatTemplateData = ref()
+export const getChatTemplate = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/chat-template?shopName=${name}`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
+    if (response.status === 200) {
+      chatTemplateData.value = await response.json()
+    } else if (response.status === 401) {
+      console.log('call - refresh token')
+      await useRefreshToken()
+      await getChatTemplate()
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+
+  return { chatTemplateData }
+}
+
+const socialInfo = ref()
+export const getSocialAccount = async () => {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
       method: 'get',
@@ -20,7 +46,7 @@ export const useGetSocialAccount = async () => {
     } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
-      await useGetSocialAccount()
+      await getSocialAccount()
     }
   } catch (error: any) {
     console.log(error)
@@ -29,6 +55,7 @@ export const useGetSocialAccount = async () => {
   return { socialInfo }
 }
 
+const latestMessages = ref()
 export const getLatestMsg = async () => {
   if (isOwner) {
     try {
