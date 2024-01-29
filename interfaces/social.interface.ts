@@ -17,3 +17,8 @@ export interface CreateLineInfo {
   socialType: SocialType.LINE
   ownerId: string
 }
+
+export interface ChatTemplateInfo {
+  keyword: string
+  template: string
+}
