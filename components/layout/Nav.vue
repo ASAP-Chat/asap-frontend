@@ -93,10 +93,10 @@
         <div :class="mobileSidebar ? 'mb-3' : 'mr-3' ">
           <v-btn
             :block="mobileSidebar ? true : false"
-            variant="outlined"
+            variant="flat"
             color="white"
-            :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-            class="font-weight-bold hover:tw-text-[#000000] hover:tw-border-[#000000]"
+            :class="data.scrollY > 10 ? 'text-primary tw-border-2 tw-rounded tw-border-[#674AE7]' : 'text-primary'"
+            class="font-weight-bold hover:tw-text-white hover:tw-bg-[#674AE7] tw-border-[#674AE7]"
             @click="navigateTo('/login/')"
             >เข้าสู่ระบบ</v-btn
           >

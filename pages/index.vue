@@ -57,9 +57,10 @@
         </div>
         <div data-aos="fade-up-right" class="tw-flex">
           <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <div class="tw-text-[20px] tw-text-gray-800 tw-font-bold tw-mb-2 tw-leading-6">
+            <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
               จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram
-              ในที่เดียว รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
+              ในที่เดียว <br /> 
+              รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
             </div>
             <!-- <p class="tw-text-gray-600 tw-mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
@@ -69,7 +70,7 @@
             </p> -->
           </div>
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full">
+            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
           </div>
 
         </div>
@@ -87,19 +88,18 @@
         </div>
         <div data-aos="fade-up-left" class="tw-flex">
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full">
+            <img src="../assets/images/chatbot.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
           </div>
           <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-flex-col tw-justify-center tw-items-center">
-            <div class="tw-text-[20px] tw-text-gray-800 tw-font-bold tw-mb-2 tw-leading-6">
-              จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram
-              ในที่เดียว รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
+            <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
+              ตอบด้วยแชทบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ แอดมินทำงานสลับไปมากับบอทได้ตลอดเวลา แก้บอทที่เดียวใช้ได้ทุกช่องทาง
             </div>
-            <p class="tw-text-gray-600 tw-mb-8">
+            <!-- <p class="tw-text-gray-600 tw-mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
               at ipsum eu nunc commodo posuere et sit amet ligula.
               <br />
               <br />
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
@@ -115,22 +115,22 @@
           </div>
         </div>
         <div data-aos="fade-up-right" class="tw-flex">
-          <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6">
-            <div class="tw-text-[20px] tw-text-gray-800 tw-font-bold tw-mb-2 tw-leading-6">
-              จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram
-              ในที่เดียว รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
+          <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col">
+            <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6 ">
+              ผู้ใช้งานสามารถสร้างชุดข้อความ (Template message) เพื่อนำมาใช้เป็นชุดข้อความมาตรฐานสำหรับให้
+              ผู้ใช้งานทุกคนเรียกใช้ชุดข้อความเดียวกันในการให้บริการตอบแชทที่เป็นมาตรฐานเดียวกันได้
             </div>
-            <p class="tw-text-gray-600 tw-mb-8">
+            <!-- <p class="tw-text-gray-600 tw-mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
               at ipsum eu nunc commodo posuere et sit amet ligula.
               <br />
               <br />
-            </p>
+            </p> -->
           </div>
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6">
             <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-              <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full">
-            </div>
+            <img src="../assets/images/chattemplate.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
+          </div>
           </div>
 
         </div>
@@ -149,20 +149,20 @@
         <div data-aos="fade-up-left" class="tw-flex">
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6">
             <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-              <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full">
-            </div>
+            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
           </div>
-          <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6">
-            <div class="tw-text-[20px] tw-text-gray-800 tw-font-bold tw-mb-2 tw-leading-6">
+          </div>
+          <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col">
+            <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
               จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram
               ในที่เดียว รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
             </div>
-            <p class="tw-text-gray-600 tw-mb-8">
+            <!-- <p class="tw-text-gray-600 tw-mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
               at ipsum eu nunc commodo posuere et sit amet ligula.
               <br />
               <br />
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
