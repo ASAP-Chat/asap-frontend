@@ -78,6 +78,7 @@
         color="primary"
         app
         density="comfortable"
+        :elevation="0"
       >
         <v-app-bar-title class="font-weight-bold tw-text-xl">
           <v-icon

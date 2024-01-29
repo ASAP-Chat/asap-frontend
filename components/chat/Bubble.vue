@@ -19,10 +19,7 @@
   </div>
   <div
     class="tw-chat"
-    :class="[
-      isOwner ? 'tw-chat-end' : 'tw-chat-start',
-      prop.msgType !== MsgType.TEXT ? '' : 'tw-drop-shadow-lg',
-    ]"
+    :class="[isOwner ? 'tw-chat-end' : 'tw-chat-start']"
   >
     <div
       class="tw-chat-image tw-avatar"
