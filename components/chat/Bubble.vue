@@ -38,7 +38,7 @@
       </time>
     </div>
     <div
-      class="tw-chat-bubble text-secondary"
+      class="tw-chat-bubble text-secondary tw-whitespace-pre-line"
       :class="isOwner ? 'tw-bg-[#d4caff]' : 'tw-bg-[#fff]'"
       v-if="prop.msgType === MsgType.TEXT"
     >
