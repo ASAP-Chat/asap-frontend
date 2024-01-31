@@ -32,7 +32,7 @@
           const dateA = new Date(a.updatedAt)
           const dateB = new Date(b.updatedAt)
 
-          return dateA.getTime() - dateB.getTime()
+          return dateB.getTime() - dateA.getTime()
         })"
         class="mb-6"
       >
@@ -40,15 +40,16 @@
           :id="item._id"
           :keyword="item.keyword"
           :template="item.template"
+          :allow-edit="true"
           @edit="storeEdit(item._id, item.keyword, item.template)"
         />
       </div>
     </div>
     <ChatTemplateEditModal
       v-model="editDialog"
-      :id="selectedTemplate.id"
-      :keyword="selectedTemplate.keyword"
-      :template="selectedTemplate.template"
+      :id="selectedTemplate?.id"
+      :keyword="selectedTemplate?.keyword"
+      :template="selectedTemplate?.template"
       @close-modal="editDialog = false"
     />
   </div>
