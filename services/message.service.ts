@@ -81,3 +81,29 @@ export const getLatestMsg = async () => {
   }
   return { latestMessages }
 }
+
+export const updateMsg = async (userId: string, msgId: string) => {
+  const res = await useFetch(
+    `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`,
+    {
+      method: 'patch',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + access_token.value,
+      },
+      body: JSON.stringify({
+        isRead: true,
+      }),
+    }
+  )
+  if (res.status.value === 'error') {
+    await useRefreshToken()
+    await updateMsg(userId, msgId)
+  }
+  if (res.status.value === 'success') {
+    await getLatestMsg()
+  }
+  nextTick(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+  })
+}
