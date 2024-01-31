@@ -30,7 +30,7 @@
           exact
           base-color="#707070"
           :active="selectedItem === 'all'"
-          @click="selectItem('all')"
+          @click="selectedItem = 'all'"
         ></v-list-item>
 
         <v-list-subheader> สถานะแชต </v-list-subheader>
@@ -41,7 +41,7 @@
           prepend-icon="mdi-emoticon-confused-outline"
           base-color="#707070"
           :active="selectedItem === 'pending'"
-          @click="selectItem('pending')"
+          @click="selectedItem = 'pending'"
         ></v-list-item>
 
         <v-list-item
@@ -50,7 +50,7 @@
           prepend-icon="mdi-emoticon-neutral-outline"
           base-color="#707070"
           :active="selectedItem === 'doing'"
-          @click="selectItem('doing')"
+          @click="selectedItem = 'doing'"
         ></v-list-item>
         <v-list-item
           title="เสร็จสิ้น"
@@ -58,7 +58,7 @@
           prepend-icon="mdi-emoticon-happy-outline"
           base-color="#707070"
           :active="selectedItem === 'done'"
-          @click="selectItem('done')"
+          @click="selectedItem = 'done'"
         ></v-list-item>
 
         <v-list-subheader> Social Media </v-list-subheader>
@@ -69,7 +69,7 @@
           prepend-icon="fa:fa-brands fa-line"
           base-color="#707070"
           :active="selectedItem === SocialType.LINE"
-          @click="selectItem(SocialType.LINE)"
+          @click="selectedItem = SocialType.LINE"
         >
           <template v-slot:prepend>
             <v-icon color="#02c153"></v-icon>
@@ -82,7 +82,7 @@
           prepend-icon="fa:fa-brands fa-square-facebook"
           base-color="#707070"
           :active="selectedItem === SocialType.FACEBOOK"
-          @click="selectItem(SocialType.FACEBOOK)"
+          @click="selectedItem = SocialType.FACEBOOK"
         >
           <template v-slot:prepend>
             <v-icon color="#0765FF"></v-icon>
@@ -94,7 +94,7 @@
           prepend-icon="mdi-instagram"
           base-color="#707070"
           :active="selectedItem === SocialType.INSTAGRAM"
-          @click="selectItem(SocialType.INSTAGRAM)"
+          @click="selectedItem = SocialType.INSTAGRAM"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -221,10 +221,55 @@
       <div
         v-if="storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''"
       >
+        <v-navigation-drawer
+          v-model="templateDrawer"
+          permanent
+          width="300"
+          location="right"
+          :rail="rail"
+          @click="rail = false"
+        >
+          <div class="pa-3 pt-6">
+            <div class="text-center mb-3">
+              <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
+            </div>
+            <div>
+              <v-text-field
+                rounded
+                density="compact"
+                v-model="searchKeyword"
+                variant="outlined"
+                placeholder="ค้นหา"
+                append-inner-icon="mdi-magnify"
+                color="primary"
+              ></v-text-field>
+              <div
+                v-for="item in filteredTemplateData"
+                class="mb-6 tw-flex tw-justify-center"
+              >
+                <ChatTemplateCard
+                  :id="item._id"
+                  :keyword="item.keyword"
+                  :template="item.template"
+                  :allow-edit="false"
+                  :width="250"
+                  @click="sendMsg = item.template"
+                />
+              </div>
+            </div>
+          </div>
+        </v-navigation-drawer>
+
         <v-app-bar
           :elevation="0"
           class="tw-border-b"
         >
+          <template v-slot:append>
+            <v-btn
+              icon="mdi-message-text-outline"
+              @click.stop="templateDrawer = !templateDrawer"
+            ></v-btn>
+          </template>
           <template v-slot:prepend>
             <v-img
               :width="40"
@@ -302,20 +347,22 @@
         <v-container>
           <v-row>
             <v-col cols="12">
-              <v-text-field
-                v-model="sendMsg"
+              <v-textarea
                 rounded
                 type="text"
+                v-model="sendMsg"
+                density="compact"
+                variant="outlined"
+                @keydown.prevent.enter="sendMessage()"
+                color="primary"
+                auto-grow
+                rows="1"
                 hide-details
                 :placeholder="
                   disabledChatInput
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามขอกำหนดของ Facebook'
                     : 'พิมพ์ข้อความ ...'
                 "
-                @keydown.prevent.enter="sendMessage()"
-                density="compact"
-                variant="outlined"
-                color="primary"
                 :disabled="Boolean(disabledChatInput)"
               >
                 <template v-slot:append>
@@ -326,7 +373,7 @@
                     :disabled="sendMsg === ''"
                   ></v-btn>
                 </template>
-              </v-text-field>
+              </v-textarea>
             </v-col>
           </v-row>
         </v-container>
@@ -348,7 +395,13 @@ import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import profileSrc from '~/assets/images/profile.png'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
-import { getSocialAccount, getLatestMsg } from '~/services/message.service'
+import {
+  getSocialAccount,
+  getLatestMsg,
+  getChatTemplate,
+  updateMsg,
+} from '~/services/message.service'
+import { ToastOptions } from 'vue-toastification/dist/types/types'
 
 const toast = useToast()
 
@@ -373,6 +426,26 @@ const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()
 const audio = new Audio(buttonSfx)
+const templateDrawer = ref(false)
+const rail = ref(false)
+const { chatTemplateData } = await getChatTemplate()
+const searchKeyword = ref('')
+const filteredTemplateData = computed(() => {
+  const keyword = searchKeyword.value.toLowerCase().trim()
+  return chatTemplateData.value.data
+    .sort((a: any, b: any) => {
+      const dateA = new Date(a.updatedAt)
+      const dateB = new Date(b.updatedAt)
+
+      return dateA.getTime() - dateB.getTime()
+    })
+    .filter((item: any) => {
+      return (
+        item.keyword.toLowerCase().includes(keyword) ||
+        item.template.toLowerCase().includes(keyword)
+      )
+    })
+})
 
 function play() {
   audio.play()
@@ -401,43 +474,31 @@ onBeforeMount(() => {
             type: newMsg.value.data[0].type,
           },
         }
+        const notifications: ToastOptions = {
+          toastClassName: generateToastClass(newMsg.value.data[0].source),
+          timeout: 2984,
+          closeOnClick: true,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          draggable: true,
+          draggablePercent: 0.4,
+          showCloseButtonOnHover: true,
+          hideProgressBar: true,
+          closeButton: 'button',
+          icon: generateToastIcon(newMsg.value.data[0].source),
+          rtl: false,
+        }
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
             play()
-            toast(content, {
-              toastClassName: generateToastClass(newMsg.value.data[0].source),
-              timeout: 2984,
-              closeOnClick: true,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: true,
-              draggablePercent: 0.4,
-              showCloseButtonOnHover: true,
-              hideProgressBar: true,
-              closeButton: 'button',
-              icon: generateToastIcon(newMsg.value.data[0].source),
-              rtl: false,
-            })
+            toast(content, notifications)
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
             play()
-            toast(content, {
-              toastClassName: generateToastClass(newMsg.value.data[0].source),
-              timeout: 2984,
-              closeOnClick: true,
-              pauseOnFocusLoss: false,
-              pauseOnHover: false,
-              draggable: true,
-              draggablePercent: 0.4,
-              showCloseButtonOnHover: true,
-              hideProgressBar: true,
-              closeButton: 'button',
-              icon: generateToastIcon(newMsg.value.data[0].source),
-              rtl: false,
-            })
+            toast(content, notifications)
           }
         }
       }
@@ -644,41 +705,12 @@ const getMoreChat = async () => {
   }
 }
 
-const updateMsg = async (userId: string, msgId: string) => {
-  const res = await useFetch(
-    `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${userId}/${msgId}`,
-    {
-      method: 'patch',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + access_token.value,
-      },
-      body: JSON.stringify({
-        isRead: true,
-      }),
-    }
-  )
-  if (res.status.value === 'error') {
-    await useRefreshToken()
-    await updateMsg(userId, msgId)
-  }
-  if (res.status.value === 'success') {
-    await getLatestMsg()
-  }
-  nextTick(() => {
-    window.scrollTo(0, document.body.scrollHeight)
-  })
-}
-
 const { socialInfo } = await getSocialAccount()
 if (Array.isArray(socialInfo.value.data)) {
   socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
 }
 
 const selectedItem = ref('all')
-const selectItem = (item: string) => {
-  selectedItem.value = item
-}
 
 const filteredMsg = computed(() => {
   const messages =
@@ -713,13 +745,5 @@ onBeforeMount(async () => {
 
 .social_icon .v-badge__badge {
   bottom: calc(100% - 43px) !important;
-}
-
-.v-list-item-title {
-  font-size: 14px !important;
-  font-weight: bold !important;
-}
-.v-list-item__prepend {
-  display: grid !important;
 }
 </style>
