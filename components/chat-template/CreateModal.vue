@@ -107,19 +107,7 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
     })
     if (response.status.value === 'success') {
       close()
-      toast.success('บันทึกสำเร็จ', {
-        timeout: 2095,
-        closeOnClick: true,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-        draggable: true,
-        draggablePercent: 0.6,
-        showCloseButtonOnHover: false,
-        hideProgressBar: true,
-        closeButton: 'button',
-        icon: true,
-        rtl: false,
-      })
+      toast.success('บันทึกสำเร็จ', useToastOption)
       await getChatTemplate()
     } else {
       await useRefreshToken()

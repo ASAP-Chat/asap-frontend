@@ -126,19 +126,7 @@ const editChatTemplate = async () => {
     if (response.status.value === 'success') {
       close()
       await getChatTemplate()
-      toast.success('บันทึกสำเร็จ', {
-        timeout: 2095,
-        closeOnClick: true,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-        draggable: true,
-        draggablePercent: 0.6,
-        showCloseButtonOnHover: false,
-        hideProgressBar: true,
-        closeButton: 'button',
-        icon: true,
-        rtl: false,
-      })
+      toast.success('บันทึกสำเร็จ', useToastOption)
     } else {
       await useRefreshToken()
       await editChatTemplate()
@@ -161,19 +149,7 @@ const deleteChatTemplate = async () => {
     if (response.status.value === 'success') {
       close()
       confirmDelete.value = false
-      toast.success('ลบรูปแบบคำตอบสำเร็จ', {
-        timeout: 2095,
-        closeOnClick: true,
-        pauseOnFocusLoss: false,
-        pauseOnHover: false,
-        draggable: true,
-        draggablePercent: 0.6,
-        showCloseButtonOnHover: false,
-        hideProgressBar: true,
-        closeButton: 'button',
-        icon: true,
-        rtl: false,
-      })
+      toast.success('ลบรูปแบบคำตอบสำเร็จ', useToastOption)
       await getChatTemplate()
     } else {
       await useRefreshToken()

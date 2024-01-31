@@ -190,12 +190,3 @@ const settingItems = [
   },
 ]
 </script>
-<style>
-.v-list-item-title {
-  font-size: 14px !important;
-  font-weight: bold !important;
-}
-.v-list-item__prepend {
-  display: grid !important;
-}
-</style>
