@@ -59,7 +59,7 @@
           <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
             <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
               จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram
-              ในที่เดียว <br /> 
+              ในที่เดียว <br />
               รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
             </div>
             <!-- <p class="tw-text-gray-600 tw-mb-8">
@@ -70,7 +70,7 @@
             </p> -->
           </div>
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
+            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full">
           </div>
 
         </div>
@@ -88,11 +88,13 @@
         </div>
         <div data-aos="fade-up-left" class="tw-flex">
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chatbot.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
+            <img src="../assets/images/chatbot.svg" alt="chat"
+              class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
           </div>
           <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-flex-col tw-justify-center tw-items-center">
             <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
-              ตอบด้วยแชทบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ แอดมินทำงานสลับไปมากับบอทได้ตลอดเวลา แก้บอทที่เดียวใช้ได้ทุกช่องทาง
+              ตอบด้วยแชทบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ แอดมินทำงานสลับไปมากับบอทได้ตลอดเวลา
+              แก้บอทที่เดียวใช้ได้ทุกช่องทาง
             </div>
             <!-- <p class="tw-text-gray-600 tw-mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
@@ -129,8 +131,9 @@
           </div>
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6">
             <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chattemplate.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
-          </div>
+              <img src="../assets/images/chattemplate.svg" alt="chat"
+                class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
+            </div>
           </div>
 
         </div>
@@ -149,8 +152,9 @@
         <div data-aos="fade-up-left" class="tw-flex">
           <div class="tw-w-full tw-sm:w-1/2 tw-p-6">
             <div class="tw-w-full tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
-            <img src="../assets/images/chat.svg" alt="chat" class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
-          </div>
+              <img src="../assets/images/team.svg" alt="chat"
+                class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md">
+            </div>
           </div>
           <div class="tw-w-5/6 tw-sm:w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col">
             <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
@@ -194,17 +198,17 @@
     </svg>
     <section id="contact" data-aos="zoom-in-up" class="tw-container tw-mx-auto tw-text-center tw-py-6 tw-mb-12">
       <h2 class="tw-w-full tw-my-2 tw-text-5xl tw-font-bold tw-leading-tight tw-text-center tw-text-white">
-        Call to Action
+        สนใจใช้งานระบบ ASAP CHAT
       </h2>
       <div class="tw-w-full tw-mb-4">
         <div class="tw-h-1 tw-mx-auto tw-bg-primary tw-w-1/6 tw-opacity-25 tw-my-0 tw-py-0 tw-rounded-t"></div>
       </div>
       <h3 class="tw-my-4 tw-text-3xl tw-leading-tight">
-        Main Hero Message to sell yourself!
+        คลิกที่นี่!!
       </h3>
       <button
         class="tw-mx-auto tw-lg:mx-0 tw-hover:underline tw-bg-white tw-text-gray-800 tw-font-bold tw-rounded-full tw-my-6 tw-py-4 tw-px-8 tw-shadow-lg tw-focus:outline-none tw-focus:shadow-outline tw-transform tw-transition tw-hover:scale-105 tw-duration-300 tw-ease-in-out">
-        Action!
+        สมัครใช้งาน
       </button>
     </section>
     <LayoutFooter />
