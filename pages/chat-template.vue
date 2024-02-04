@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-5">
+  <div class="pa-6">
     <div class="tw-flex tw-justify-between mb-4">
       <div class="tw-flex tw-items-center">
         <span class="tw-text-xl font-weight-bold text-primary">{{
@@ -7,7 +7,15 @@
         }}</span>
         &nbsp; รูปแบบคำตอบ
       </div>
-      <div>
+      <div class="tw-flex tw-gap-3 tw-items-center tw-w-96">
+        <CommonTextField
+          rounded="lg"
+          placeholder="ค้นหา"
+          prepend-inner-icon="mdi-magnify"
+          bg-color="white"
+          hide-details
+          v-model="searchKeyword"
+        />
         <v-btn
           prepend-icon="mdi-plus"
           color="primary"
@@ -28,7 +36,7 @@
       class="tw-justify-items-center tw-overflow-y-auto custom-scrollbar tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-1 lg:tw-grid-cols-1 xl:tw-grid-cols-3"
     >
       <div
-        v-for="item in chatTemplateData.data.slice().sort((a:any, b:any) => {
+        v-for="item in filteredTemplateData.sort((a:any, b:any) => {
           const dateA = new Date(a.updatedAt)
           const dateB = new Date(b.updatedAt)
 
@@ -75,4 +83,22 @@ const storeEdit = (id: string, keyword: string, template: string) => {
   editDialog.value = true
   setSelectTemplate(id, keyword, template)
 }
+
+const searchKeyword = ref('')
+const filteredTemplateData = computed(() => {
+  const keyword = searchKeyword.value.toLowerCase().trim()
+  return chatTemplateData.value.data
+    .sort((a: any, b: any) => {
+      const dateA = new Date(a.updatedAt)
+      const dateB = new Date(b.updatedAt)
+
+      return dateA.getTime() - dateB.getTime()
+    })
+    .filter((item: any) => {
+      return (
+        item.keyword.toLowerCase().includes(keyword) ||
+        item.template.toLowerCase().includes(keyword)
+      )
+    })
+})
 </script>
