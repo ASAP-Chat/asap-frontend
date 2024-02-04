@@ -22,3 +22,9 @@ export interface ChatTemplateInfo {
   keyword: string
   template: string
 }
+
+export interface MemberInfo {
+  email: string
+  role: string
+  shop: object
+}
