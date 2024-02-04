@@ -35,12 +35,15 @@ export const getChatTemplate = async () => {
 const socialInfo = ref()
 export const getSocialAccount = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?ownerId=${_id}`, {
-      method: 'get',
-      headers: {
-        Authorization: 'Bearer ' + access_token.value,
-      },
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/social-account?$limit=3`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
     if (response.status === 200) {
       socialInfo.value = await response.json()
     } else if (response.status === 401) {
