@@ -1,21 +1,14 @@
 <template>
   <v-dialog :width="470">
     <v-card>
-      <v-toolbar
-        color="white"
-        class="px-4 pt-4"
-      >
-        <v-toolbar-title class="font-weight-bold">แก้ไขรูปแบบคำตอบ</v-toolbar-title>
+      <v-toolbar color="white" class="px-4 pt-4">
+        <v-toolbar-title class="font-weight-bold"
+          >แก้ไขรูปแบบคำตอบ</v-toolbar-title
+        >
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn
-            @click="close()"
-            variant="text"
-          >
-            <v-icon
-              icon="mdi-close"
-              color="secondary-lighten"
-            ></v-icon>
+          <v-btn @click="close()" variant="text">
+            <v-icon icon="mdi-close" color="secondary-lighten"></v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -57,6 +50,9 @@
             text="ลบ"
             @click="confirmDelete = true"
           >
+            <template v-slot:prepend>
+              <v-icon color="red darken-4">mdi-trash-can-outline</v-icon>
+            </template>
           </v-btn>
         </div>
         <div>
@@ -66,8 +62,12 @@
             flat
             rounded="lg"
             text="บันทึก"
+            prepend-icon="mdi-content-save"
             @click="editChatTemplate"
           >
+            <template v-slot:prepend>
+              <v-icon color="white">mdi mdi-content-save</v-icon>
+            </template>
           </v-btn>
         </div>
       </div>
@@ -114,17 +114,20 @@ const close = () => {
 
 const editChatTemplate = async () => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`, {
-      method: 'patch',
-      body: JSON.stringify({
-        keyword: localInfo.value.keyword,
-        template: localInfo.value.template,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + access_token.value,
-      },
-    })
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`,
+      {
+        method: 'patch',
+        body: JSON.stringify({
+          keyword: localInfo.value.keyword,
+          template: localInfo.value.template,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
     if (response.status.value === 'success') {
       close()
       await getChatTemplate()
@@ -141,12 +144,15 @@ const editChatTemplate = async () => {
 
 const deleteChatTemplate = async () => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`, {
-      method: 'delete',
-      headers: {
-        Authorization: 'Bearer ' + access_token.value,
-      },
-    })
+    const response = await useFetch(
+      `${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`,
+      {
+        method: 'delete',
+        headers: {
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
 
     if (response.status.value === 'success') {
       close()
