@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const refresh_token = useCookie(REFRESH_TOKEN)
   const isOwner = user?.value?.isOwner
 
-  const allowedRoutes = ['/login/', '/signup/', '/']
+  const allowedRoutes = ['/login/', '/signup/', '/', '/invite/']
   const chatRedirectRoutes = '/chat/'
   const profileRedirectRoute = '/setting/profile/'
   const chatIntegrationRoute = '/setting/chat-integration/'
