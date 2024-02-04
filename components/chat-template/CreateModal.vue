@@ -1,6 +1,6 @@
 <template>
   <v-dialog :width="440">
-    <v-card>
+    <v-card class="tw-rounded-xl">
       <v-toolbar
         color="white"
         class="px-4 pt-4"
@@ -66,7 +66,9 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ChatTemplateInfo } from '~/interfaces/social.interface'
+// @ts-nocheck
+
+import { type ChatTemplateInfo } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/message.service'

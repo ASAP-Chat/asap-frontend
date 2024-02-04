@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserLogin } from '~/interfaces/auth.interface'
+import { type UserLogin } from '~/interfaces/auth.interface'
 import imageSrc from '~/assets/images/logo.png'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Token'
 
@@ -130,6 +130,7 @@ const login = async (userData: UserLogin) => {
         displayName: responseData.user.displayName,
         isOwner: responseData.user.isOwner,
         shop: responseData.user.shop,
+        role: responseData.user.role,
       }
       access_token.value = responseData.accessToken
       refresh_token.value = responseData.refreshToken

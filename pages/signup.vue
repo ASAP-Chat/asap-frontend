@@ -218,7 +218,7 @@
 
 <script setup lang="ts">
 import { businessCategories } from '~/data/businessCategories.data'
-import UserSignup from '~/interfaces/auth.interface'
+import type UserSignup from '~/interfaces/auth.interface'
 import imageSrc from '~/assets/images/logo.png'
 
 useHead({

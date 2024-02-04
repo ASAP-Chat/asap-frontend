@@ -234,15 +234,13 @@
               <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
             </div>
             <div>
-              <v-text-field
+              <CommonTextField
                 rounded
-                density="compact"
-                v-model="searchKeyword"
-                variant="outlined"
                 placeholder="ค้นหา"
-                append-inner-icon="mdi-magnify"
-                color="primary"
-              ></v-text-field>
+                prepend-inner-icon="mdi-magnify"
+                bg-color="white"
+                v-model="searchKeyword"
+              />
               <div
                 v-for="item in filteredTemplateData"
                 class="mb-6 tw-flex tw-justify-center"
@@ -330,7 +328,7 @@
     <v-footer
       app
       name="footer"
-      class="tw-grid"
+      class="tw-grid tw-drop-shadow-2xl"
       :class="
         storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
           ? ''
@@ -401,7 +399,7 @@ import {
   getChatTemplate,
   updateMsg,
 } from '~/services/message.service'
-import { ToastOptions } from 'vue-toastification/dist/types/types'
+import type { ToastOptions } from 'vue-toastification/dist/types/types'
 
 const toast = useToast()
 
@@ -593,7 +591,7 @@ const setSelectCustomer = async (
 
   const hoursDifference = Math.abs(messageTimestamp.diff(useDayjs()(), 'hours'))
   disabledMoreThan24.value = hoursDifference >= 24
-
+  sendMsg.value = ''
   nextTick(() => window.scrollTo(0, document.body.scrollHeight))
 }
 

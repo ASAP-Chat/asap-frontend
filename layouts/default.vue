@@ -104,7 +104,7 @@
   </v-card>
 </template>
 <script lang="ts" setup>
-import { PathToTitleMap } from '~/interfaces/index.interface'
+import { type PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
 
 const route = useRoute()

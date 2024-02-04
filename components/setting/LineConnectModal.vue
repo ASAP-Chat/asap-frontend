@@ -99,7 +99,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { CreateLineInfo, SocialType } from '~/interfaces/social.interface'
+import { type CreateLineInfo, SocialType } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
 

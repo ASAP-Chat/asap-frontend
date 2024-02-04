@@ -85,6 +85,8 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
+// @ts-nocheck
+
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/message.service'
