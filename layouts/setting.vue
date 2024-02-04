@@ -95,23 +95,23 @@
       </v-app-bar>
       <v-navigation-drawer
         permanent
-        width="190"
+        width="175"
         color="#fafafa"
       >
         <v-list color="primary">
           <div
             v-for="item in isOwner
               ? settingItems
-              : settingItems.filter((item) => item.value !== '/setting/chat-integration/')"
+              : settingItems.filter((item) => item.path !== '/setting/chat-integration/')"
           >
             <v-list-item
-              :key="item.value"
+              :key="item.path"
               :title="item.title"
-              :value="item.value"
+              :value="item.path"
               exact
               base-color="#707070"
               :prepend-icon="item.icon"
-              :to="item.value"
+              :to="item.path"
             ></v-list-item>
             <v-divider></v-divider>
           </div>
@@ -121,13 +121,10 @@
       <v-main class="tw-bg-[#f2f2f2]">
         <v-container
           fluid
-          class="tw-min-h-[92.8dvh]"
+          class="tw-min-h-[92.8dvh] pa-9"
         >
-          <h1 class="tw-text-xl">
-            <v-icon class="pb-2">
-              {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.icon || '' }}
-            </v-icon>
-            {{ settingItems.find((item) => 'setting-' + item.value === route.name)?.title || '' }}
+          <h1 class="tw-text-xl pb-3">
+            {{ settingItems.find((item) => 'setting-' + item.value === $route.name)?.title || '' }}
           </h1>
           <slot />
         </v-container>
@@ -175,18 +172,21 @@ const sidebarList = [
 const settingItems = [
   {
     title: 'ข้อมูลส่วนตัว',
-    value: '/setting/profile/',
+    path: '/setting/profile/',
+    value: 'profile',
     icon: 'mdi-account-outline',
   },
   {
     title: 'การตั้งค่าช่องทาง',
-    value: '/setting/chat-integration/',
+    path: '/setting/chat-integration/',
+    value: 'chat-integration',
     icon: 'mdi-store-cog-outline',
   },
   {
     title: 'สมาชิก',
-    value: '/setting/member/',
-    icon: 'mdi-account-group-outline',
+    path: '/setting/member/',
+    value: 'member',
+    icon: 'mdi-face-agent',
   },
 ]
 </script>
