@@ -34,12 +34,13 @@
             density="compact"
           />
         </div>
-        <div class="form-control tw-mt-2">
-          <p class="pb-2">เลือกบทบาท</p>
+        <div class="form-control tw-mt-4">
+          <p class="pb-4">เลือกบทบาท</p>
           <v-radio-group v-model="memberData.role">
             <v-radio
               v-for="biz in businesses"
               :value="biz.value"
+              class="tw-mb-3"
             >
               <template v-slot:label>
                 <div>
