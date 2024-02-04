@@ -15,7 +15,7 @@ const manager = new Manager(socketURL, {
 const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 
-const { shop } = user.value
+const { shop } = user?.value
 const { name } = shop
 
 const resetCookie = (cookieName: string) => {
