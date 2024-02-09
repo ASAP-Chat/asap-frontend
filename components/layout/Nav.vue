@@ -12,7 +12,7 @@
           href="#"
         >
           <v-img
-            :width="50"
+            :width="40"
             aspect-ratio="1/1"
             :src="imageSrc"
             class="tw-mx-auto"
@@ -90,12 +90,16 @@
             >
           </li>
         </ul>
-        <div :class="mobileSidebar ? 'mb-3' : 'mr-3' ">
+        <div :class="mobileSidebar ? 'mb-3' : 'mr-3'">
           <v-btn
             :block="mobileSidebar ? true : false"
             variant="flat"
             color="white"
-            :class="data.scrollY > 10 ? 'text-primary tw-border-2 tw-rounded tw-border-[#674AE7]' : 'text-primary'"
+            :class="
+              data.scrollY > 10
+                ? 'text-primary tw-border-2 tw-rounded tw-border-[#674AE7]'
+                : 'text-primary'
+            "
             class="font-weight-bold hover:tw-text-white hover:tw-bg-[#674AE7] tw-border-[#674AE7]"
             @click="navigateTo('/login/')"
             >เข้าสู่ระบบ</v-btn
