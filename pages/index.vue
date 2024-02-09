@@ -6,7 +6,7 @@
       class="tw-pt-28"
     >
       <div
-        class="tw-container tw-pl-28 tw-mx-auto tw-flex tw-flex-wrap tw-flex-col md:tw-flex-row tw-items-center"
+        class="tw-container lg:tw-pl-28 tw-px-3 tw-mx-auto tw-flex tw-flex-wrap tw-flex-col md:tw-flex-row tw-items-center"
       >
         <div
           class="tw-flex tw-flex-col tw-w-full md:tw-w-2/5 tw-justify-center tw-items-start tw-text-center md:tw-text-left"
@@ -15,7 +15,7 @@
           <h1 class="tw-my-4 tw-text-5xl tw-font-bold tw-leading-tight">
             ระบบจัดการแชตลูกค้าสำหรับร้านค้าใน Social Media
           </h1>
-          <p class="tw-leading-normal tw-text-2xl tw-mb-8">ASAP CHAT</p>
+          <p class="tw-leading-normal tw-text-2xl tw-mb-8 tw-w-full">ASAP CHAT</p>
           <button
             class="tw-mx-auto lg:tw-mx-0 tw-hover:tw-underline tw-bg-white tw-text-gray-800 tw-font-bold tw-rounded-full tw-my-6 tw-py-4 tw-px-8 tw-shadow-lg tw-focus:outline-none tw-focus:shadow-outline tw-transform tw-transition tw-hover:tw-scale-105 tw-duration-300 tw-ease-in-out"
           >
