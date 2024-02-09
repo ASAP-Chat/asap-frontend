@@ -113,6 +113,7 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
       await getChatTemplate()
     } else {
       await useRefreshToken()
+      await createChatTemplate(templateInfo)
       console.log(`Request failed with status: ${response.error.value}`)
     }
   } catch (error) {

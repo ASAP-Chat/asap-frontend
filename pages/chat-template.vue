@@ -1,6 +1,6 @@
 <template>
-  <div class="pa-6">
-    <div class="tw-flex tw-justify-between mb-4">
+  <div class="pa-9">
+    <div class="tw-flex tw-justify-between mb-7">
       <div class="tw-flex tw-items-center">
         <span class="tw-text-xl font-weight-bold text-primary">{{
           chatTemplateData.data.length

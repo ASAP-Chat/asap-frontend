@@ -1,14 +1,21 @@
 <template>
   <v-dialog :width="470">
     <v-card>
-      <v-toolbar color="white" class="px-4 pt-4">
-        <v-toolbar-title class="font-weight-bold"
-          >แก้ไขรูปแบบคำตอบ</v-toolbar-title
-        >
+      <v-toolbar
+        color="white"
+        class="px-4 pt-4"
+      >
+        <v-toolbar-title class="font-weight-bold">แก้ไขรูปแบบคำตอบ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn @click="close()" variant="text">
-            <v-icon icon="mdi-close" color="secondary-lighten"></v-icon>
+          <v-btn
+            @click="close()"
+            variant="text"
+          >
+            <v-icon
+              icon="mdi-close"
+              color="secondary-lighten"
+            ></v-icon>
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -22,7 +29,14 @@
             name="keyword"
             rounded="lg"
             density="compact"
+            :error="dupKeyword"
           />
+          <p
+            class="mb-3 text-error tw-text-sm mt-n3"
+            v-if="dupKeyword"
+          >
+            Keyword นี้มีอยู่แล้ว
+          </p>
         </div>
         <div class="form-control tw-mt-2">
           <p class="pb-2">ข้อความตัวอักษร</p>
@@ -93,6 +107,7 @@ import { getChatTemplate } from '~/services/message.service'
 
 const toast = useToast()
 const confirmDelete = ref(false)
+const dupKeyword = ref(false)
 
 const props = defineProps<{
   id: string
@@ -109,50 +124,51 @@ const access_token = useCookie(ACCESS_TOKEN)
 
 const emits = defineEmits(['close-modal'])
 const close = () => {
+  dupKeyword.value = false
   emits('close-modal')
 }
 
 const editChatTemplate = async () => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`,
-      {
-        method: 'patch',
-        body: JSON.stringify({
-          keyword: localInfo.value.keyword,
-          template: localInfo.value.template,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + access_token.value,
-        },
-      }
-    )
-    if (response.status.value === 'success') {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        keyword: localInfo.value.keyword,
+        template: localInfo.value.template,
+      }),
+      headers: {
+        'content-Type': 'application/json',
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
+
+    if (response.status === 200) {
       close()
       await getChatTemplate()
       toast.success('บันทึกสำเร็จ', useToastOption)
-    } else {
+    } else if (response.status === 401) {
+      dupKeyword.value = false
       await useRefreshToken()
       await editChatTemplate()
-      console.log(`Request failed with status: ${response.error.value}`)
+    }
+    if (response.status === 500) {
+      dupKeyword.value = true
+    } else {
+      console.log('err')
     }
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
 }
 
 const deleteChatTemplate = async () => {
   try {
-    const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`,
-      {
-        method: 'delete',
-        headers: {
-          Authorization: 'Bearer ' + access_token.value,
-        },
-      }
-    )
+    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/chat-template/${props.id}`, {
+      method: 'delete',
+      headers: {
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
 
     if (response.status.value === 'success') {
       close()
