@@ -14,6 +14,24 @@
         :active="props.selectedItem === 'all'"
         @click="updateSelectedItem('all')"
       ></v-list-item>
+      <v-list-item
+        title="แชตของฉัน"
+        value="mine"
+        prepend-icon="mdi-message-star-outline"
+        exact
+        base-color="#707070"
+        :active="props.selectedItem === 'mine'"
+        @click="updateSelectedItem('mine')"
+      ></v-list-item>
+      <v-list-item
+        title="แชตที่ยังว่าง"
+        value="mine"
+        prepend-icon="mdi-message-badge-outline"
+        exact
+        base-color="#707070"
+        :active="props.selectedItem === 'empty'"
+        @click="updateSelectedItem('empty')"
+      ></v-list-item>
 
       <v-list-subheader> สถานะแชต </v-list-subheader>
       <v-divider></v-divider>

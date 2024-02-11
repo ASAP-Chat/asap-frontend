@@ -633,20 +633,31 @@ const filteredMsg = computed(() => {
     return msg.source === selectedItem.value
   })
 
-  const statusDict: { [key: string]: string } = {}
+  const statusDict: { [key: string]: { chatStatus: string; agentDisplayName: string } } = {}
   customer.value.data.forEach((customer: any) => {
-    statusDict[customer.customerId] = customer.chatStatus
+    statusDict[customer.customerId] = {
+      chatStatus: customer.chatStatus,
+      agentDisplayName: customer.agent.displayName,
+    }
   })
 
   // Filter latestMessages based on the condition
-  const filteredByStatus = latestMessages?.value?.data.filter(
-    (message: any) => statusDict[message.customerId] === selectedItem.value
-  )
-  return selectedItem.value === Status.PENDING ||
-    selectedItem.value === Status.ONGOING ||
-    selectedItem.value === Status.COMPLETED
-    ? filteredByStatus
-    : filteredBySelectedItem
+  const filteredByStatus = latestMessages?.value?.data.filter((message: any) => {
+    const customerStatus = statusDict[message.customerId]?.chatStatus
+    const agentDisplayName = statusDict[message.customerId]?.agentDisplayName
+
+    if (selectedItem.value === 'mine') {
+      return agentDisplayName === displayName
+    } else if (selectedItem.value === 'empty') {
+      return !agentDisplayName
+    } else {
+      return customerStatus === selectedItem.value
+    }
+  })
+
+  const showAllItems = [Status.PENDING, Status.ONGOING, Status.COMPLETED, 'mine', 'empty']
+
+  return showAllItems.includes(selectedItem.value) ? filteredByStatus : filteredBySelectedItem
 })
 
 onBeforeMount(async () => {
