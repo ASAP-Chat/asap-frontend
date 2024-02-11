@@ -3,8 +3,8 @@ import { ACCESS_TOKEN, USER } from '~/constants/Token'
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner } = user.value && user.value
-const { name } = shop
+const { shop, isOwner } = user?.value || {}
+const { name } = shop || {}
 
 const chatTemplateData = ref()
 export const getChatTemplate = async () => {

@@ -23,11 +23,11 @@ const resetCookie = (cookieName: string) => {
   cookie.value = null
 }
 export const useSignOut = async () => {
+  socket.emit('leave-message', name)
   resetCookie(ACCESS_TOKEN)
   resetCookie(USER)
   resetCookie(REFRESH_TOKEN)
   resetCookie('storeSelectCus')
-  socket.emit('leave-message', name)
   navigateTo('/')
   location.reload()
 }
