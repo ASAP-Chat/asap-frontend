@@ -51,6 +51,7 @@ const storeSelectCus: any = useCookie('storeSelectCus')
 const { memberData } = await getMember()
 const updateAgent = async (id: string, v: any) => {
   localMember.value = v
+
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-customer/${id}`, {
       method: 'PATCH',
@@ -64,7 +65,7 @@ const updateAgent = async (id: string, v: any) => {
     })
 
     if (response.status === 200) {
-      if (storeSelectCus.value.statusId === id) {
+      if (storeSelectCus?.value?.statusId === id) {
         storeSelectCus.value.agent = localMember.value.displayName
       }
       await getCustomer()

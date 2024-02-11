@@ -33,6 +33,8 @@
           :title="generateName(message)"
           :value="message.customerId"
           :active="storeSelectCus && message.customerId === storeSelectCus.userId"
+          :disabled="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName !== displayName && role === Role.AGENT"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -45,7 +47,9 @@
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]
                 ?.chatStatus,
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
-                ?.displayName
+                ?.displayName,
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName === displayName
             )
           "
         >
@@ -85,12 +89,15 @@
               v-if="message.isRead === false"
             >
               <time class="tw-text-xs tw-opacity-50 text-center">
-                <b class="text-primary">{{
-                  generateStatus(
-                    customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                      ?.chatStatus
-                  )
-                }}</b
+                <b
+                  :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus}`"
+                  >{{
+                    generateStatus(
+                      customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                        ?.chatStatus
+                    )
+                  }}</b
                 ><br />
                 {{
                   ((timestamp) => {
@@ -187,6 +194,9 @@
                 </template>
               </v-btn>
             </template>
+            {{
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id
+            }}
             <ChatAssignMember
               :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
               :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
@@ -348,7 +358,7 @@ function play() {
 onBeforeMount(() => {
   if (name) {
     socket.emit('join-message', name)
-    socket.on('latest-message', (data: any) => {
+    socket.on('latest-message', async (data: any) => {
       newMsg.value = data
       if (
         latestMessages.value &&
@@ -382,6 +392,7 @@ onBeforeMount(() => {
           icon: generateToastIcon(newMsg.value.data[0].source),
           rtl: false,
         }
+        await getCustomer()
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
@@ -411,6 +422,7 @@ onBeforeMount(() => {
           (item: any) => item._id === newMsg.value.data[0]._id
         )
         if (isCustomerIdEqual && isIdNotPresent) {
+          await getCustomer()
           play()
           filteredMessages.value.data.push(newMsg.value.data[0])
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
@@ -460,11 +472,12 @@ const setSelectCustomer = async (
   msgId: string,
   statusId: string,
   status: string,
-  agent: any
+  agent: any,
+  isChatOwner: boolean
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
-  if (!filteredMessages.value.data[filteredMessages.value.data.length - 1].isRead) {
+  if (!filteredMessages.value.data[filteredMessages.value.data.length - 1].isRead && isChatOwner) {
     await updateMsg(userId, msgId)
   }
 

@@ -83,4 +83,11 @@ const updateStatusByStep = async () => {
   localStatus.value = nextStatus.value
   await updateChatStatus(props.id, nextStatus.value)
 }
+
+watch(
+  () => props.status,
+  (newValue) => {
+    localStatus.value = newValue
+  }
+)
 </script>
