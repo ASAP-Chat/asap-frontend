@@ -46,6 +46,7 @@ const props = defineProps<{
 }>()
 const localMember = ref(props.currentMember)
 const access_token = useCookie(ACCESS_TOKEN)
+const storeSelectCus: any = useCookie('storeSelectCus')
 
 const { memberData } = await getMember()
 const updateAgent = async (id: string, v: any) => {
@@ -63,6 +64,9 @@ const updateAgent = async (id: string, v: any) => {
     })
 
     if (response.status === 200) {
+      if (storeSelectCus.value.statusId === id) {
+        storeSelectCus.value.agent = localMember.value.displayName
+      }
       await getCustomer()
     } else if (response.status === 401) {
       await useRefreshToken()
