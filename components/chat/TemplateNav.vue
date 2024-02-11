@@ -21,7 +21,7 @@
         />
       </div>
     </div>
-    <div class="tw-overflow-auto tw-h-5/6">
+    <div class="tw-overflow-auto tw-h-4/5">
       <div
         v-for="item in filteredTemplateData"
         class="mb-6 tw-flex tw-justify-center"
@@ -50,6 +50,7 @@
       <v-btn
         icon="mdi-message-text-outline"
         @click.stop="templateDrawer = !templateDrawer"
+        :disabled="storeSelectCus?.agent !== displayName"
       ></v-btn>
     </template>
     <template v-slot:prepend>
@@ -76,6 +77,7 @@
 <script setup lang="ts">
 import { getChatTemplate } from '~/services/message.service'
 import profileSrc from '~/assets/images/profile.png'
+import { USER } from '~/constants/Token'
 
 const props = defineProps<{
   id: string
@@ -87,6 +89,8 @@ const emit = defineEmits()
 const updateSendMsg = (item: string) => {
   emit('update:sendMsg', item)
 }
+const user: any = useCookie(USER)
+const { displayName } = user.value && user.value
 
 const templateDrawer = ref(false)
 const storeSelectCus: any = useCookie('storeSelectCus')
