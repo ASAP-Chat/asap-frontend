@@ -6,6 +6,7 @@
         :color="localStatus"
         v-bind="props"
         class="tw-rounded-l-md tw-rounded-r-none"
+        :disabled="storeSelectCus?.agent !== displayName"
       >
         {{ generateStatus(localStatus) }}
       </v-btn>
@@ -16,9 +17,9 @@
         :color="localStatus"
         icon="mdi-chevron-right"
         size="small"
-        class="tw-h-9 tw-rounded-l-none tw-rounded-r-md"
+        class="tw-h-9 tw-ml-[1px] tw-rounded-l-none tw-rounded-r-md"
+        :disabled="storeSelectCus?.agent !== displayName"
         @click="updateStatusByStep"
-        density="compact"
       >
         <template v-slot:default>
           <v-icon :color="localStatus"></v-icon>
@@ -38,6 +39,7 @@
 </template>
 <script setup lang="ts">
 import { Status } from '~/constants/Status'
+import { USER } from '~/constants/Token'
 import { updateChatStatus } from '~/services/message.service'
 
 const props = defineProps<{
@@ -46,6 +48,9 @@ const props = defineProps<{
 }>()
 
 const localStatus = ref(props.status)
+const storeSelectCus: any = useCookie('storeSelectCus')
+const user: any = useCookie(USER)
+const { displayName } = user.value && user.value
 
 const presetStatus = [
   {
