@@ -10,27 +10,30 @@
       <div class="text-center mb-3">
         <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
       </div>
-      <div>
+      <div class="mb-2">
         <CommonTextField
           rounded
           placeholder="ค้นหา"
           prepend-inner-icon="mdi-magnify"
           bg-color="white"
           v-model="searchKeyword"
+          hide-details
         />
-        <div
-          v-for="item in filteredTemplateData"
-          class="mb-6 tw-flex tw-justify-center"
-        >
-          <ChatTemplateCard
-            :id="item._id"
-            :keyword="item.keyword"
-            :template="item.template"
-            :allow-edit="false"
-            :width="250"
-            @click="updateSendMsg(item.template)"
-          />
-        </div>
+      </div>
+    </div>
+    <div class="tw-overflow-auto tw-h-5/6">
+      <div
+        v-for="item in filteredTemplateData"
+        class="mb-6 tw-flex tw-justify-center"
+      >
+        <ChatTemplateCard
+          :id="item._id"
+          :keyword="item.keyword"
+          :template="item.template"
+          :allow-edit="false"
+          :width="250"
+          @click="updateSendMsg(item.template)"
+        />
       </div>
     </div>
   </v-navigation-drawer>
