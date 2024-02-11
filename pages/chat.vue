@@ -358,7 +358,7 @@ function play() {
 onBeforeMount(() => {
   if (name) {
     socket.emit('join-message', name)
-    socket.on('latest-message', (data: any) => {
+    socket.on('latest-message', async (data: any) => {
       newMsg.value = data
       if (
         latestMessages.value &&
@@ -392,6 +392,7 @@ onBeforeMount(() => {
           icon: generateToastIcon(newMsg.value.data[0].source),
           rtl: false,
         }
+        await getCustomer()
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
@@ -421,6 +422,7 @@ onBeforeMount(() => {
           (item: any) => item._id === newMsg.value.data[0]._id
         )
         if (isCustomerIdEqual && isIdNotPresent) {
+          await getCustomer()
           play()
           filteredMessages.value.data.push(newMsg.value.data[0])
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
