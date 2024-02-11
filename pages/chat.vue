@@ -33,6 +33,8 @@
           :title="generateName(message)"
           :value="message.customerId"
           :active="storeSelectCus && message.customerId === storeSelectCus.userId"
+          :disabled="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName !== displayName && role === Role.AGENT"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -192,6 +194,9 @@
                 </template>
               </v-btn>
             </template>
+            {{
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id
+            }}
             <ChatAssignMember
               :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
               :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
