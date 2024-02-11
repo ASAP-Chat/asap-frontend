@@ -3,7 +3,7 @@ import { ACCESS_TOKEN, USER } from '~/constants/Token'
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, _id, isOwner } = user.value && user.value
+const { shop, isOwner } = user.value && user.value
 const { name } = shop
 
 const chatTemplateData = ref()
@@ -35,15 +35,12 @@ export const getChatTemplate = async () => {
 const socialInfo = ref()
 export const getSocialAccount = async () => {
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/social-account?$limit=3`,
-      {
-        method: 'get',
-        headers: {
-          Authorization: 'Bearer ' + access_token.value,
-        },
-      }
-    )
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-account?$limit=3`, {
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
     if (response.status === 200) {
       socialInfo.value = await response.json()
     } else if (response.status === 401) {
@@ -109,4 +106,52 @@ export const updateMsg = async (userId: string, msgId: string) => {
   nextTick(() => {
     window.scrollTo(0, document.body.scrollHeight)
   })
+}
+
+const customer = ref()
+export const getCustomer = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-customer`, {
+      method: 'get',
+      headers: {
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
+    if (response.status === 200) {
+      customer.value = await response.json()
+    } else if (response.status === 401) {
+      console.log('call - refresh token')
+      await useRefreshToken()
+      await getCustomer()
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+  return { customer }
+}
+
+export const updateChatStatus = async (statusId: string, status: string) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-customer/${statusId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        chatStatus: status,
+      }),
+      headers: {
+        'content-Type': 'application/json',
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
+
+    if (response.status === 200) {
+      await getCustomer()
+    } else if (response.status === 401) {
+      await useRefreshToken()
+      await updateChatStatus(statusId, status)
+    } else {
+      console.log('err')
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
