@@ -16,7 +16,9 @@
     @btn-action="closeModal"
   />
   <div class="mt-2">
-    <span class="tw-text-xl font-weight-bold text-primary">{{ socialInfo.data.length }}/3</span>
+    <span class="tw-text-xl font-weight-bold text-primary"
+      >{{ socialInfo?.data?.length ? socialInfo?.data?.length : 0 }}/3</span
+    >
     &nbsp; ช่องทาง
   </div>
   <div class="mt-6 mx-auto">
