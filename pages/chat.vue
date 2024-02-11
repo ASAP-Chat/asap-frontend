@@ -1,20 +1,12 @@
 <template>
   <CommonModal
-    v-if="socialInfo && socialInfo.data.length === 0"
-    :header="
-      isOwner
-        ? 'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'
-        : 'กรุณารอเจ้าของร้านค้าทำการเชิญเข้าร่วมทีมของร้านค้า'
-    "
+    v-if="!socialInfo && isOwner"
+    :header="'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'"
     custom-icon="mdi-store-cog-outline"
-    :content="
-      isOwner
-        ? 'กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP'
-        : 'สามารถใช้งานระบบได้เมื่อเจ้าของร้านค้าทำการเชิญเข้าร่วมทีม'
-    "
-    :buttonText="isOwner ? 'ตั้งค่า' : 'ออกจากระบบ'"
+    :content="'กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP'"
+    :buttonText="'ตั้งค่า'"
     :isSuccess="false"
-    @btn-action="isOwner ? navigateTo('/setting/chat-integration/') : useSignOut()"
+    @btn-action="navigateTo('/setting/chat-integration/')"
   />
   <div>
     <ChatFilterNav
@@ -36,7 +28,7 @@
       >
         <v-list-item
           class="tw-gap-x-3"
-          height="90"
+          height="70"
           exact
           :title="generateName(message)"
           :value="message.customerId"
@@ -51,7 +43,9 @@
               message._id,
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id,
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                ?.chatStatus
+                ?.chatStatus,
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName
             )
           "
         >
@@ -150,7 +144,7 @@
           </template>
         </v-list-item>
         <div
-          class="pl-5 tw-flex tw-items-center"
+          class="pl-5 pb-2 tw-flex tw-items-center tw-text-sm"
           :class="{
             'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
           }"
@@ -163,12 +157,22 @@
           >
             {{
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName
                 ? customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                    ?.agent.displayName
+                    ?.agent?.displayName
                 : 'ยังไม่มีผู้รับผิดชอบ'
             }}
           </span>
-          <v-menu :close-on-content-click="false">
+          <span
+            class="text-secondary-lighten"
+            v-if="customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.agent.displayName === displayName"
+            >(คุณ)</span
+          >
+          <v-menu
+            :close-on-content-click="false"
+            v-if="role !== Role.AGENT"
+          >
             <template v-slot:activator="{ props }">
               <v-btn
                 class="ma-0"
@@ -202,9 +206,7 @@
 
   <div id="chatContainer">
     <div v-if="filteredMessages">
-      <div
-        v-if="storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''"
-      >
+      <div v-if="storeSelectCus">
         <ChatTemplateNav
           :id="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]?._id"
           :status="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]
@@ -242,7 +244,7 @@
             "
             :name="generateName(message)"
             :img="generateCustomerImg(message)"
-            :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
+            :date="showDisplayTime(filteredMessages, index) ? message.sourceTimestamp : ''"
             :time="message.sourceTimestamp"
             :is-owner="message.isOwner"
           />
@@ -254,19 +256,9 @@
       order="2"
       name="footer"
       class="tw-grid"
-      :class="
-        storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
-          ? ' tw-drop-shadow-2xl'
-          : 'tw-bg-[#f2f2f2]'
-      "
+      :class="storeSelectCus ? ' tw-drop-shadow-2xl' : 'tw-bg-[#f2f2f2]'"
     >
-      <v-form
-        :class="
-          storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
-            ? ''
-            : 'tw-invisible'
-        "
-      >
+      <v-form :class="storeSelectCus ? '' : 'tw-invisible'">
         <v-container>
           <v-row>
             <v-col cols="12">
@@ -284,9 +276,11 @@
                 :placeholder="
                   disabledChatInput
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามข้อกำหนดของ Facebook'
+                    : storeSelectCus?.agent !== displayName
+                    ? 'ไม่สามารถส่งข้อความได้ เนื่องจากคุณไม่ได้รับผิดชอบแชตนี้'
                     : 'พิมพ์ข้อความ ...'
                 "
-                :disabled="Boolean(disabledChatInput)"
+                :disabled="Boolean(disabledChatInput) || storeSelectCus?.agent !== displayName"
               >
                 <template v-slot:append>
                   <v-btn
@@ -320,6 +314,7 @@ import profileSrc from '~/assets/images/profile.png'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
 import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/services/message.service'
 import { Status } from '~/constants/Status'
+import { Role } from '~/constants/Role'
 import type { ToastOptions } from 'vue-toastification/dist/types/types'
 
 const toast = useToast()
@@ -340,7 +335,7 @@ const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner } = user.value && user.value
+const { shop, isOwner, role, displayName } = user.value && user.value
 const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()
@@ -434,22 +429,6 @@ onBeforeUnmount(() => {
 const loading = ref(false)
 const loadingBtn = ref(false)
 
-const shouldDisplayTime = (index: number) => {
-  if (index === 0) {
-    return true
-  }
-
-  const currentMessage = filteredMessages.value.data[index]
-  const previousMessage = filteredMessages.value.data[index - 1]
-
-  const currentDate = new Date(currentMessage.sourceTimestamp)
-  const previousDate = new Date(previousMessage.sourceTimestamp)
-
-  const isDifferentDay = currentDate.getDate() !== previousDate.getDate()
-
-  return isDifferentDay
-}
-
 useHead({
   title: 'แชต',
 })
@@ -480,7 +459,8 @@ const setSelectCustomer = async (
   time: string,
   msgId: string,
   statusId: string,
-  status: string
+  status: string,
+  agent: any
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
@@ -497,6 +477,7 @@ const setSelectCustomer = async (
     messageTimestamp,
     statusId,
     status,
+    agent,
   }
   storeSelectCus.value = selectCustomer.value
 
@@ -617,7 +598,7 @@ const getMoreChat = async () => {
 const { socialInfo } = await getSocialAccount()
 const { customer } = await getCustomer()
 
-if (Array.isArray(socialInfo.value.data)) {
+if (Array.isArray(socialInfo?.value?.data)) {
   socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
 }
 
@@ -645,7 +626,7 @@ const filteredMsg = computed(() => {
   })
 
   // Filter latestMessages based on the condition
-  const filteredByStatus = latestMessages.value.data.filter(
+  const filteredByStatus = latestMessages?.value?.data.filter(
     (message: any) => statusDict[message.customerId] === selectedItem.value
   )
   return selectedItem.value === Status.PENDING ||
@@ -661,6 +642,14 @@ onBeforeMount(async () => {
   await getLatestMsg()
   await getCustomer()
 })
+
+watch(
+  () => selectedItem.value,
+  (newValue) => {
+    storeSelectCus.value = null
+    filteredMessages.value = null
+  }
+)
 </script>
 <style>
 .v-list-item--one-line .v-list-item-subtitle {
