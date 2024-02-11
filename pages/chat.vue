@@ -17,87 +17,10 @@
     @btn-action="isOwner ? navigateTo('/setting/chat-integration/') : useSignOut()"
   />
   <div>
-    <v-navigation-drawer
-      permanent
-      width="145"
-      color="#fafafa"
-    >
-      <v-list color="primary">
-        <v-list-item
-          title="ทั้งหมด"
-          value="all"
-          prepend-icon="mdi-message-outline"
-          exact
-          base-color="#707070"
-          :active="selectedItem === 'all'"
-          @click="selectedItem = 'all'"
-        ></v-list-item>
-
-        <v-list-subheader> สถานะแชต </v-list-subheader>
-        <v-divider></v-divider>
-        <v-list-item
-          title="รอดำเนินการ"
-          value="pending"
-          prepend-icon="mdi-emoticon-confused-outline"
-          base-color="#707070"
-          :active="selectedItem === 'pending'"
-          @click="selectedItem = 'pending'"
-        ></v-list-item>
-
-        <v-list-item
-          title="ดำเนินการ"
-          value="doing"
-          prepend-icon="mdi-emoticon-neutral-outline"
-          base-color="#707070"
-          :active="selectedItem === 'doing'"
-          @click="selectedItem = 'doing'"
-        ></v-list-item>
-        <v-list-item
-          title="เสร็จสิ้น"
-          value="done"
-          prepend-icon="mdi-emoticon-happy-outline"
-          base-color="#707070"
-          :active="selectedItem === 'done'"
-          @click="selectedItem = 'done'"
-        ></v-list-item>
-
-        <v-list-subheader> Social Media </v-list-subheader>
-        <v-divider></v-divider>
-        <v-list-item
-          title="Line"
-          :value="SocialType.LINE"
-          prepend-icon="fa:fa-brands fa-line"
-          base-color="#707070"
-          :active="selectedItem === SocialType.LINE"
-          @click="selectedItem = SocialType.LINE"
-        >
-          <template v-slot:prepend>
-            <v-icon color="#02c153"></v-icon>
-          </template>
-        </v-list-item>
-
-        <v-list-item
-          title="Facebook"
-          :value="SocialType.FACEBOOK"
-          prepend-icon="fa:fa-brands fa-square-facebook"
-          base-color="#707070"
-          :active="selectedItem === SocialType.FACEBOOK"
-          @click="selectedItem = SocialType.FACEBOOK"
-        >
-          <template v-slot:prepend>
-            <v-icon color="#0765FF"></v-icon>
-          </template>
-        </v-list-item>
-        <v-list-item
-          title="Instagram"
-          :value="SocialType.INSTAGRAM"
-          prepend-icon="mdi-instagram"
-          base-color="#707070"
-          :active="selectedItem === SocialType.INSTAGRAM"
-          @click="selectedItem = SocialType.INSTAGRAM"
-        ></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <ChatFilterNav
+      :selectedItem="selectedItem"
+      @update:selectedItem="selectedItem = $event"
+    />
 
     <!-- drawer รายชื่อ -->
     <v-navigation-drawer
@@ -109,6 +32,7 @@
         class="tw-p-0"
         v-if="latestMessages"
         v-for="message in filteredMsg"
+        density="compact"
       >
         <v-list-item
           class="tw-gap-x-3"
@@ -124,7 +48,10 @@
               message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
               message.source,
               message.sourceTimestamp,
-              message._id
+              message._id,
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id,
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                ?.chatStatus
             )
           "
         >
@@ -163,7 +90,14 @@
               color="error"
               v-if="message.isRead === false"
             >
-              <time class="tw-text-xs tw-opacity-50">
+              <time class="tw-text-xs tw-opacity-50 text-center">
+                <b class="text-primary">{{
+                  generateStatus(
+                    customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                      ?.chatStatus
+                  )
+                }}</b
+                ><br />
                 {{
                   ((timestamp) => {
                     const messageTimestamp = useDayjs()(message.sourceTimestamp)
@@ -184,9 +118,19 @@
               </time>
             </v-badge>
             <time
-              class="tw-text-xs tw-opacity-50"
+              class="tw-text-xs tw-opacity-50 text-center"
               v-else
             >
+              <b
+                :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus}`"
+                >{{
+                  generateStatus(
+                    customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                      ?.chatStatus
+                  )
+                }}</b
+              ><br />
               {{
                 ((timestamp) => {
                   const messageTimestamp = useDayjs()(message.sourceTimestamp)
@@ -205,6 +149,46 @@
             </time>
           </template>
         </v-list-item>
+        <div
+          class="pl-5 tw-flex tw-items-center"
+          :class="{
+            'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
+          }"
+        >
+          มอบหมายให้ :&nbsp;
+          <span
+            class="mr-1"
+            :class="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                .displayName ? 'text-primary font-weight-bold' : 'text-secondary-lighten'"
+          >
+            {{
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ? customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.agent.displayName
+                : 'ยังไม่มีผู้รับผิดชอบ'
+            }}
+          </span>
+          <v-menu :close-on-content-click="false">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                class="ma-0"
+                color="primary"
+                v-bind="props"
+                icon="mdi-account-edit-outline"
+                variant="text"
+                density="compact"
+              >
+                <template v-slot:default>
+                  <v-icon color="primary"></v-icon>
+                </template>
+              </v-btn>
+            </template>
+            <ChatAssignMember
+              :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
+              :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
+            />
+          </v-menu>
+        </div>
       </v-list>
       <v-list v-if="filteredMsg.length === 0">
         <v-list-item
@@ -216,122 +200,63 @@
     </v-navigation-drawer>
   </div>
 
-  <div id="test">
+  <div id="chatContainer">
     <div v-if="filteredMessages">
       <div
         v-if="storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''"
       >
-        <v-navigation-drawer
-          v-model="templateDrawer"
-          permanent
-          width="300"
-          location="right"
-          :rail="rail"
-          @click="rail = false"
-        >
-          <div class="pa-3 pt-6">
-            <div class="text-center mb-3">
-              <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
-            </div>
-            <div>
-              <CommonTextField
-                rounded
-                placeholder="ค้นหา"
-                prepend-inner-icon="mdi-magnify"
-                bg-color="white"
-                v-model="searchKeyword"
-              />
-              <div
-                v-for="item in filteredTemplateData"
-                class="mb-6 tw-flex tw-justify-center"
-              >
-                <ChatTemplateCard
-                  :id="item._id"
-                  :keyword="item.keyword"
-                  :template="item.template"
-                  :allow-edit="false"
-                  :width="250"
-                  @click="sendMsg = item.template"
-                />
-              </div>
-            </div>
-          </div>
-        </v-navigation-drawer>
-
-        <v-app-bar
-          :elevation="0"
-          class="tw-border-b"
-        >
-          <template v-slot:append>
-            <v-btn
-              icon="mdi-message-text-outline"
-              @click.stop="templateDrawer = !templateDrawer"
-            ></v-btn>
-          </template>
-          <template v-slot:prepend>
-            <v-img
-              :width="40"
-              :height="40"
-              aspect-ratio="1/1"
-              cover
-              class="tw-rounded-full"
-              :src="storeSelectCus.pictureUrl ? storeSelectCus.pictureUrl : profileSrc"
-            ></v-img>
-          </template>
-          <v-app-bar-title class="font-weight-bold">
-            <v-icon
-              :color="generateSocialColor(storeSelectCus.source)"
-              class="pb-6"
-              size="x-small"
-              >{{ generateSocialIcon(storeSelectCus.source) }}</v-icon
-            >
-            {{ storeSelectCus.displayName }}
-          </v-app-bar-title>
-        </v-app-bar>
-      </div>
-      <div
-        class="text-center mb-2"
-        v-if="filteredMessages.total > totalChat"
-      >
-        <v-btn
-          prepend-icon="mdi-cursor-default-click-outline"
-          variant="flat"
-          @click="getMoreChat()"
-          :loading="loadingBtn"
-        >
-          <template v-slot:prepend>
-            <v-icon color="primary"></v-icon>
-          </template>
-
-          คลิกเพื่อแสดงข้อความก่อนหน้า
-        </v-btn>
-      </div>
-      <div
-        v-for="(message, index) in filteredMessages.data.sort((a:any, b:any) => a.sourceTimestamp - b.sourceTimestamp)"
-      >
-        <ChatBubble
-          :msgType="message.type"
-          :msg-text="message.message"
-          :msg-sticker="message.type === MsgType.STICKER ? message.link[0] : ''"
-          :msg-link="
-            message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
-          "
-          :name="generateName(message)"
-          :img="generateCustomerImg(message)"
-          :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
-          :time="message.sourceTimestamp"
-          :is-owner="message.isOwner"
+        <ChatTemplateNav
+          :id="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]?._id"
+          :status="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]
+                ?.chatStatus"
+          @update:sendMsg="sendMsg = $event"
         />
       </div>
-    </div>
+      <div>
+        <div
+          class="text-center mb-2"
+          v-if="filteredMessages?.total > totalChat"
+        >
+          <v-btn
+            prepend-icon="mdi-cursor-default-click-outline"
+            variant="flat"
+            @click="getMoreChat()"
+            :loading="loadingBtn"
+          >
+            <template v-slot:prepend>
+              <v-icon color="primary"></v-icon>
+            </template>
 
+            คลิกเพื่อแสดงข้อความก่อนหน้า
+          </v-btn>
+        </div>
+        <div
+          v-for="(message, index) in filteredMessages?.data.sort((a:any, b:any) => a.sourceTimestamp - b.sourceTimestamp)"
+        >
+          <ChatBubble
+            :msgType="message.type"
+            :msg-text="message.message"
+            :msg-sticker="message.type === MsgType.STICKER ? message.link[0] : ''"
+            :msg-link="
+              message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
+            "
+            :name="generateName(message)"
+            :img="generateCustomerImg(message)"
+            :date="shouldDisplayTime(index) ? message.sourceTimestamp : ''"
+            :time="message.sourceTimestamp"
+            :is-owner="message.isOwner"
+          />
+        </div>
+      </div>
+    </div>
     <v-footer
       app
+      order="2"
       name="footer"
-      class="tw-grid tw-drop-shadow-2xl"
+      class="tw-grid"
       :class="
         storeSelectCus && storeSelectCus.userId !== '' && storeSelectCus.displayName !== ''
-          ? ''
+          ? ' tw-drop-shadow-2xl'
           : 'tw-bg-[#f2f2f2]'
       "
     >
@@ -358,7 +283,7 @@
                 hide-details
                 :placeholder="
                   disabledChatInput
-                    ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามขอกำหนดของ Facebook'
+                    ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามข้อกำหนดของ Facebook'
                     : 'พิมพ์ข้อความ ...'
                 "
                 :disabled="Boolean(disabledChatInput)"
@@ -393,12 +318,8 @@ import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import profileSrc from '~/assets/images/profile.png'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
-import {
-  getSocialAccount,
-  getLatestMsg,
-  getChatTemplate,
-  updateMsg,
-} from '~/services/message.service'
+import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/services/message.service'
+import { Status } from '~/constants/Status'
 import type { ToastOptions } from 'vue-toastification/dist/types/types'
 
 const toast = useToast()
@@ -424,26 +345,6 @@ const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()
 const audio = new Audio(buttonSfx)
-const templateDrawer = ref(false)
-const rail = ref(false)
-const { chatTemplateData } = await getChatTemplate()
-const searchKeyword = ref('')
-const filteredTemplateData = computed(() => {
-  const keyword = searchKeyword.value.toLowerCase().trim()
-  return chatTemplateData.value.data
-    .sort((a: any, b: any) => {
-      const dateA = new Date(a.updatedAt)
-      const dateB = new Date(b.updatedAt)
-
-      return dateA.getTime() - dateB.getTime()
-    })
-    .filter((item: any) => {
-      return (
-        item.keyword.toLowerCase().includes(keyword) ||
-        item.template.toLowerCase().includes(keyword)
-      )
-    })
-})
 
 function play() {
   audio.play()
@@ -577,7 +478,9 @@ const setSelectCustomer = async (
   pictureUrl: string,
   source: string,
   time: string,
-  msgId: string
+  msgId: string,
+  statusId: string,
+  status: string
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
@@ -586,7 +489,15 @@ const setSelectCustomer = async (
   }
 
   const messageTimestamp = useDayjs()(time)
-  selectCustomer.value = { userId, displayName, pictureUrl, source, messageTimestamp }
+  selectCustomer.value = {
+    userId,
+    displayName,
+    pictureUrl,
+    source,
+    messageTimestamp,
+    statusId,
+    status,
+  }
   storeSelectCus.value = selectCustomer.value
 
   const hoursDifference = Math.abs(messageTimestamp.diff(useDayjs()(), 'hours'))
@@ -686,7 +597,7 @@ const getMoreChat = async () => {
       if (Array.isArray(result.data)) {
         totalChat.value += result.data.length
       }
-      var myDiv = document.getElementById('test')
+      var myDiv = document.getElementById('chatContainer')
       const height = myDiv && Math.trunc(myDiv.offsetHeight / 3.32)
       nextTick(() => {
         if (myDiv && height) window.scrollTo(0, height)
@@ -704,6 +615,8 @@ const getMoreChat = async () => {
 }
 
 const { socialInfo } = await getSocialAccount()
+const { customer } = await getCustomer()
+
 if (Array.isArray(socialInfo.value.data)) {
   socialTypes.value = socialInfo.value.data.map((info: any) => info.socialType)
 }
@@ -726,13 +639,27 @@ const filteredMsg = computed(() => {
     return msg.source === selectedItem.value
   })
 
-  return filteredBySelectedItem
+  const statusDict: { [key: string]: string } = {}
+  customer.value.data.forEach((customer: any) => {
+    statusDict[customer.customerId] = customer.chatStatus
+  })
+
+  // Filter latestMessages based on the condition
+  const filteredByStatus = latestMessages.value.data.filter(
+    (message: any) => statusDict[message.customerId] === selectedItem.value
+  )
+  return selectedItem.value === Status.PENDING ||
+    selectedItem.value === Status.ONGOING ||
+    selectedItem.value === Status.COMPLETED
+    ? filteredByStatus
+    : filteredBySelectedItem
 })
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
   await getSocialAccount()
   await getLatestMsg()
+  await getCustomer()
 })
 </script>
 <style>
