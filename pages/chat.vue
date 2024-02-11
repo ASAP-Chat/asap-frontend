@@ -45,7 +45,9 @@
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]
                 ?.chatStatus,
               customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
-                ?.displayName
+                ?.displayName,
+              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+                ?.displayName === displayName
             )
           "
         >
@@ -85,12 +87,15 @@
               v-if="message.isRead === false"
             >
               <time class="tw-text-xs tw-opacity-50 text-center">
-                <b class="text-primary">{{
-                  generateStatus(
-                    customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                      ?.chatStatus
-                  )
-                }}</b
+                <b
+                  :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus}`"
+                  >{{
+                    generateStatus(
+                      customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                        ?.chatStatus
+                    )
+                  }}</b
                 ><br />
                 {{
                   ((timestamp) => {
@@ -460,11 +465,12 @@ const setSelectCustomer = async (
   msgId: string,
   statusId: string,
   status: string,
-  agent: any
+  agent: any,
+  isChatOwner: boolean
 ) => {
   totalChat.value = 0
   await getMsgById(userId, totalChat.value)
-  if (!filteredMessages.value.data[filteredMessages.value.data.length - 1].isRead) {
+  if (!filteredMessages.value.data[filteredMessages.value.data.length - 1].isRead && isChatOwner) {
     await updateMsg(userId, msgId)
   }
 
