@@ -15,18 +15,19 @@ const manager = new Manager(socketURL, {
 const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 
-const { shop } = user?.value
-const { name } = shop
+const { shop } = user?.value || {}
+const { name } = shop || {}
 
 const resetCookie = (cookieName: string) => {
   const cookie = useCookie(cookieName)
   cookie.value = null
 }
-export const useSignOut = () => {
+export const useSignOut = async () => {
   resetCookie(ACCESS_TOKEN)
   resetCookie(USER)
   resetCookie(REFRESH_TOKEN)
   resetCookie('storeSelectCus')
   socket.emit('leave-message', name)
   navigateTo('/')
+  location.reload()
 }

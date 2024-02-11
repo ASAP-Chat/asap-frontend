@@ -42,6 +42,7 @@
             link
             :to="item.path"
             :active="i === 3"
+            :disabled="!socialInfo"
           >
             <template #title>
               <v-row
@@ -100,9 +101,9 @@
       >
         <v-list color="primary">
           <div
-            v-for="item in isOwner
+            v-for="item in role !== Role.AGENT
               ? settingItems
-              : settingItems.filter((item) => item.path !== '/setting/chat-integration/')"
+              : settingItems.filter((item) => item.path === '/setting/profile/')"
           >
             <v-list-item
               :key="item.path"
@@ -134,13 +135,15 @@
 </template>
 <script setup lang="ts">
 import imageSrc from '~/assets/images/logo.png'
+import { Role } from '~/constants/Role'
 import { USER } from '~/constants/Token'
+import { getSocialAccount } from '~/services/message.service'
 
-const route = useRoute()
+const { socialInfo } = await getSocialAccount()
 const confirmLogout = ref(false)
 
 const user: any = useCookie(USER)
-const { isOwner } = user.value
+const { isOwner, role } = user.value
 
 const sidebarList = [
   {

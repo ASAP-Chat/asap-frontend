@@ -26,7 +26,10 @@
             class="mx-auto"
           ></v-img>
           <p class="tw-mb-5">ระบบจัดการแชตลูกค้า<br />สำหรับร้านค้าใน Social Media</p>
-          <h5 class="tw-text-3xl font-weight-bold tw-mb-4">สร้างบัญชี ASAP</h5>
+          <h5 class="tw-text-3xl font-weight-bold tw-mb-4">สร้างบัญชี ASAP สำหรับเจ้าของธุรกิจ</h5>
+          <p class="text-secondary-lighten">
+            ในกรณีที่ท่านไม่ใช่เจ้าของธุรกิจ โปรดติดต่อเจ้าของร้าน เพื่อให้ invite เข้าร่วมทีม
+          </p>
         </div>
         <v-form v-model="isFormValid">
           <div class="form-control tw-mt-2">
@@ -41,7 +44,7 @@
           </div>
           <div class="form-control tw-mt-2">
             <CommonTextField
-              :rules="[required, passwordLengthMin, passwordLengthMax]"
+              :rules="[required, englishNumberSpecial, passwordLengthMin, passwordLengthMax]"
               v-model="userInfo.password"
               id="password"
               name="password"
@@ -73,33 +76,6 @@
               type="displayName"
               label="ชื่อผู้ใช้"
             />
-          </div>
-          <div class="form-control tw-mt-2">
-            <v-radio-group
-              label="คุณเป็นเจ้าของร้านค้าใช่หรือไม่?"
-              inline
-              hide-details
-              v-model="userInfo.isOwner"
-            >
-              <v-radio
-                label="ใช่"
-                :value="true"
-                color="primary"
-                class="tw-mr-7"
-              ></v-radio>
-              <v-radio
-                label="ไม่ใช่"
-                :value="false"
-                color="primary"
-                @click="resetShopValue"
-              ></v-radio>
-            </v-radio-group>
-            <p
-              class="tw-text-xs text-error"
-              v-if="userInfo?.isOwner === false"
-            >
-              ในกรณีที่ท่านไม่ใช่เจ้าของร้านค้า ท่านจะมีสิทธิ์เป็น Agent Lead หรือ Agent เท่านั้น
-            </p>
           </div>
         </v-form>
         <!-- Biz question -->
@@ -236,6 +212,7 @@ const {
   confirmPassword,
   facebookLink,
   instagramLink,
+  englishNumberSpecial,
 } = useFormRules()
 
 const userInfo = ref<UserSignup>({
@@ -243,7 +220,7 @@ const userInfo = ref<UserSignup>({
   email: '',
   password: '',
   confirmPassword: '',
-  isOwner: undefined,
+  isOwner: true,
   shop: {
     name: '',
     category: '',
@@ -272,35 +249,16 @@ const isShopInfoValid = computed(() => {
 })
 
 const isButtonDisabled = computed(() => {
-  if (userInfo.value?.isOwner === true) {
-    return (
-      !isFormValid.value ||
-      selectedSocial.value.length === 0 ||
-      !isShopInfoValid.value ||
-      !isSocialValid.value
-    )
-  } else if (userInfo.value?.isOwner === false) {
-    return !isFormValid.value
-  } else {
-    return true
-  }
+  return (
+    !isFormValid.value ||
+    selectedSocial.value.length === 0 ||
+    !isShopInfoValid.value ||
+    !isSocialValid.value
+  )
 })
 
 const visible = ref(false)
 const confirmVisible = ref(false)
-
-const resetShopValue = () => {
-  userInfo.value.shop = {
-    name: '',
-    category: '',
-    detail: '',
-    social: {
-      facebook: '',
-      instagram: '',
-      line: '',
-    },
-  }
-}
 
 const register = async (user: UserSignup) => {
   loading.value = true
