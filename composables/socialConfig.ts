@@ -96,9 +96,7 @@ export const generateCustomerImg = (message: any) => {
       return senderDetail?.pictureUrl
 
     case SocialType.FACEBOOK:
-      return isOwner
-        ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png'
-        : profileSrc
+      return senderDetail.picture.data.url
 
     case SocialType.INSTAGRAM:
       return isOwner
@@ -108,4 +106,18 @@ export const generateCustomerImg = (message: any) => {
     default:
       return ''
   }
+}
+
+export const generateAvatarUrl = (message: any) => {
+  const isOwner = message.isOwner
+  const socialType = message.source
+  const pictureUrl = isOwner
+    ? socialType === SocialType.LINE
+      ? message.receiverDetail.pictureUrl
+      : message.receiverDetail.picture.data.url
+    : socialType === SocialType.LINE
+    ? message.senderDetail.pictureUrl
+    : message.senderDetail.picture.data.url
+
+  return pictureUrl
 }

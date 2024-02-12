@@ -39,7 +39,7 @@
             setSelectCustomer(
               message.customerId,
               generateName(message),
-              message.isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl,
+              generateAvatarUrl(message),
               message.source,
               message.sourceTimestamp,
               message._id,
@@ -70,15 +70,7 @@
                   size="small"
                 ></v-icon>
               </template>
-              <v-avatar
-                :image="
-                  message.isOwner && message.source === SocialType.LINE
-                    ? message.receiverDetail.pictureUrl
-                    : message.source === SocialType.FACEBOOK
-                    ? profileSrc
-                    : message.senderDetail.pictureUrl
-                "
-              />
+              <v-avatar :image="generateAvatarUrl(message)" />
             </v-badge>
           </template>
           <template v-slot:append>
@@ -320,7 +312,6 @@ import { Manager } from 'socket.io-client'
 import ToastNoti from '~/components/chat/ToastNoti.vue'
 import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
-import profileSrc from '~/assets/images/profile.png'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
 import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/services/message.service'
 import { Status } from '~/constants/Status'

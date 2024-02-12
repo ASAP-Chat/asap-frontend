@@ -143,7 +143,7 @@
           <div data-aos="fade-up-left" class="tw-flex tw-flex-wrap tw-justify-center">
             <div class="tw-w-full sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
               <img src="../assets/images/team.svg" alt="chat"
-                class="tw-w-full tw-rounded-lg tw-drop-shadow-xl tw-shadow-md" />
+                class="tw-w-full tw-rounded-lg" />
             </div>
             <div class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col">
               <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
