@@ -196,7 +196,7 @@
           </v-menu>
         </div>
       </v-list>
-      <v-list v-if="filteredMsg.length === 0">
+      <v-list v-if="filteredMsg?.length === 0">
         <v-list-item
           disabled
           class="text-center"
