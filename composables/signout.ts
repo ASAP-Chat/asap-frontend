@@ -29,5 +29,4 @@ export const useSignOut = async () => {
   resetCookie(REFRESH_TOKEN)
   resetCookie('storeSelectCus')
   navigateTo('/')
-  location.reload()
 }
