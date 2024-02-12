@@ -22,7 +22,7 @@ const props = defineProps<{
   img?: string
   msg?: string
   type: string
-  senderName: string
+  senderName?: string
 }>()
 </script>
 <style></style>

@@ -17,7 +17,7 @@
     <!-- drawer รายชื่อ -->
     <v-navigation-drawer
       permanent
-      width="280"
+      width="370"
       app
     >
       <v-list
@@ -27,7 +27,7 @@
         density="compact"
       >
         <v-list-item
-          class="tw-gap-x-3"
+          class="tw-gap-x-3 pt-4"
           height="70"
           exact
           :title="generateName(message)"
@@ -143,7 +143,7 @@
           </template>
         </v-list-item>
         <div
-          class="pl-5 pb-2 tw-flex tw-items-center tw-text-sm"
+          class="pt-2 pl-5 pb-2 tw-flex tw-items-center tw-text-xs"
           :class="{
             'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
           }"
@@ -186,9 +186,6 @@
                 </template>
               </v-btn>
             </template>
-            {{
-              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id
-            }}
             <ChatAssignMember
               :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
               :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
@@ -363,7 +360,7 @@ onBeforeMount(() => {
         const content = {
           component: ToastNoti,
           props: {
-            img: newMsg.value.data[0].senderDetail.pictureUrl,
+            img: generateAvatarUrl(newMsg.value.data[0]),
             senderName: newMsg.value.data[0].senderDetail.displayName,
             msg: newMsg.value.data[0].message,
             type: newMsg.value.data[0].type,
@@ -633,7 +630,7 @@ const filteredMsg = computed(() => {
   })
 
   // Filter latestMessages based on the condition
-  const filteredByStatus = latestMessages?.value?.data.filter((message: any) => {
+  const filteredByStatus = filteredBySocialTypes?.filter((message: any) => {
     const customerStatus = statusDict[message.customerId]?.chatStatus
     const agentDisplayName = statusDict[message.customerId]?.agentDisplayName
 
