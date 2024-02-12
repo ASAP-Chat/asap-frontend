@@ -17,7 +17,7 @@
       <v-list-item
         title="แชตของฉัน"
         value="mine"
-        prepend-icon="mdi-message-star-outline"
+        prepend-icon="mdi-message-bookmark-outline"
         exact
         base-color="#707070"
         :active="props.selectedItem === 'mine'"
