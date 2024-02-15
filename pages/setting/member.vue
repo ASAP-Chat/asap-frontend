@@ -98,7 +98,6 @@ const { role } = user.value
 const calculateOwnerCount = computed(() => {
   return memberData.value.data.filter((item) => item.role === 'owner').length
 })
-console.log('🍪🥛 ~ calculateOwnerCount ~ calculateOwnerCount:', calculateOwnerCount.value)
 
 const headers: any[] = [
   {

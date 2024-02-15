@@ -32,7 +32,14 @@
             name="keyword"
             rounded="lg"
             density="compact"
+            :error="dupKeyword"
           />
+          <p
+            class="mb-3 text-error tw-text-sm mt-n3"
+            v-if="dupKeyword"
+          >
+            Email นี้มีอยู่ในระบบแล้ว
+          </p>
         </div>
         <div class="form-control tw-mt-4">
           <p class="pb-4">เลือกบทบาท</p>
@@ -78,6 +85,7 @@ const { checkEmail, required } = useFormRules()
 const toast = useToast()
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
+const dupKeyword = ref(false)
 
 const { shop } = user.value && user.value
 
@@ -107,6 +115,7 @@ const memberData = ref<MemberInfo>({
 const emits = defineEmits(['close-modal'])
 const close = () => {
   emits('close-modal')
+  dupKeyword.value = false
   memberData.value.email = ''
   memberData.value.role = ''
 }
@@ -114,7 +123,7 @@ const isFormValid = ref(false)
 
 const createMember = async (memberData: MemberInfo) => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/team-member`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/team-member`, {
       method: 'post',
       body: JSON.stringify({
         email: memberData.email,
@@ -126,13 +135,20 @@ const createMember = async (memberData: MemberInfo) => {
         Authorization: 'Bearer ' + access_token.value,
       },
     })
-    if (response.status.value === 'success') {
+    if (response.status === 200) {
       close()
       toast.success('เพิ่มสมาชิกสำเร็จ', useToastOption)
       await getMember()
-    } else {
+    } else if (response.status === 401) {
+      dupKeyword.value = false
       await useRefreshToken()
+      await createMember(memberData)
       console.log(`Request failed with status: ${response.error.value}`)
+    }
+    if (response.status === 500) {
+      dupKeyword.value = true
+    } else {
+      console.log('err')
     }
   } catch (error) {
     console.error(error)
