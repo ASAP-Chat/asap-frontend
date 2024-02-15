@@ -54,7 +54,7 @@
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
               href="#chat"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >แชท</a
+              >แชต</a
             >
           </li>
           <li class="tw-mr-3">
@@ -62,7 +62,7 @@
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
               href="#chatbot"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >แชทบอท</a
+              >แชตบอท</a
             >
           </li>
           <li class="tw-mr-3">
@@ -70,7 +70,7 @@
               class="tw-inline-block tw-uppercase tw-no-underline tw-font-medium tw-py-2 tw-px-4"
               href="#chattemplate"
               :class="data.scrollY > 10 ? 'text-primary' : 'text-white'"
-              >แชทเทมเพลต</a
+              >แชตเทมเพลต</a
             >
           </li>
           <li class="tw-mr-3">
