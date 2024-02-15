@@ -1,6 +1,7 @@
 import { MsgType } from '~/interfaces/message.interface'
 import { SocialType } from '~/interfaces/social.interface'
 import profileSrc from '~/assets/images/profile.png'
+import { Role } from '~/constants/Role'
 
 export const generateSocialColor = (type: string) => {
   switch (type) {
@@ -120,4 +121,17 @@ export const generateAvatarUrl = (message: any) => {
     : message.senderDetail.picture.data.url
 
   return pictureUrl
+}
+
+export const generateRole = (role: any) => {
+  switch (role) {
+    case Role.AGENT:
+      return 'เอเจนต์'
+    case Role.MANAGER:
+      return 'ผู้จัดการ'
+    case Role.OWNER:
+      return 'เจ้าของธุรกิจ'
+    default:
+      return role
+  }
 }

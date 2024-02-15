@@ -100,10 +100,10 @@ const filteredTemplateData = computed(() => {
   const keyword = searchKeyword.value.toLowerCase().trim()
   return chatTemplateData.value.data
     .sort((a: any, b: any) => {
-      const dateA = new Date(a.updatedAt)
-      const dateB = new Date(b.updatedAt)
+      const keywordA = a.keyword.toLowerCase()
+      const keywordB = b.keyword.toLowerCase()
 
-      return dateA.getTime() - dateB.getTime()
+      return keywordA.localeCompare(keywordB, 'th', { sensitivity: 'base' })
     })
     .filter((item: any) => {
       return (

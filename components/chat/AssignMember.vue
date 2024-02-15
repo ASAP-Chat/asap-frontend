@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-list color="primary">
       <v-list-item
-        v-for="member in memberData.data"
+        v-for="member in sortedMembers"
         :value="member"
         :active="member.displayName === localMember.displayName"
         @click="updateAgent(props.id, member)"
@@ -16,8 +16,10 @@
             class="mr-2"
             >mdi-check-circle
           </v-icon>
-          <b v-if="member.displayName === localMember.displayName">{{ member.displayName }}</b>
-          <span v-else>{{ member.displayName }}</span>
+          <b v-if="member.displayName === localMember.displayName"
+            >{{ member.displayName }} &nbsp; ({{ generateRole(member.role) }})</b
+          >
+          <span v-else>{{ member.displayName }} &nbsp; ({{ generateRole(member.role) }})</span>
         </v-list-item-title>
       </v-list-item>
     </v-list>
@@ -49,6 +51,28 @@ const access_token = useCookie(ACCESS_TOKEN)
 const storeSelectCus: any = useCookie('storeSelectCus')
 
 const { memberData } = await getMember()
+const roleOrder: { [key: string]: number } = {
+  manager: 1,
+  agent: 2,
+  owner: 0,
+}
+const sortedMembers = computed(() => {
+  return memberData.value.data.sort((a: any, b: any) => {
+    const roleComparison = roleOrder[a.role] - roleOrder[b.role]
+    if (roleComparison !== 0) {
+      return roleComparison
+    }
+
+    // If roles are the same, sort by displayName
+    if (a.displayName < b.displayName) {
+      return -1
+    }
+    if (a.displayName > b.displayName) {
+      return 1
+    }
+    return 0
+  })
+})
 const updateAgent = async (id: string, v: any) => {
   localMember.value = v
 

@@ -89,7 +89,10 @@
           />
           {{ pathTitle }}
         </v-app-bar-title>
-        <v-spacer></v-spacer>
+        <template v-slot:append>
+          <b>{{ displayName }}</b
+          >&nbsp; ({{ generateRole(role) }})
+        </template>
       </v-app-bar>
 
       <v-main class="tw-bg-[#f2f2f2]">
@@ -106,9 +109,12 @@
 <script lang="ts" setup>
 import { type PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
+import { USER } from '~/constants/Token'
 
 const route = useRoute()
 const confirmLogout = ref(false)
+const user: any = useCookie(USER)
+const { displayName, role } = user.value && user.value
 
 const pathToTitle = {
   chat: 'แชต',

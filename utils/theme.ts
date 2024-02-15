@@ -11,7 +11,7 @@ export const light: ThemeDefinition = {
     'secondary-lighten': '#8f8f8f',
     info: '#53b389',
     warning: '#FFBE00',
-    pending: '#725040',
+    pending: '#606166',
     ongoing: '#1190E0',
     completed: '#008844',
   },

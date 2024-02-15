@@ -93,6 +93,10 @@
         >
 
         <v-spacer></v-spacer>
+        <template v-slot:append>
+          <b>{{ displayName }}</b
+          >&nbsp; ({{ generateRole(role) }})
+        </template>
       </v-app-bar>
       <v-navigation-drawer
         permanent
@@ -143,7 +147,7 @@ const { socialInfo } = await getSocialAccount()
 const confirmLogout = ref(false)
 
 const user: any = useCookie(USER)
-const { isOwner, role } = user.value
+const { displayName, role } = user.value && user.value
 
 const sidebarList = [
   {

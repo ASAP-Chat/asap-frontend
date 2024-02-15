@@ -32,7 +32,14 @@
             name="keyword"
             rounded="lg"
             density="compact"
+            :error="dupKeyword"
           />
+          <p
+            class="mb-3 text-error tw-text-sm mt-n3"
+            v-if="dupKeyword"
+          >
+            Keyword นี้มีอยู่แล้ว
+          </p>
         </div>
         <div class="form-control tw-mt-2">
           <p class="pb-2">ข้อความตัวอักษร</p>
@@ -77,6 +84,7 @@ const toast = useToast()
 const { required } = useFormRules()
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
+const dupKeyword = ref(false)
 
 const { shop } = user.value && user.value
 const { name } = shop
@@ -88,6 +96,7 @@ const templateInfo = ref<ChatTemplateInfo>({
 const emits = defineEmits(['close-modal'])
 const close = () => {
   emits('close-modal')
+  dupKeyword.value = false
   templateInfo.value.keyword = ''
   templateInfo.value.template = ''
 }
@@ -95,7 +104,7 @@ const isFormValid = ref(false)
 
 const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
   try {
-    const response = await useFetch(`${import.meta.env.VITE_BASE_URL}/chat-template`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-template`, {
       method: 'post',
       body: JSON.stringify({
         keyword: templateInfo.keyword,
@@ -107,14 +116,20 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
         Authorization: 'Bearer ' + access_token.value,
       },
     })
-    if (response.status.value === 'success') {
+    if (response.status === 200) {
       close()
       toast.success('บันทึกสำเร็จ', useToastOption)
       await getChatTemplate()
-    } else {
+    } else if (response.status === 401) {
+      dupKeyword.value = false
       await useRefreshToken()
       await createChatTemplate(templateInfo)
       console.log(`Request failed with status: ${response.error.value}`)
+    }
+    if (response.status === 500) {
+      dupKeyword.value = true
+    } else {
+      console.log('err')
     }
   } catch (error) {
     console.error(error)

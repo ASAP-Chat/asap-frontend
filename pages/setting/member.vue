@@ -27,6 +27,7 @@
   </div>
   <div>
     <v-data-table
+      v-model:sort-by="sortBy"
       :headers="headers"
       :items="memberData.data"
       item-value="_id"
@@ -46,7 +47,7 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
-          v-if="item.role !== 'owner'"
+          v-if="role !== Role.MANAGER || (role === Role.MANAGER && item.role !== Role.OWNER)"
           size="small"
           @click=";(selectedMember = item), (confirmDelete = true)"
         >
@@ -73,9 +74,11 @@
 <script setup lang="ts">
 // @ts-nocheck
 
-import { ACCESS_TOKEN } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { getMember } from '~/services/member.service'
 import { useToast } from 'vue-toastification'
+import { Role } from '~/constants/Role'
+
 useHead({
   title: 'การตั้งค่า',
 })
@@ -89,6 +92,13 @@ const confirmDelete = ref(false)
 const access_token = useCookie(ACCESS_TOKEN)
 const toast = useToast()
 const selectedMember = ref()
+const user: any = useCookie(USER)
+const { role } = user.value
+
+const calculateOwnerCount = computed(() => {
+  return memberData.value.data.filter((item) => item.role === 'owner').length
+})
+console.log('🍪🥛 ~ calculateOwnerCount ~ calculateOwnerCount:', calculateOwnerCount.value)
 
 const headers: any[] = [
   {
@@ -102,12 +112,12 @@ const headers: any[] = [
     title: 'บทบาท',
     align: 'center',
     key: 'role',
-    value: (item: any) =>
-      item.role === 'agent' ? 'เอเจนต์' : item.role === 'manager' ? 'ผู้จัดการ' : 'เจ้าของธุรกิจ',
+    value: (item: any) => generateRole(item.role),
   },
   { title: '', align: 'center', key: 'status' },
   { title: '', key: 'actions', sortable: false },
 ]
+const sortBy = [{ key: 'role', order: 'desc' }]
 
 const deleteItem = async (item: any) => {
   confirmDelete.value = true

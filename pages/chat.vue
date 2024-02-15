@@ -659,6 +659,13 @@ watch(
   () => selectedItem.value,
   (newValue) => {
     storeSelectCus.value = null
+    selectCustomer.value = {
+      userId: '',
+      displayName: '',
+      pictureUrl: '',
+      source: '',
+      time: '',
+    }
     filteredMessages.value = null
   }
 )

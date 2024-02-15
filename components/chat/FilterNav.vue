@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     permanent
-    width="145"
+    width="175"
     color="#fafafa"
   >
     <v-list color="primary">
@@ -24,7 +24,7 @@
         @click="updateSelectedItem('mine')"
       ></v-list-item>
       <v-list-item
-        title="แชตที่ยังว่าง"
+        title="ยังไม่ได้มอบหมาย"
         value="mine"
         prepend-icon="mdi-message-badge-outline"
         exact
@@ -36,30 +36,48 @@
       <v-list-subheader> สถานะแชต </v-list-subheader>
       <v-divider></v-divider>
       <v-list-item
-        title="รอดำเนินการ"
         value="pending"
-        prepend-icon="mdi-emoticon-confused-outline"
+        prepend-icon="mdi-circle"
         base-color="#707070"
         :active="props.selectedItem === Status.PENDING"
         @click="updateSelectedItem(Status.PENDING)"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon :color="Status.PENDING"></v-icon>
+        </template>
+        <template v-slot:title>
+          <p :class="`text-${Status.PENDING}`">รอดำเนินการ</p>
+        </template>
+      </v-list-item>
 
       <v-list-item
-        title="ดำเนินการ"
         value="doing"
-        prepend-icon="mdi-emoticon-neutral-outline"
+        prepend-icon="mdi-circle"
         base-color="#707070"
         :active="props.selectedItem === Status.ONGOING"
         @click="updateSelectedItem(Status.ONGOING)"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon :color="Status.ONGOING"></v-icon>
+        </template>
+        <template v-slot:title>
+          <p :class="`text-${Status.ONGOING}`">ดำเนินการ</p>
+        </template>
+      </v-list-item>
       <v-list-item
-        title="เสร็จสิ้น"
         value="done"
-        prepend-icon="mdi-emoticon-happy-outline"
+        prepend-icon="mdi-circle"
         base-color="#707070"
         :active="props.selectedItem === Status.COMPLETED"
         @click="updateSelectedItem(Status.COMPLETED)"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon :color="Status.COMPLETED"></v-icon>
+        </template>
+        <template v-slot:title>
+          <p :class="`text-${Status.COMPLETED}`">เสร็จสิ้น</p>
+        </template>
+      </v-list-item>
 
       <v-list-subheader> Social Media </v-list-subheader>
       <v-divider></v-divider>
