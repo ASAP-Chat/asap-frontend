@@ -56,7 +56,7 @@
           <div data-aos="fade-up-right" class="tw-flex tw-flex-wrap tw-justify-center">
             <div class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
               <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
-                จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
+                จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
                 รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
               </div>
               <!-- <p class="tw-text-gray-600 tw-mb-8">
@@ -76,7 +76,7 @@
         <div class="container tw-max-w-5xl tw-mx-auto m-8">
           <h2 data-aos="fade-up"
             class="tw-w-full tw-my-2 tw-text-5xl tw-font-bold tw-leading-tight tw-text-center tw-text-gray-800">
-            แชทบอท
+            แชตบอท
           </h2>
           <div data-aos="fade-up" class="tw-w-full tw-mb-4">
             <div class="tw-h-1 tw-mx-auto tw-bg-primary tw-w-64 tw-opacity-25 tw-my-0 tw-py-0 tw-rounded-t"></div>
@@ -88,7 +88,7 @@
             </div>
             <div class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-flex-col tw-justify-center tw-items-center">
               <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
-                ตอบด้วยแชทบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ <br>แอดมินสามารถทำงานได้ง่าย ๆ เพียงแค่สลับไปมากับบอทได้ตลอดเวลา
+                ตอบด้วยแชตบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ <br>แอดมินสามารถทำงานได้ง่าย ๆ เพียงแค่สลับไปมากับบอทได้ตลอดเวลา
                 และทำการแก้บอทที่เดียวใช้ได้ทุกช่องทาง
               </div>
               <!-- <p class="tw-text-gray-600 tw-mb-8">
@@ -105,7 +105,7 @@
         <div class="container tw-max-w-5xl tw-mx-auto m-8">
           <h2 data-aos="fade-up"
             class="tw-w-full tw-my-2 tw-text-5xl tw-font-bold tw-leading-tight tw-text-center tw-text-gray-800">
-            แชทเทมเพลต
+            แชตเทมเพลต
           </h2>
           <div data-aos="fade-up" class="tw-w-full tw-mb-4">
             <div class="tw-h-1 tw-mx-auto tw-bg-primary tw-w-64 tw-opacity-25 tw-my-0 tw-py-0 tw-rounded-t"></div>
@@ -115,7 +115,7 @@
               <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
                 ผู้ใช้งานสามารถสร้างชุดข้อความ (Template message)
                 เพื่อนำมาใช้เป็นชุดข้อความมาตรฐานสำหรับให้
-                ผู้ใช้งานทุกคนเรียกใช้ชุดข้อความเดียวกันในการให้บริการตอบแชทที่เป็นมาตรฐานเดียวกันได้
+                ผู้ใช้งานทุกคนเรียกใช้ชุดข้อความเดียวกันในการให้บริการตอบแชตที่เป็นมาตรฐานเดียวกันได้
               </div>
               <!-- <p class="tw-text-gray-600 tw-mb-8">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
@@ -147,7 +147,7 @@
             </div>
             <div class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col">
               <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
-                จัดการแชทผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
+                จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
                 รองรับแอดมินที่ทำงานเป็นทีม
               </div>
               <!-- <p class="tw-text-gray-600 tw-mb-8">
