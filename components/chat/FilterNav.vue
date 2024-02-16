@@ -26,7 +26,7 @@
       <v-list-item
         title="ยังไม่ได้มอบหมาย"
         value="mine"
-        prepend-icon="mdi-message-badge-outline"
+        prepend-icon="mdi-account-remove"
         exact
         base-color="#707070"
         :active="props.selectedItem === 'empty'"
