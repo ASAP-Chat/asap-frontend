@@ -89,7 +89,7 @@
     <CommonConfirmModal
       v-model="confirmDelete"
       header="ลบรูปแบบคำตอบ"
-      content="คุณยืนยันจะลบรูปแบบคำตอบนี้ใช่หรือไม่?"
+      :content="`คุณยืนยันจะลบรูปแบบคำตอบ ${localInfo.keyword} ใช่หรือไม่?`"
       cancelWording="ยกเลิก"
       confirmWording="ยืนยัน"
       :isSuccess="false"

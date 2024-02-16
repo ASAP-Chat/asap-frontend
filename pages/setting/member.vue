@@ -47,9 +47,17 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
-          v-if="role !== Role.MANAGER || (role === Role.MANAGER && item.role !== Role.OWNER)"
+          v-if="
+            (calculateOwnerCount > 1 || role !== Role.MANAGER) &&
+            (item.role !== Role.OWNER || calculateOwnerCount > 1)
+          "
           size="small"
-          @click=";(selectedMember = item), (confirmDelete = true)"
+          @click="
+            ;(selectedMember = item),
+              (confirmDelete = true),
+              (deleteMember.displayName = item.displayName),
+              (deleteMember.role = item.role)
+          "
         >
           mdi-delete
         </v-icon>
@@ -63,7 +71,9 @@
   <CommonConfirmModal
     v-model="confirmDelete"
     header="ลบสมาชิก"
-    content="คุณยืนยันจะลบสมาชิกนี้ใช่หรือไม่?"
+    :content="`คุณยืนยันจะลบ ${deleteMember.displayName} ตำแหน่ง ${generateRole(
+      deleteMember.role
+    )} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
     cancelWording="ยกเลิก"
     confirmWording="ยืนยัน"
     :isSuccess="false"
@@ -99,6 +109,10 @@ const calculateOwnerCount = computed(() => {
   return memberData.value.data.filter((item) => item.role === 'owner').length
 })
 
+const deleteMember = ref({
+  displayName: '',
+  role: '',
+})
 const headers: any[] = [
   {
     title: 'ชื่อสมาชิก',
