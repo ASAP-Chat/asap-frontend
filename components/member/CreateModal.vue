@@ -135,7 +135,7 @@ const createMember = async (memberData: MemberInfo) => {
         Authorization: 'Bearer ' + access_token.value,
       },
     })
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       close()
       toast.success('เพิ่มสมาชิกสำเร็จ', useToastOption)
       await getMember()

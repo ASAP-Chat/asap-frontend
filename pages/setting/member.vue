@@ -55,8 +55,6 @@
           @click="
             ;(selectedMember = item),
               (confirmDelete = true),
-              (deleteMember.displayName = item.displayName),
-              (deleteMember.role = item.role)
           "
         >
           mdi-delete
@@ -71,9 +69,9 @@
   <CommonConfirmModal
     v-model="confirmDelete"
     header="ลบสมาชิก"
-    :content="`คุณยืนยันจะลบ ${deleteMember.displayName} ตำแหน่ง ${generateRole(
-      deleteMember.role
-    )} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
+    :content="`คุณยืนยันจะลบ ${
+      selectedMember.displayName ? selectedMember.displayName : selectedMember.email
+    } ตำแหน่ง ${generateRole(selectedMember.role)} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
     cancelWording="ยกเลิก"
     confirmWording="ยืนยัน"
     :isSuccess="false"
@@ -109,10 +107,6 @@ const calculateOwnerCount = computed(() => {
   return memberData.value.data.filter((item) => item.role === 'owner').length
 })
 
-const deleteMember = ref({
-  displayName: '',
-  role: '',
-})
 const headers: any[] = [
   {
     title: 'ชื่อสมาชิก',
