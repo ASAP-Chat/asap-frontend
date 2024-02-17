@@ -67,8 +67,8 @@
     v-model="confirmDelete"
     header="ลบสมาชิก"
     :content="`คุณยืนยันจะลบ ${
-      selectedMember.displayName ? selectedMember.displayName : selectedMember.email
-    } ตำแหน่ง ${generateRole(selectedMember.role)} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
+      selectedMember?.displayName ? selectedMember?.displayName : selectedMember?.email
+    } ตำแหน่ง ${generateRole(selectedMember?.role)} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
     cancelWording="ยกเลิก"
     confirmWording="ยืนยัน"
     :isSuccess="false"
