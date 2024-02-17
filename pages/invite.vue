@@ -82,6 +82,7 @@
             rounded="lg"
             class="font-weight-bold"
             :loading="loading"
+            :disabled="!isFormValid"
             @click="registerMember()"
           >
             สร้างบัญชีผู้ใช้งาน

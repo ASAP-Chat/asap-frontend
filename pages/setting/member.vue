@@ -52,10 +52,7 @@
             (item.role !== Role.OWNER || calculateOwnerCount > 1)
           "
           size="small"
-          @click="
-            ;(selectedMember = item),
-              (confirmDelete = true),
-          "
+          @click=";(selectedMember = item), (confirmDelete = true)"
         >
           mdi-delete
         </v-icon>
