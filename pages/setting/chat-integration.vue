@@ -157,7 +157,7 @@
 
                     <td class="text-center">
                       <v-icon
-                        v-if="socialInfo.data.some((data: any) => data.socialType === item.socialType)"
+                        v-if="socialInfo?.data?.some((data: any) => data.socialType === item.socialType)"
                         color="info"
                       >
                         mdi-check
