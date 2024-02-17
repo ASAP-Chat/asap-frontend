@@ -277,9 +277,15 @@
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามข้อกำหนดของ Facebook'
                     : storeSelectCus?.agent !== displayName
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากคุณไม่ได้รับผิดชอบแชตนี้'
+                    : storeSelectCus.status === Status.PENDING
+                    ? 'คุณจะสามารถตอบแชตได้ ก็ต่อเมื่อสถานะของแชตเป็นดำเนินการ'
                     : 'พิมพ์ข้อความ ...'
                 "
-                :disabled="Boolean(disabledChatInput) || storeSelectCus?.agent !== displayName"
+                :disabled="
+                  Boolean(disabledChatInput) ||
+                  storeSelectCus?.agent !== displayName ||
+                  storeSelectCus.status === Status.PENDING
+                "
               >
                 <template v-slot:append>
                   <v-btn
