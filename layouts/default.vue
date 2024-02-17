@@ -133,12 +133,12 @@ const sidebarList = [
     value: 'chat',
     path: '/chat/',
   },
-  {
-    prependIcon: 'mdi-robot-outline',
-    title: 'แชตบอท',
-    value: 'chatbot',
-    path: '/chatbot/',
-  },
+  // {
+  //   prependIcon: 'mdi-robot-outline',
+  //   title: 'แชตบอท',
+  //   value: 'chatbot',
+  //   path: '/chatbot/',
+  // },
   {
     prependIcon: 'mdi-message-text-outline',
     title: 'รูปแบบคำตอบ',
