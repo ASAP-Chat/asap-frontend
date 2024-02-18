@@ -33,6 +33,8 @@
             rounded="lg"
             density="compact"
             :error="dupKeyword"
+            counter
+            maxlength="50"
           />
           <p
             class="mb-3 text-error tw-text-sm mt-n3"
@@ -54,6 +56,8 @@
             color="primary"
             auto-grow
             rows="1"
+            counter
+            maxlength="500"
           ></v-textarea>
         </div>
       </v-form>

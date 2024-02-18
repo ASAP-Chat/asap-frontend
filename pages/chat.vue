@@ -33,8 +33,6 @@
           :title="generateName(message)"
           :value="message.customerId"
           :active="storeSelectCus && message.customerId === storeSelectCus.userId"
-          :disabled="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
-                ?.displayName !== displayName && role === Role.AGENT"
           @click="
             setSelectCustomer(
               message.customerId,

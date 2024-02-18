@@ -7,8 +7,10 @@
       :width="props.width ? props.width : 400"
       :link="!allowEdit"
     >
-      <div class="tw-flex tw-justify-between">
-        <div class="tw-flex tw-items-center">{{ props.keyword }}</div>
+      <div class="tw-flex tw-justify-between tw-items-center">
+        <div>
+          <div class="tw-items-center tw-w-80">{{ props.keyword }}</div>
+        </div>
         <div v-if="allowEdit">
           <v-btn
             color="black"

@@ -17,6 +17,7 @@
           v-model="searchKeyword"
         />
         <v-btn
+          v-if="role !== Role.AGENT"
           prepend-icon="mdi-plus"
           color="primary"
           class="font-weight-bold"
@@ -48,7 +49,7 @@
           :id="item._id"
           :keyword="item.keyword"
           :template="item.template"
-          :allow-edit="true"
+          :allow-edit="role !== Role.AGENT"
           @edit="storeEdit(item._id, item.keyword, item.template)"
         />
       </div>
@@ -63,13 +64,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import { USER } from '~/constants/Token'
 import { getChatTemplate } from '../services/message.service'
+import { Role } from '~/constants/Role'
 useHead({
   title: 'รูปแบบคำตอบ',
 })
 const chatTempDialog = ref(false)
 const editDialog = ref(false)
 const { chatTemplateData } = await getChatTemplate()
+const user: any = useCookie(USER)
+const { role } = user.value && user.value
 
 const selectedTemplate = ref<any>({
   _id: '',
