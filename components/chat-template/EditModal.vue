@@ -19,7 +19,11 @@
           </v-btn>
         </v-toolbar-items>
       </v-toolbar>
-      <v-form class="px-6 pt-3 pb-3">
+
+      <v-form
+        v-model="isFormValid"
+        class="px-6 pt-3 pb-3"
+      >
         <div class="form-control">
           <p class="pb-2">ชื่อหัวข้อ</p>
           <CommonTextField
@@ -77,6 +81,7 @@
             rounded="lg"
             text="บันทึก"
             prepend-icon="mdi-content-save"
+            :disabled="!isFormValid"
             @click="editChatTemplate"
           >
             <template v-slot:prepend>
@@ -108,6 +113,7 @@ import { getChatTemplate } from '~/services/message.service'
 const toast = useToast()
 const confirmDelete = ref(false)
 const dupKeyword = ref(false)
+const isFormValid = ref(false)
 
 const props = defineProps<{
   id: string
@@ -125,6 +131,11 @@ const access_token = useCookie(ACCESS_TOKEN)
 const emits = defineEmits(['close-modal'])
 const close = () => {
   dupKeyword.value = false
+  localInfo.value = {
+    _id: props.id,
+    keyword: props.keyword,
+    template: props.template,
+  }
   emits('close-modal')
 }
 
@@ -200,6 +211,13 @@ watch(
   () => props.template,
   (newValue) => {
     localInfo.value.template = newValue
+  }
+)
+
+watch(
+  () => localInfo.value.keyword,
+  (newValue) => {
+    dupKeyword.value = false
   }
 )
 </script>

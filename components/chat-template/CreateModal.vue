@@ -135,4 +135,10 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
     console.error(error)
   }
 }
+watch(
+  () => templateInfo.value.keyword,
+  (newValue) => {
+    dupKeyword.value = false
+  }
+)
 </script>

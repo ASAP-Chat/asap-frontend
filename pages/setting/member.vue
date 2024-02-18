@@ -27,13 +27,25 @@
   </div>
   <div>
     <v-data-table
-      v-model:sort-by="sortBy"
+      :sort-by="sortBy"
       :headers="headers"
       :items="memberData.data"
       item-value="_id"
       :search="search"
       class="tw-rounded-lg tw-bg-transparent"
     >
+      <template v-slot:item.displayName="{ item }">
+        <div>
+          <p>
+            {{ item.displayName ? item.displayName : '-' }}
+            <span
+              class="text-secondary-lighten"
+              v-if="item.displayName === displayName"
+              >(คุณ)</span
+            >
+          </p>
+        </div>
+      </template>
       <template v-slot:item.status="{ item }">
         <div>
           <v-chip
@@ -48,8 +60,9 @@
       <template v-slot:item.actions="{ item }">
         <v-icon
           v-if="
-            (calculateOwnerCount > 1 || role !== Role.MANAGER) &&
-            (item.role !== Role.OWNER || calculateOwnerCount > 1)
+            (role !== Role.MANAGER || (role === Role.MANAGER && item.role !== Role.OWNER)) &&
+            !(calculateOwnerCount === 1 && item.role === Role.OWNER) &&
+            item.displayName !== displayName
           "
           size="small"
           @click=";(selectedMember = item), (confirmDelete = true)"
@@ -98,7 +111,7 @@ const access_token = useCookie(ACCESS_TOKEN)
 const toast = useToast()
 const selectedMember = ref()
 const user: any = useCookie(USER)
-const { role } = user.value
+const { role, displayName } = user.value
 
 const calculateOwnerCount = computed(() => {
   return memberData.value.data.filter((item) => item.role === 'owner').length
@@ -109,7 +122,6 @@ const headers: any[] = [
     title: 'ชื่อสมาชิก',
     align: 'start',
     key: 'displayName',
-    value: (item: any) => (item.displayName ? item.displayName : '-'),
   },
   { title: 'อีเมล', align: 'start', key: 'email' },
   {
