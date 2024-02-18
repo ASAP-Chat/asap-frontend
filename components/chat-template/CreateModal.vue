@@ -25,17 +25,20 @@
       >
         <div class="form-control">
           <p class="pb-2">ชื่อหัวข้อ</p>
-          <CommonTextField
+          <v-textarea
+            id="template"
+            name="template"
             :rules="[required]"
             v-model="templateInfo.keyword"
-            id="keyword"
-            name="keyword"
-            rounded="lg"
             density="compact"
-            :error="dupKeyword"
+            variant="outlined"
+            rounded="lg"
+            color="primary"
+            auto-grow
+            rows="1"
             counter
             maxlength="50"
-          />
+          ></v-textarea>
           <p
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupKeyword"
