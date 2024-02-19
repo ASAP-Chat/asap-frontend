@@ -57,21 +57,23 @@ const roleOrder: { [key: string]: number } = {
   owner: 0,
 }
 const sortedMembers = computed(() => {
-  return memberData.value.data.sort((a: any, b: any) => {
-    const roleComparison = roleOrder[a.role] - roleOrder[b.role]
-    if (roleComparison !== 0) {
-      return roleComparison
-    }
+  return memberData.value.data
+    .filter((item: any) => item.status === 'completed')
+    .sort((a: any, b: any) => {
+      const roleComparison = roleOrder[a.role] - roleOrder[b.role]
+      if (roleComparison !== 0) {
+        return roleComparison
+      }
 
-    // If roles are the same, sort by displayName
-    if (a.displayName < b.displayName) {
-      return -1
-    }
-    if (a.displayName > b.displayName) {
-      return 1
-    }
-    return 0
-  })
+      // If roles are the same, sort by displayName
+      if (a.displayName < b.displayName) {
+        return -1
+      }
+      if (a.displayName > b.displayName) {
+        return 1
+      }
+      return 0
+    })
 })
 const updateAgent = async (id: string, v: any) => {
   localMember.value = v
