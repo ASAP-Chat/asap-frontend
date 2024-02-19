@@ -130,12 +130,14 @@ export const getCustomer = async () => {
   return { customer }
 }
 
-export const updateChatStatus = async (statusId: string, status: string) => {
+const storeSelectCus: any = useCookie('storeSelectCus')
+
+export const updateChatStatus = async (statusId: string, chatStatus: string) => {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-customer/${statusId}`, {
       method: 'PATCH',
       body: JSON.stringify({
-        chatStatus: status,
+        chatStatus: chatStatus,
       }),
       headers: {
         'content-Type': 'application/json',
@@ -145,9 +147,10 @@ export const updateChatStatus = async (statusId: string, status: string) => {
 
     if (response.status === 200) {
       await getCustomer()
+      storeSelectCus.value.status = chatStatus
     } else if (response.status === 401) {
       await useRefreshToken()
-      await updateChatStatus(statusId, status)
+      await updateChatStatus(statusId, chatStatus)
     } else {
       console.log('err')
     }

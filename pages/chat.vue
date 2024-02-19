@@ -240,7 +240,7 @@
               message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
             "
             :name="generateName(message)"
-            :img="storeSelectCus?.pictureUrl"
+            :img="generateCustomerImg(message)"
             :date="showDisplayTime(filteredMessages, index) ? message.sourceTimestamp : ''"
             :time="message.sourceTimestamp"
             :is-owner="message.isOwner"

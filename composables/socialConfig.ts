@@ -2,6 +2,7 @@ import { MsgType } from '~/interfaces/message.interface'
 import { SocialType } from '~/interfaces/social.interface'
 import profileSrc from '~/assets/images/profile.png'
 import { Role } from '~/constants/Role'
+import fbSrc from '~/assets/images/facebook-page.png'
 
 export const generateSocialColor = (type: string) => {
   switch (type) {
@@ -85,6 +86,7 @@ export const generateMessageSubtitle = (message: any) => {
   }
 }
 
+const storeSelectCus: any = useCookie('storeSelectCus')
 export const generateCustomerImg = (message: any) => {
   const isOwner = message?.isOwner
   const socialType = message?.source
@@ -94,10 +96,10 @@ export const generateCustomerImg = (message: any) => {
 
   switch (socialType) {
     case SocialType.LINE:
-      return senderDetail?.pictureUrl
+      return isOwner ? senderDetail?.pictureUrl : storeSelectCus?.pictureUrl
 
     case SocialType.FACEBOOK:
-      return senderDetail.picture.data.url
+      return isOwner ? fbSrc : profileSrc
 
     case SocialType.INSTAGRAM:
       return isOwner
@@ -115,10 +117,10 @@ export const generateAvatarUrl = (message: any) => {
   const pictureUrl = isOwner
     ? socialType === SocialType.LINE
       ? message.receiverDetail.pictureUrl
-      : message.receiverDetail.picture.data.url
+      : profileSrc
     : socialType === SocialType.LINE
     ? message.senderDetail.pictureUrl
-    : message.senderDetail.picture.data.url
+    : profileSrc
 
   return pictureUrl
 }

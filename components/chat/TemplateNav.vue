@@ -60,7 +60,9 @@
         aspect-ratio="1/1"
         cover
         class="tw-rounded-full"
-        :src="storeSelectCus.pictureUrl ? storeSelectCus.pictureUrl : profileSrc"
+        :src="
+          storeSelectCus.source === SocialType.FACEBOOK ? profileSrc : storeSelectCus.pictureUrl
+        "
       ></v-img>
     </template>
     <v-app-bar-title class="font-weight-bold">
@@ -78,6 +80,7 @@
 import { getChatTemplate } from '~/services/message.service'
 import profileSrc from '~/assets/images/profile.png'
 import { USER } from '~/constants/Token'
+import { SocialType } from '~/interfaces/social.interface'
 
 const props = defineProps<{
   id: string
