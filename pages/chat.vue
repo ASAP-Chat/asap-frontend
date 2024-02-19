@@ -387,13 +387,21 @@ onBeforeMount(() => {
         await getCustomer()
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+          if (
+            newMsg.value.data[0].isOwner === false &&
+            newMsg.value.data[0].isRead === false &&
+            newMsg.value.data[0].senderDetail.name
+          ) {
             play()
             toast(content, notifications)
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+          if (
+            newMsg.value.data[0].isOwner === false &&
+            newMsg.value.data[0].isRead === false &&
+            newMsg.value.data[0].senderDetail.name
+          ) {
             play()
             toast(content, notifications)
           }
@@ -415,7 +423,7 @@ onBeforeMount(() => {
         )
         if (isCustomerIdEqual && isIdNotPresent) {
           await getCustomer()
-          play()
+          !newMsg.value.data[0].senderDetail.name && play()
           filteredMessages.value.data.push(newMsg.value.data[0])
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
           nextTick(() => {
@@ -518,6 +526,8 @@ const sendMessage = async () => {
       console.log('call - refresh token')
       await useRefreshToken()
       await sendMessage()
+    } else if (response.status === 404) {
+      await getCustomer()
     } else {
       console.log('err')
     }
