@@ -501,41 +501,44 @@ const setSelectCustomer = async (
 }
 
 const sendMessage = async () => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          source: storeSelectCus.value.source,
-          message: {
-            text: sendMsg.value,
+  console.log(sendMsg.value === '')
+  if (sendMsg.value !== '') {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            source: storeSelectCus.value.source,
+            message: {
+              text: sendMsg.value,
+            },
+          }),
+          headers: {
+            'content-Type': 'application/json',
+            Authorization: 'Bearer ' + access_token.value,
           },
-        }),
-        headers: {
-          'content-Type': 'application/json',
-          Authorization: 'Bearer ' + access_token.value,
-        },
-      }
-    )
+        }
+      )
 
-    if (response.status === 200 || response.status === 201) {
-      sendMsg.value = ''
-      await getMsgById(storeSelectCus.value.userId, 0)
-    } else if (response.status === 401) {
-      console.log('call - refresh token')
-      await useRefreshToken()
-      await sendMessage()
-    } else if (response.status === 404) {
-      await getCustomer()
-    } else {
-      console.log('err')
+      if (response.status === 200 || response.status === 201) {
+        sendMsg.value = ''
+        await getMsgById(storeSelectCus.value.userId, 0)
+      } else if (response.status === 401) {
+        console.log('call - refresh token')
+        await useRefreshToken()
+        await sendMessage()
+      } else if (response.status === 404) {
+        await getCustomer()
+      } else {
+        console.log('err')
+      }
+      nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight)
+      })
+    } catch (error) {
+      console.log(error)
     }
-    nextTick(() => {
-      window.scrollTo(0, document.body.scrollHeight)
-    })
-  } catch (error) {
-    console.log(error)
   }
 }
 const socialTypes = ref()
