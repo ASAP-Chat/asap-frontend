@@ -26,8 +26,8 @@
         <div class="form-control">
           <p class="pb-2">ชื่อหัวข้อ</p>
           <v-textarea
-            id="template"
-            name="template"
+            id="keyword"
+            name="keyword"
             :rules="[required]"
             v-model="templateInfo.keyword"
             density="compact"
