@@ -141,54 +141,69 @@
           </template>
         </v-list-item>
         <div
-          class="pt-2 pl-5 pb-2 tw-flex tw-items-center tw-text-xs"
+          v-if="customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus === Status.PENDING"
+          class="pt-2 pl-5 tw-flex tw-items-center tw-text-xs"
           :class="{
             'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
           }"
         >
-          มอบหมายให้ :&nbsp;
-          <span
-            class="mr-1"
-            :class="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
+          แชตบอทกำลังทำงาน
+        </div>
+
+        <div
+          class="pl-5 pb-2 tw-flex tw-items-center tw-text-xs"
+          :class="{
+            'pt-2': customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus !== Status.PENDING,
+            'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
+          }"
+        >
+          <div>
+            มอบหมายให้ :&nbsp;
+            <span
+              class="mr-1"
+              :class="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
                 .displayName ? 'text-primary font-weight-bold' : 'text-secondary-lighten'"
-          >
-            {{
-              customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent
-                ?.displayName
-                ? customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                    ?.agent?.displayName
-                : 'ยังไม่มีผู้รับผิดชอบ'
-            }}
-          </span>
-          <span
-            class="text-secondary-lighten"
-            v-if="customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+            >
+              {{
+                customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                  ?.agent?.displayName
+                  ? customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                      ?.agent?.displayName
+                  : 'ยังไม่มีผู้รับผิดชอบ'
+              }}
+            </span>
+            <span
+              class="text-secondary-lighten"
+              v-if="customer.data.filter((item: any) => item.customerId === message.customerId)[0]
                     ?.agent.displayName === displayName"
-            >(คุณ)</span
-          >
-          <v-menu
-            :close-on-content-click="false"
-            v-if="role !== Role.AGENT"
-          >
-            <template v-slot:activator="{ props }">
-              <v-btn
-                class="ma-0"
-                color="primary"
-                v-bind="props"
-                icon="mdi-account-edit-outline"
-                variant="text"
-                density="compact"
-              >
-                <template v-slot:default>
-                  <v-icon color="primary"></v-icon>
-                </template>
-              </v-btn>
-            </template>
-            <ChatAssignMember
-              :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
-              :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
-            />
-          </v-menu>
+              >(คุณ)</span
+            >
+            <v-menu
+              :close-on-content-click="false"
+              v-if="role !== Role.AGENT"
+            >
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  class="ma-0"
+                  color="primary"
+                  v-bind="props"
+                  icon="mdi-account-edit-outline"
+                  variant="text"
+                  density="compact"
+                >
+                  <template v-slot:default>
+                    <v-icon color="primary"></v-icon>
+                  </template>
+                </v-btn>
+              </template>
+              <ChatAssignMember
+                :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
+                :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
+              />
+            </v-menu>
+          </div>
         </div>
       </v-list>
       <v-list v-if="filteredMsg?.length === 0">
