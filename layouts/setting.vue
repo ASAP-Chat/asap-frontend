@@ -54,7 +54,11 @@
                   cols="12"
                   class="tw-justify-center tw-flex"
                 >
-                  <v-icon size="large">{{ item.prependIcon }}</v-icon>
+                  <v-icon
+                    size="large"
+                    color="primary"
+                    >{{ item.prependIcon }}</v-icon
+                  >
                   <v-tooltip
                     activator="parent"
                     location="start"
@@ -73,6 +77,7 @@
             class="ma-2"
             variant="text"
             icon="mdi-logout"
+            color="primary"
           />
         </template>
       </v-navigation-drawer>
@@ -115,9 +120,13 @@
               :value="item.path"
               exact
               base-color="#707070"
-              :prepend-icon="item.icon"
+              color="primary"
               :to="item.path"
-            ></v-list-item>
+            >
+              <template v-slot:prepend>
+                <v-icon color="primary">{{ item.icon }}</v-icon>
+              </template>
+            </v-list-item>
             <v-divider></v-divider>
           </div>
         </v-list>
@@ -156,12 +165,12 @@ const sidebarList = [
     value: 'chat',
     path: '/chat/',
   },
-  // {
-  //   prependIcon: 'mdi-robot-outline',
-  //   title: 'แชตบอท',
-  //   value: 'chatbot',
-  //   path: '/chatbot/',
-  // },
+  {
+    prependIcon: 'mdi-robot-outline',
+    title: 'แชตบอท',
+    value: 'chatbot',
+    path: '/chatbot/',
+  },
   {
     prependIcon: 'mdi-message-text-outline',
     title: 'รูปแบบคำตอบ',

@@ -46,7 +46,6 @@
             <v-icon
               class="mr-3 mb-1"
               size="x-large"
-              :color="generateSocialColor(item?.socialType)"
             >
               {{ generateSocialIcon(item?.socialType) }}
             </v-icon>
@@ -115,6 +114,7 @@
         <v-dialog
           v-model="connectDialog"
           width="auto"
+          persistent
         >
           <v-card
             :width="400"
@@ -148,7 +148,16 @@
                       <v-icon
                         class="mr-3 mb-1"
                         size="x-large"
-                        :color="generateSocialColor(item.socialType)"
+                        :style="{
+                          background:
+                            item.socialType === SocialType.INSTAGRAM
+                              ? 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%)'
+                              : 'none',
+                          '-webkit-text-fill-color':
+                            item.socialType === SocialType.INSTAGRAM ? 'transparent' : 'inherit',
+                          'background-clip':
+                            item.socialType === SocialType.INSTAGRAM ? 'text' : 'initial',
+                        }"
                       >
                         {{ generateSocialIcon(item.socialType) }}
                       </v-icon>
@@ -181,6 +190,7 @@
         <v-dialog
           v-model="connectSocialDialog"
           width="auto"
+          persistent
         >
           <component
             :is="getSocialConnectModalComponent(selectSocial)"

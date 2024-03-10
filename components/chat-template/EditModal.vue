@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :width="470">
+  <v-dialog :width="470" persistent>
     <v-card>
       <v-toolbar
         color="white"
@@ -108,8 +108,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-// @ts-nocheck
-
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/message.service'

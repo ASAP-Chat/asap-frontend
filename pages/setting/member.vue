@@ -5,14 +5,20 @@
       &nbsp; คน
     </div>
     <div class="tw-flex tw-gap-3 tw-items-center tw-w-96">
-      <CommonTextField
+      <v-text-field
+        density="compact"
+        variant="outlined"
+        color="primary"
         rounded="lg"
         placeholder="ค้นหา"
-        prepend-inner-icon="mdi-magnify"
         bg-color="white"
         hide-details
         v-model="search"
-      />
+      >
+        <template v-slot:prepend-inner>
+          <v-icon color="primary">mdi-magnify</v-icon>
+        </template>
+      </v-text-field>
       <v-btn
         prepend-icon="mdi-plus"
         color="primary"
@@ -32,6 +38,7 @@
       :items="memberData.data"
       item-value="_id"
       :search="search"
+      color="primary"
       class="tw-rounded-lg tw-bg-transparent"
     >
       <template v-slot:item.displayName="{ item }">
@@ -65,6 +72,7 @@
             item.displayName !== displayName
           "
           size="small"
+          color="primary"
           @click=";(selectedMember = item), (confirmDelete = true)"
         >
           mdi-delete

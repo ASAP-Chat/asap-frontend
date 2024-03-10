@@ -3,7 +3,7 @@
     v-if="!socialInfo && isOwner"
     :header="'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'"
     custom-icon="mdi-store-cog-outline"
-    :content="'กรุณาตั้งค่าบัญชี Social Media เพื่อใช้งาน ASAP'"
+    :content="'โปรดเชื่อมต่ออย่างน้อย 1 บัญชี Social Media เพื่อเริ่มใช้งาน ASAP'"
     :buttonText="'ตั้งค่า'"
     :isSuccess="false"
     @btn-action="navigateTo('/setting/chat-integration/')"
@@ -310,7 +310,7 @@
 import { useToast } from 'vue-toastification'
 import { SocialType } from '~/interfaces/social.interface'
 import { Manager } from 'socket.io-client'
-import ToastNoti from '~/components/chat/ToastNoti.vue'
+import Notification from '~/components/chat/Notification.vue'
 import { MsgType } from '~/interfaces/message.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
@@ -352,6 +352,29 @@ onBeforeMount(() => {
     socket.emit('join-message', name)
     socket.on('latest-message', async (data: any) => {
       newMsg.value = data
+      const content = {
+        component: Notification,
+        props: {
+          img: generateAvatarUrl(newMsg.value.data[0]),
+          senderName: newMsg.value.data[0].senderDetail.displayName,
+          msg: newMsg.value.data[0].message,
+          type: newMsg.value.data[0].type,
+        },
+      }
+      const notifications: ToastOptions = {
+        toastClassName: generateToastClass(newMsg.value.data[0].source),
+        timeout: 2984,
+        closeOnClick: true,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+        draggable: true,
+        draggablePercent: 0.4,
+        showCloseButtonOnHover: true,
+        hideProgressBar: true,
+        closeButton: 'button',
+        icon: generateToastIcon(newMsg.value.data[0].source),
+        rtl: false,
+      }
       if (
         latestMessages.value &&
         Array.isArray(latestMessages.value.data) &&
@@ -361,29 +384,7 @@ onBeforeMount(() => {
         const existingIndex = latestMessages.value.data.findIndex(
           (item: any) => item.customerId === newMsg.value.data[0].customerId
         )
-        const content = {
-          component: ToastNoti,
-          props: {
-            img: generateAvatarUrl(newMsg.value.data[0]),
-            senderName: newMsg.value.data[0].senderDetail.displayName,
-            msg: newMsg.value.data[0].message,
-            type: newMsg.value.data[0].type,
-          },
-        }
-        const notifications: ToastOptions = {
-          toastClassName: generateToastClass(newMsg.value.data[0].source),
-          timeout: 2984,
-          closeOnClick: true,
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-          draggable: true,
-          draggablePercent: 0.4,
-          showCloseButtonOnHover: true,
-          hideProgressBar: true,
-          closeButton: 'button',
-          icon: generateToastIcon(newMsg.value.data[0].source),
-          rtl: false,
-        }
+
         await getCustomer()
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
@@ -426,6 +427,7 @@ onBeforeMount(() => {
           !newMsg.value.data[0].senderDetail.name && play()
           filteredMessages.value.data.push(newMsg.value.data[0])
           updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
+          toast(content, notifications)
           nextTick(() => {
             window.scrollTo(0, document.body.scrollHeight)
           })

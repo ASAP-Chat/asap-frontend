@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :width="440">
+  <v-dialog :width="440" persistent>
     <v-card class="tw-rounded-xl">
       <v-toolbar
         color="white"
@@ -78,8 +78,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-// @ts-nocheck
-
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getMember } from '~/services/member.service'
@@ -147,7 +145,6 @@ const createMember = async (memberData: MemberInfo) => {
       dupKeyword.value = false
       await useRefreshToken()
       await createMember(memberData)
-      console.log(`Request failed with status: ${response.error.value}`)
     }
     if (response.status === 500) {
       dupKeyword.value = true

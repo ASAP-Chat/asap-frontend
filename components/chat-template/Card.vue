@@ -13,11 +13,13 @@
         </div>
         <div v-if="allowEdit">
           <v-btn
-            color="black"
-            variant="text"
-            icon="mdi-pencil-outline"
+            color="white"
+            flat
+            icon
             @click="edit"
-          ></v-btn>
+          >
+            <v-icon color="primary">mdi-pencil-outline</v-icon>
+          </v-btn>
         </div>
       </div>
       <div>

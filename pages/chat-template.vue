@@ -8,14 +8,20 @@
         &nbsp; รูปแบบคำตอบ
       </div>
       <div class="tw-flex tw-gap-3 tw-items-center tw-w-96">
-        <CommonTextField
+        <v-text-field
+          density="compact"
+          variant="outlined"
+          color="primary"
           rounded="lg"
           placeholder="ค้นหา"
-          prepend-inner-icon="mdi-magnify"
           bg-color="white"
           hide-details
           v-model="searchKeyword"
-        />
+        >
+          <template v-slot:prepend-inner>
+            <v-icon color="primary">mdi-magnify</v-icon>
+          </template>
+        </v-text-field>
         <v-btn
           v-if="role !== Role.AGENT"
           prepend-icon="mdi-plus"
@@ -81,12 +87,10 @@ const selectedTemplate = ref<any>({
   keyword: '',
   template: '',
 })
-const setSelectTemplate = async (id: string, keyword: string, template: string) => {
-  selectedTemplate.value = { id, keyword, template }
-}
+
 const storeEdit = (id: string, keyword: string, template: string) => {
   editDialog.value = true
-  setSelectTemplate(id, keyword, template)
+  selectedTemplate.value = { id, keyword, template }
 }
 
 const searchKeyword = ref('')

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :width="440">
+  <v-dialog :width="440" persistent>
     <v-card class="tw-rounded-xl">
       <v-toolbar
         color="white"
@@ -80,8 +80,6 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-// @ts-nocheck
-
 import { type ChatTemplateInfo } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
@@ -131,7 +129,6 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
       dupKeyword.value = false
       await useRefreshToken()
       await createChatTemplate(templateInfo)
-      console.log(`Request failed with status: ${response.error.value}`)
     }
     if (response.status === 500) {
       dupKeyword.value = true

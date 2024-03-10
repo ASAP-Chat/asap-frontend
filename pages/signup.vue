@@ -94,6 +94,7 @@
           </div>
           <div class="form-control tw-mb-3">
             <v-autocomplete
+              class="text-select"
               label="ประเภทธุรกิจ"
               id="bizCategory"
               density="compact"

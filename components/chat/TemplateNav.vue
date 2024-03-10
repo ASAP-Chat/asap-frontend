@@ -11,14 +11,20 @@
         <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
       </div>
       <div class="mb-2">
-        <CommonTextField
+        <v-text-field
+          density="compact"
+          variant="outlined"
+          color="primary"
           rounded
           placeholder="ค้นหา"
-          prepend-inner-icon="mdi-magnify"
           bg-color="white"
-          v-model="searchKeyword"
           hide-details
-        />
+          v-model="searchKeyword"
+        >
+          <template v-slot:prepend-inner>
+            <v-icon color="primary">mdi-magnify</v-icon>
+          </template>
+        </v-text-field>
       </div>
     </div>
     <div class="tw-overflow-auto tw-h-4/5">
@@ -49,6 +55,7 @@
       />
       <v-btn
         icon="mdi-message-text-outline"
+        color="primary"
         @click.stop="templateDrawer = !templateDrawer"
         :disabled="storeSelectCus?.agent !== displayName"
       ></v-btn>
@@ -67,7 +74,6 @@
     </template>
     <v-app-bar-title class="font-weight-bold">
       <v-icon
-        :color="generateSocialColor(storeSelectCus.source)"
         class="pb-6"
         size="x-small"
         >{{ generateSocialIcon(storeSelectCus.source) }}</v-icon

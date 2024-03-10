@@ -13,25 +13,35 @@
         base-color="#707070"
         :active="props.selectedItem === 'all'"
         @click="updateSelectedItem('all')"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon color="primary">mdi-message-outline</v-icon>
+        </template>
+      </v-list-item>
       <v-list-item
         title="แชตของฉัน"
         value="mine"
-        prepend-icon="mdi-message-bookmark-outline"
         exact
         base-color="#707070"
         :active="props.selectedItem === 'mine'"
         @click="updateSelectedItem('mine')"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon color="primary">mdi-message-bookmark-outline</v-icon>
+        </template>
+      </v-list-item>
       <v-list-item
         title="ยังไม่ได้มอบหมาย"
         value="mine"
-        prepend-icon="mdi-account-remove"
         exact
         base-color="#707070"
         :active="props.selectedItem === 'empty'"
         @click="updateSelectedItem('empty')"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon color="primary">mdi-account-remove</v-icon>
+        </template>
+      </v-list-item>
 
       <v-list-subheader> สถานะแชต </v-list-subheader>
       <v-divider></v-divider>
@@ -109,11 +119,28 @@
       <v-list-item
         title="Instagram"
         :value="SocialType.INSTAGRAM"
-        prepend-icon="mdi-instagram"
         base-color="#707070"
         :active="props.selectedItem === SocialType.INSTAGRAM"
         @click="updateSelectedItem(SocialType.INSTAGRAM)"
-      ></v-list-item>
+      >
+        <template v-slot:prepend>
+          <v-icon
+            style="
+              background: radial-gradient(
+                circle at 30% 107%,
+                #fdf497 0%,
+                #fdf497 5%,
+                #fd5949 45%,
+                #d6249f 60%,
+                #285aeb 90%
+              );
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            >mdi-instagram</v-icon
+          >
+        </template>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
