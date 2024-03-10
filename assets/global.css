@@ -10,7 +10,11 @@ button {
   border-radius: 12px;
 }
 
-.v-icon {
+.v-data-table-header__sort-icon {
+  color: #674ae7;
+}
+
+.v-data-table-footer__pagination {
   color: #674ae7;
 }
 
@@ -23,6 +27,7 @@ button {
 
 .Vue-Toastification__icon {
   font-size: 25px !important;
+  color: white !important;
 }
 
 .Vue-Toastification__toast--default.line-custom-toast-class {
@@ -62,6 +67,24 @@ html {
   font-size: 14px !important;
   font-weight: bold !important;
 }
+
+.v-list-item-title .text-select {
+  font-size: 14px !important;
+  font-weight: normal !important;
+}
+
 .v-list-item__prepend {
   display: grid !important;
+}
+
+.fa-square-facebook {
+  color: #0765ff;
+}
+
+.fa-line {
+  color: #02c153;
+}
+
+.v-badge__badge .v-icon .fa-line {
+  color: #02c153;
 }
