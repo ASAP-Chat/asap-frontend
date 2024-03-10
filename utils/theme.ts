@@ -14,5 +14,7 @@ export const light: ThemeDefinition = {
     pending: '#606166',
     ongoing: '#1190E0',
     completed: '#008844',
+    'line-color': '#02c153',
+    'fb-color': '#0765ff',
   },
 }
