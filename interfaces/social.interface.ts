@@ -28,3 +28,8 @@ export interface MemberInfo {
   role: string
   shop: object
 }
+
+export interface ChatbotInfo {
+  keyword: string[]
+  replyMessage: string
+}

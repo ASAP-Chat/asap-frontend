@@ -1,0 +1,46 @@
+<template>
+  <v-card
+    class="pa-5 mb-9"
+    rounded="xl"
+    flat
+    :width="480"
+  >
+    <div class="tw-text-end">
+      <v-btn
+        color="white"
+        density="compact"
+        flat
+        icon
+        @click="emit('edit')"
+      >
+        <v-icon color="primary">mdi-pencil-outline</v-icon>
+      </v-btn>
+    </div>
+    <div v-for="item in keyword">
+      <div class="tw-chat tw-chat-start tw-whitespace-pre-line">
+        <div class="tw-chat-bubble tw-bg-[#EEEEEE] text-black">{{ item }}</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tw-chat tw-chat-end tw-whitespace-pre-line">
+        <div class="tw-chat-image">
+          <v-icon
+            size="x-large"
+            color="primary"
+            >mdi-robot-outline</v-icon
+          >
+        </div>
+        <div class="tw-chat-bubble tw-bg-[#d4caff] text-black">{{ replyMessage }}</div>
+      </div>
+    </div>
+  </v-card>
+</template>
+<script setup lang="ts">
+const props = defineProps<{
+  id: string
+  keyword?: string[]
+  replyMessage: string
+}>()
+const emit = defineEmits(['edit'])
+</script>
