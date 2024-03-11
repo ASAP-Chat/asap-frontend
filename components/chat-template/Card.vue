@@ -1,34 +1,32 @@
 <template>
-  <div>
-    <v-card
-      class="py-2 px-5 tw-border"
-      rounded="xl"
-      flat
-      :width="props.width ? props.width : 400"
-      :link="!allowEdit"
-    >
-      <div class="tw-flex tw-justify-between tw-items-center">
-        <div>
-          <div class="tw-items-center tw-w-80">{{ props.keyword }}</div>
-        </div>
-        <div v-if="allowEdit">
-          <v-btn
-            color="white"
-            flat
-            icon
-            @click="edit"
-          >
-            <v-icon color="primary">mdi-pencil-outline</v-icon>
-          </v-btn>
-        </div>
-      </div>
+  <v-card
+    class="py-2 px-5"
+    rounded="xl"
+    flat
+    :width="props.width ? props.width : 400"
+    :link="!allowEdit"
+  >
+    <div class="tw-flex tw-justify-between tw-items-center">
       <div>
-        <div class="tw-chat tw-chat-end tw-whitespace-pre-line">
-          <div class="tw-chat-bubble tw-bg-[#d4caff] text-black">{{ props.template }}</div>
-        </div>
+        <div class="tw-items-center tw-w-80">{{ props.keyword }}</div>
       </div>
-    </v-card>
-  </div>
+      <div v-if="allowEdit">
+        <v-btn
+          color="white"
+          flat
+          icon
+          @click="edit"
+        >
+          <v-icon color="primary">mdi-pencil-outline</v-icon>
+        </v-btn>
+      </div>
+    </div>
+    <div>
+      <div class="tw-chat tw-chat-end tw-whitespace-pre-line">
+        <div class="tw-chat-bubble tw-bg-[#d4caff] text-black">{{ props.template }}</div>
+      </div>
+    </div>
+  </v-card>
 </template>
 <script setup lang="ts">
 const props = defineProps<{

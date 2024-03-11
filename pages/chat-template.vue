@@ -40,9 +40,9 @@
       @close-modal="chatTempDialog = false"
     />
     <div
-      class="tw-justify-items-center tw-overflow-y-auto custom-scrollbar tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-1 lg:tw-grid-cols-1 xl:tw-grid-cols-3"
+      class="tw-justify-items-center tw-overflow-y-auto custom-scrollbar tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-2 xl:tw-grid-cols-3"
     >
-      <div
+      <ChatTemplateCard
         v-for="item in filteredTemplateData.sort((a:any, b:any) => {
           const dateA = new Date(a.updatedAt)
           const dateB = new Date(b.updatedAt)
@@ -50,15 +50,12 @@
           return dateB.getTime() - dateA.getTime()
         })"
         class="mb-6"
-      >
-        <ChatTemplateCard
-          :id="item._id"
-          :keyword="item.keyword"
-          :template="item.template"
-          :allow-edit="role !== Role.AGENT"
-          @edit="storeEdit(item._id, item.keyword, item.template)"
-        />
-      </div>
+        :id="item._id"
+        :keyword="item.keyword"
+        :template="item.template"
+        :allow-edit="role !== Role.AGENT"
+        @edit="storeEdit(item._id, item.keyword, item.template)"
+      />
     </div>
     <ChatTemplateEditModal
       v-model="editDialog"
