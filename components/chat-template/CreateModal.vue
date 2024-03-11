@@ -1,5 +1,8 @@
 <template>
-  <v-dialog :width="440" persistent>
+  <v-dialog
+    :width="440"
+    persistent
+  >
     <v-card class="tw-rounded-xl">
       <v-toolbar
         color="white"
@@ -121,7 +124,7 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
         Authorization: 'Bearer ' + access_token.value,
       },
     })
-    if (response.status === 200) {
+    if (response.status === 200 || response.status === 201) {
       close()
       toast.success('บันทึกสำเร็จ', useToastOption)
       await getChatTemplate()
