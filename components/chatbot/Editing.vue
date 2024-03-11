@@ -17,20 +17,17 @@
         </v-btn>
       </div>
 
-      <v-form
-        v-model="isFormValid"
-        class="px-6 pt-3 pb-3"
-      >
+      <v-form class="px-6 pt-3 pb-3">
         <div class="form-control">
           <p class="pb-2">คีย์เวิร์ด</p>
           <div
-            v-for="(keyword, index) in localInfo.keyword"
+            v-for="(item, index) in localInfo.keyword"
             :key="index"
           >
             <v-textarea
               v-model="localInfo.keyword[index]"
-              id="keyword"
-              name="keyword"
+              :id="`keyword`[index]"
+              :name="`keyword`[index]"
               density="compact"
               variant="outlined"
               rounded="lg"
@@ -40,6 +37,7 @@
               counter
               maxlength="50"
               :rules="[required]"
+              :error="dupKeyword"
             >
               <template v-slot:append>
                 <v-btn
@@ -64,7 +62,7 @@
                   density="comfortable"
                   size="small"
                   @click="addTextarea"
-                  :disabled="keyword === ''"
+                  :disabled="item === ''"
                 >
                   <v-icon color="primary">mdi-plus</v-icon>
                 </v-btn>
@@ -75,7 +73,7 @@
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupKeyword"
           >
-            Keyword นี้มีอยู่แล้ว
+            มี Keyword ซ้ำกับรูปแบบการตอบกลับของแชตบอทที่มีอยู่แล้ว, <br />โปรดเปลี่ยน Keyword
           </p>
         </div>
         <div class="form-control tw-mt-2">
@@ -132,7 +130,7 @@
     <CommonConfirmModal
       v-model="confirmDelete"
       header="ลบรูปแบบการตอบกลับของแชตบอท"
-      :content="`คุณยืนยันจะลบรูปแบบการตอบกลับของแชตบอทนี้ใช่หรือไม่?`"
+      :content="`คุณยืนยันที่จะลบรูปแบบการตอบกลับของแชตบอทนี้ใช่หรือไม่?`"
       cancelWording="ยกเลิก"
       confirmWording="ยืนยัน"
       :isSuccess="false"
@@ -149,17 +147,16 @@ import { getChatbotMsg } from '~/services/chatbot.service'
 const toast = useToast()
 const confirmDelete = ref(false)
 const dupKeyword = ref(false)
-const isFormValid = ref(false)
 
 const props = defineProps<{
-  id: string
+  id?: string
   keyword: string[]
   replyMessage: string
 }>()
 
 const localInfo = ref<any>({
-  _id: props.id,
-  keyword: props.keyword,
+  id: props.id,
+  keyword: [...props.keyword],
   replyMessage: props.replyMessage,
 })
 
@@ -185,8 +182,8 @@ const emits = defineEmits(['close'])
 const close = () => {
   dupKeyword.value = false
   localInfo.value = {
-    _id: props.id,
-    keyword: props.keyword,
+    id: props.id,
+    keyword: [...props.keyword],
     replyMessage: props.replyMessage,
   }
   emits('close')
@@ -194,7 +191,7 @@ const close = () => {
 
 const editChatbotMsg = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chatbot-message${props.id}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chatbot-message/${props.id}`, {
       method: 'PATCH',
       body: JSON.stringify({
         keyword: localInfo.value.keyword,
@@ -207,15 +204,15 @@ const editChatbotMsg = async () => {
     })
 
     if (response.status === 200) {
-      close()
+      dupKeyword.value = false
+      emits('close')
       await getChatbotMsg()
       toast.success('บันทึกสำเร็จ', useToastOption)
     } else if (response.status === 401) {
       dupKeyword.value = false
       await useRefreshToken()
       await editChatbotMsg()
-    }
-    if (response.status === 500) {
+    } else if (response.status === 500) {
       dupKeyword.value = true
     } else {
       console.log('err')
@@ -254,14 +251,14 @@ const deleteChatbotMsg = async () => {
 watch(
   () => props.id,
   (newValue) => {
-    localInfo.value._id = newValue
+    localInfo.value.id = newValue
   }
 )
 
 watch(
   () => props.keyword,
   (newValue) => {
-    localInfo.value.keyword = newValue
+    localInfo.value.keyword = [...newValue]
   }
 )
 watch(
@@ -270,4 +267,13 @@ watch(
     localInfo.value.replyMessage = newValue
   }
 )
+
+for (let i = 0; i < 3; i++) {
+  watch(
+    () => localInfo.value.keyword[i],
+    (newValue) => {
+      if (dupKeyword.value) dupKeyword.value = false
+    }
+  )
+}
 </script>
