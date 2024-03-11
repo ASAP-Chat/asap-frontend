@@ -141,17 +141,6 @@
           </template>
         </v-list-item>
         <div
-          v-if="customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                    ?.chatStatus === Status.PENDING"
-          class="pt-2 pl-5 tw-flex tw-items-center tw-text-xs"
-          :class="{
-            'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
-          }"
-        >
-          แชตบอทกำลังทำงาน
-        </div>
-
-        <div
           class="pl-5 pb-2 tw-flex tw-items-center tw-text-xs"
           :class="{
             'pt-2': customer.data.filter((item: any) => item.customerId === message.customerId)[0]

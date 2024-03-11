@@ -49,6 +49,17 @@
     order="3"
   >
     <template v-slot:append>
+      <div
+        class="tw-flex tw-mr-2"
+        v-if="isEnabled && props.status === Status.PENDING"
+      >
+        <v-icon
+          color="primary"
+          class="pb-1 mr-1"
+          >mdi-robot-excited-outline</v-icon
+        >แชตบอทกำลังทำงาน
+      </div>
+
       <ChatStatus
         :id="props.id"
         :status="props.status"
@@ -87,6 +98,8 @@ import { getChatTemplate } from '~/services/message.service'
 import profileSrc from '~/assets/images/profile.png'
 import { USER } from '~/constants/Token'
 import { SocialType } from '~/interfaces/social.interface'
+import { getChatbotStatus } from '~/services/chatbot.service'
+import { Status } from '~/constants/Status'
 
 const props = defineProps<{
   id: string
@@ -94,7 +107,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits()
-
 const updateSendMsg = (item: string) => {
   emit('update:sendMsg', item)
 }
@@ -104,6 +116,20 @@ const { displayName } = user.value && user.value
 const templateDrawer = ref(false)
 const storeSelectCus: any = useCookie('storeSelectCus')
 const { chatTemplateData } = await getChatTemplate()
+const { data } = (await getChatbotStatus()).chatbotStatus.value
+const statusLine = ref(data[0].isEnabledLine)
+const statusFb = ref(data[0].isEnabledFacebook)
+const statusIg = ref(data[0].isEnabledInstagram)
+
+const isEnabled = computed(() => {
+  const { source } = storeSelectCus.value
+  return (
+    (source === SocialType.LINE && statusLine.value) ||
+    (source === SocialType.FACEBOOK && statusFb.value) ||
+    (source === SocialType.INSTAGRAM && statusIg.value)
+  )
+})
+
 const searchKeyword = ref('')
 const filteredTemplateData = computed(() => {
   const keyword = searchKeyword.value.toLowerCase().trim()
