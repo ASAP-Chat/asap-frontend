@@ -31,7 +31,7 @@
       </v-btn>
     </div>
   </div>
-  <div>
+  <div class="bg-white tw-rounded-3xl tw-px-8 tw-pt-4 tw-mt-12">
     <v-data-table
       :sort-by="sortBy"
       :headers="headers"
@@ -39,7 +39,7 @@
       item-value="_id"
       :search="search"
       color="primary"
-      class="tw-rounded-lg tw-bg-transparent"
+      class="tw-rounded-lg"
     >
       <template v-slot:item.displayName="{ item }">
         <div>
@@ -87,9 +87,9 @@
   <CommonConfirmModal
     v-model="confirmDelete"
     header="ลบสมาชิก"
-    :content="`คุณยืนยันจะลบ ${
+    :content="`คุณยืนยันที่จะลบ <b>${
       selectedMember?.displayName ? selectedMember?.displayName : selectedMember?.email
-    } ตำแหน่ง ${generateRole(selectedMember?.role)} ออกจากการเป็นสมาชิกใช่หรือไม่?`"
+    }</b> ตำแหน่ง <b>${generateRole(selectedMember?.role)}</b> ออกจากการเป็นสมาชิกใช่หรือไม่?`"
     cancelWording="ยกเลิก"
     confirmWording="ยืนยัน"
     :isSuccess="false"
@@ -130,15 +130,19 @@ const headers: any[] = [
     title: 'ชื่อสมาชิก',
     align: 'start',
     key: 'displayName',
+    sortable: false,
+    class: 'tw-text-lg text-left tw-text-[#464646]',
   },
-  { title: 'อีเมล', align: 'start', key: 'email' },
+
+  { title: 'อีเมล', align: 'start', key: 'email', sortable: false },
   {
     title: 'บทบาท',
-    align: 'center',
+    align: 'start',
     key: 'role',
     value: (item: any) => generateRole(item.role),
+    sortable: false,
   },
-  { title: '', align: 'center', key: 'status' },
+  { title: '', align: 'center', key: 'status', sortable: false },
   { title: '', key: 'actions', sortable: false },
 ]
 const sortBy = [{ key: 'role', order: 'desc' }]
@@ -170,5 +174,10 @@ const deleteItem = async (item: any) => {
 <style>
 .v-data-table-header__content {
   font-weight: bold;
+}
+
+.v-data-table-header__content {
+  font-size: 18px;
+  color: #464646;
 }
 </style>

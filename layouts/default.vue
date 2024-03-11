@@ -1,6 +1,6 @@
 <template>
   <CommonConfirmModal
-    v-if="confirmLogout"
+    v-model="confirmLogout"
     header="คุณต้องการออกจากระบบใช่หรือไม่ ?"
     buttonText="ปิด"
     cancelWording="ยกเลิก"
@@ -15,7 +15,7 @@
       <v-navigation-drawer
         app
         rail
-        rail-width="60"
+        rail-width="75"
         permanent
       >
         <v-list>
@@ -95,8 +95,10 @@
           {{ pathTitle }}
         </v-app-bar-title>
         <template v-slot:append>
-          <b>{{ displayName }}</b
-          >&nbsp; ({{ generateRole(role) }})
+          <span class="tw-text-xl">
+            <b>{{ displayName }}</b
+            >&nbsp; ({{ generateRole(role) }})</span
+          >
         </template>
       </v-app-bar>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :width="440" persistent>
+  <v-dialog :width="440">
     <v-card class="tw-rounded-xl">
       <v-toolbar
         color="white"
@@ -43,8 +43,8 @@
         </div>
         <div class="form-control tw-mt-4">
           <p class="pb-4">เลือกบทบาท</p>
-
           <v-radio-group
+            color="primary"
             v-model="memberData.role"
             :rules="[required]"
           >
@@ -55,7 +55,11 @@
             >
               <template v-slot:label>
                 <div>
-                  {{ biz.label }} <br /><span class="tw-text-xs">{{ biz.description }}</span>
+                  <span
+                    :class="memberData.role === biz.value ? 'text-primary font-weight-bold' : ''"
+                    >{{ biz.label }}</span
+                  >
+                  <br /><span class="tw-text-xs">{{ biz.description }}</span>
                 </div>
               </template>
             </v-radio>

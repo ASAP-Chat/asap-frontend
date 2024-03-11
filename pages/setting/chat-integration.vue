@@ -16,99 +16,104 @@
     @btn-action="closeModal"
   />
   <div class="mt-2">
-    <span class="tw-text-xl font-weight-bold text-primary"
-      >{{ socialInfo?.data?.length ? socialInfo?.data?.length : 0 }}/3</span
-    >
-    &nbsp; ช่องทาง
+    <span class="bg-primary text-white tw-px-3.5 tw-py-1.5 tw-rounded-lg">
+      {{ socialInfo?.data?.length ? socialInfo?.data?.length : 0 }}/3 &nbsp;ช่องทาง
+    </span>
   </div>
-  <div class="mt-6 mx-auto">
-    <v-table
-      v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
-      fixed-header
-      class="tw-bg-[#F2F2F2]"
-      width="100px"
-    >
-      <thead>
-        <tr class="tw-text-sm">
-          <th class="text-left font-weight-bold tw-w-64">ชื่อช่องทาง</th>
-          <th class="text-left font-weight-bold tw-w-64">สถานะ</th>
-          <th class="text-left tw-w-64"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="tw-text-sm"
-          v-if="socialInfo && socialInfo.data"
-          v-for="item in socialInfo.data"
-          :key="item.name"
-        >
-          <td class="font-weight-bold">
-            <v-icon
-              class="mr-3 mb-1"
-              size="x-large"
-            >
-              {{ generateSocialIcon(item?.socialType) }}
-            </v-icon>
-            {{ item?.profile?.displayName }}
-          </td>
-          <td :class="item?.status?.isAvailable ? 'text-info' : 'text-error'">
-            <span>
-              <v-tooltip
-                v-if="!item?.status?.isAvailable"
-                activator="parent"
-                location="top"
-                >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
-              </v-tooltip>
-
+  <div class="mt-12 mx-auto">
+    <div class="bg-white tw-rounded-3xl tw-px-8 tw-pt-4 tw-h-96">
+      <v-table
+        v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
+        fixed-header
+      >
+        <thead>
+          <tr class="tw-text-lg text-left tw-text-[#464646]">
+            <th class="font-weight-bold tw-w-64">ชื่อช่องทาง</th>
+            <th class="text-center font-weight-bold tw-w-64">สถานะ</th>
+            <th class="tw-w-64"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="tw-text-sm"
+            v-if="socialInfo && socialInfo.data"
+            v-for="item in socialInfo.data"
+            :key="item.name"
+          >
+            <td>
               <v-icon
-                :color="item?.status?.isAvailable ? 'info' : 'error'"
-                size="sm"
-                class="mr-1"
+                class="mr-3 mb-1"
+                size="x-large"
               >
-                {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-alert-circle' }}
+                {{ generateSocialIcon(item?.socialType) }}
               </v-icon>
-              {{ item?.status?.isAvailable ? 'พร้อมใช้งาน' : 'พบปัญหา' }}
-            </span>
-          </td>
-          <td class="text-center">
-            <v-btn
-              variant="flat"
-              class="font-weight-bold"
-              color="error"
-              @click=";(confirmDeleteModal = true), (cancelItemId = item?._id)"
-              >ยกเลิกการเชื่อมต่อ</v-btn
+              {{ item?.profile?.displayName }}
+            </td>
+            <td
+              class="text-center"
+              :class="item?.status?.isAvailable ? 'text-success' : 'text-warning'"
             >
-            <CommonConfirmModal
-              v-if="confirmDeleteModal && cancelItemId === item?._id"
-              :header="`คุณต้องการยกเลิกการเชื่อมต่อ ${item.socialType} ใช่หรือไม่ ?`"
-              content="หากยืนยัน, การเชื่อมต่อจะถูกยกเลิก และคุณจะต้องทำการเชื่อมต่อใหม่เมื่อต้องการใช้บริการอีกครั้ง"
-              buttonText="ปิด"
-              cancelWording="ยกเลิก"
-              confirmWording="ยืนยัน"
-              :isSuccess="false"
-              @btn-action="closeModal"
-              @confirm-action="cancelSocialAccount(item._id)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+              <div>
+                <v-tooltip
+                  v-if="!item?.status?.isAvailable"
+                  activator="parent"
+                  location="top"
+                  >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
+                </v-tooltip>
+                <div class="tw-flex tw-items-center tw-justify-center">
+                  <v-icon
+                    :color="item?.status?.isAvailable ? 'success' : 'warning'"
+                    class="mr-1"
+                  >
+                    {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-close' }}
+                  </v-icon>
+                  <span :class="{ 'font-weight-bold': item?.status?.isAvailable }">{{
+                    item?.status?.isAvailable ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'
+                  }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="text-center">
+              <v-btn
+                variant="flat"
+                color="error-lighten"
+                rounded="lg"
+                @click=";(confirmDeleteModal = true), (cancelItemId = item?._id)"
+                >ยกเลิกการเชื่อมต่อ</v-btn
+              >
+              <CommonConfirmModal
+                v-if="cancelItemId === item?._id"
+                v-model="confirmDeleteModal"
+                :header="`คุณต้องการยกเลิกการเชื่อมต่อ ${item.socialType} ใช่หรือไม่ !`"
+                :content="`หากยืนยัน, การเชื่อมต่อจะถูกยกเลิกและข้อความจาก ${item.socialType} จะไม่แสดงบน ASAP <br/>คุณจะต้องทำการเชื่อมต่อใหม่เมื่อต้องการใช้บริการอีกครั้ง`"
+                buttonText="ปิด"
+                cancelWording="ยกเลิก"
+                confirmWording="ยืนยัน"
+                :isSuccess="false"
+                @btn-action="closeModal"
+                @confirm-action="cancelSocialAccount(item._id)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
 
-    <div class="tw-text-center">
-      <v-btn
-        variant="flat"
-        class="font-weight-bold tw-mx-auto mt-4"
-        color="info"
-        prepend-icon="mdi-plus-circle-outline"
-        @click="connectDialog = true"
-      >
-        <template v-slot:prepend>
-          <v-icon color="white"></v-icon>
-        </template>
-        เพิ่มการเชื่อมต่อ</v-btn
-      >
+      <div class="tw-text-center">
+        <v-btn
+          variant="flat"
+          class="tw-mx-auto mt-4"
+          color="success"
+          rounded="lg"
+          prepend-icon="mdi-plus"
+          @click="connectDialog = true"
+        >
+          <template v-slot:prepend>
+            <v-icon color="white"></v-icon>
+          </template>
+          เพิ่มการเชื่อมต่อ</v-btn
+        >
+      </div>
     </div>
-
     <div>
       <v-row justify="center">
         <v-dialog
@@ -167,14 +172,15 @@
                     <td class="text-center">
                       <v-icon
                         v-if="socialInfo?.data?.some((data: any) => data.socialType === item.socialType)"
-                        color="info"
+                        color="success"
                       >
                         mdi-check
                       </v-icon>
                       <v-btn
                         v-else
                         variant="outlined"
-                        class="font-weight-bold text-secondary-lighten"
+                        color="primary"
+                        class="font-weight-bold"
                         @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
                       >
                         {{ 'เชื่อมต่อ' }}
@@ -313,8 +319,3 @@ onBeforeMount(async () => {
   }
 })
 </script>
-<style>
-.v-table.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th {
-  background-color: #f2f2f2;
-}
-</style>

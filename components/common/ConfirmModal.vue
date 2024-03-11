@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    width="auto"
-    persistent
-  >
+  <v-dialog width="auto">
     <v-card class="rounded-xl pa-8 tw-bg-white">
       <v-card-title class="mx-2 pb-0 text-center">
         <v-icon
@@ -13,27 +9,27 @@
           mdi-tooltip-question-outline
         </v-icon>
         <br />
-        <b class="tw-text-3xl text-error">{{ props.header }}</b>
       </v-card-title>
+      <p class="tw-text-3xl text-error text-center font-weight-bold">{{ props.header }}</p>
+
       <v-card-text class="text-center tw-mt-0 tw-text-base">
-        <p>
-          {{ props.content }}
-        </p>
+        <p v-html="props.content"></p>
       </v-card-text>
       <v-card-actions class="justify-center mt-4 tw-gap-12">
         <v-btn
           size="large"
           class="font-weight-bold tw-text-base px-6"
           variant="tonal"
-          @click="btnAction"
+          @click="emits('btn-action')"
           >{{ props.cancelWording }}
         </v-btn>
         <v-btn
           size="large"
           color="error"
           class="font-weight-bold tw-text-base px-6"
-          variant="flat"
-          @click="confirmAction"
+          flat
+          variant="outlined"
+          @click="emits('confirm-action')"
           >{{ props.confirmWording }}
         </v-btn>
       </v-card-actions>
@@ -50,16 +46,4 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits(['btn-action', 'confirm-action'])
-
-const dialog = ref(true)
-
-const btnAction = () => {
-  emits('btn-action')
-}
-
-const confirmAction = () => {
-  emits('confirm-action')
-}
 </script>
-
-<style scoped></style>

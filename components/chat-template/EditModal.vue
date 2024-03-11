@@ -1,5 +1,8 @@
 <template>
-  <v-dialog :width="470" persistent>
+  <v-dialog
+    :width="470"
+    persistent
+  >
     <v-card>
       <v-toolbar
         color="white"
@@ -98,7 +101,7 @@
     <CommonConfirmModal
       v-model="confirmDelete"
       header="ลบรูปแบบคำตอบ"
-      :content="`คุณยืนยันจะลบรูปแบบคำตอบ ${localInfo.keyword} ใช่หรือไม่?`"
+      :content="`คุณยืนยันที่จะลบรูปแบบคำตอบ <b>${localInfo.keyword}</b> ใช่หรือไม่?`"
       cancelWording="ยกเลิก"
       confirmWording="ยืนยัน"
       :isSuccess="false"
