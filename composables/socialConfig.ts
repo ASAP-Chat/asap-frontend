@@ -86,7 +86,6 @@ export const generateMessageSubtitle = (message: any) => {
   }
 }
 
-const storeSelectCus: any = useCookie('storeSelectCus')
 export const generateCustomerImg = (message: any) => {
   const isOwner = message?.isOwner
   const socialType = message?.source
@@ -96,7 +95,7 @@ export const generateCustomerImg = (message: any) => {
 
   switch (socialType) {
     case SocialType.LINE:
-      return isOwner ? senderDetail?.pictureUrl : storeSelectCus?.pictureUrl
+      return isOwner ? senderDetail?.pictureUrl : senderDetail.pictureUrl
 
     case SocialType.FACEBOOK:
       return isOwner ? fbSrc : profileSrc

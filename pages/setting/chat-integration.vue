@@ -21,15 +21,15 @@
     </span>
   </div>
   <div class="mt-12 mx-auto">
-    <div class="bg-white tw-rounded-3xl tw-px-8 tw-pt-4 tw-h-96">
+    <div class="bg-white tw-rounded-3xl tw-px-8 tw-py-4">
       <v-table
         v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
         fixed-header
       >
         <thead>
           <tr class="tw-text-lg text-left tw-text-[#464646]">
-            <th class="font-weight-bold tw-w-64">ชื่อช่องทาง</th>
-            <th class="text-center font-weight-bold tw-w-64">สถานะ</th>
+            <th class="font-weight-bold tw-w-96">ชื่อช่องทาง</th>
+            <th class="text-left font-weight-bold tw-w-64">สถานะ</th>
             <th class="tw-w-64"></th>
           </tr>
         </thead>
@@ -50,7 +50,7 @@
               {{ item?.profile?.displayName }}
             </td>
             <td
-              class="text-center"
+              class="text-left tw-flex tw-items-center tw-justify-start"
               :class="item?.status?.isAvailable ? 'text-success' : 'text-warning'"
             >
               <div>

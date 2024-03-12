@@ -38,6 +38,7 @@
           :template="item.template"
           :allow-edit="false"
           :width="250"
+          class="tw-border"
           @click="updateSendMsg(item.template)"
         />
       </div>

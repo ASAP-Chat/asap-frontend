@@ -264,8 +264,8 @@
           <v-row>
             <v-col cols="12">
               <v-textarea
-                rounded
                 type="text"
+                rounded="xl"
                 v-model="sendMsg"
                 density="compact"
                 variant="outlined"
@@ -291,6 +291,7 @@
               >
                 <template v-slot:append>
                   <v-btn
+                    color="primary"
                     icon="mdi-send"
                     variant="text"
                     @click="sendMessage()"

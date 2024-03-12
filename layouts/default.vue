@@ -102,11 +102,8 @@
         </template>
       </v-app-bar>
 
-      <v-main class="tw-bg-[#f2f2f2]">
-        <v-container
-          fluid
-          :class="route.name === 'chat' ? 'tw-min-h-[72.9dvh]' : 'tw-min-h-[92.8dvh]'"
-        >
+      <v-main class="tw-bg-[#f2f2f2] tw-min-h-screen">
+        <v-container fluid>
           <slot />
         </v-container>
       </v-main>
