@@ -26,10 +26,8 @@
         </div>
       </div>
       <div class="py-2 px-5 tw-mt-auto">
-        <div>
-          <div class="tw-chat tw-chat-end tw-whitespace-pre-line">
-            <div class="tw-chat-bubble tw-bg-[#d4caff] text-black">{{ props.template }}</div>
-          </div>
+        <div class="tw-chat tw-chat-end tw-whitespace-pre-line">
+          <div class="tw-chat-bubble tw-bg-[#d4caff] text-black">{{ props.template }}</div>
         </div>
       </div>
     </div>
