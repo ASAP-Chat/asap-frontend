@@ -44,7 +44,7 @@
       </div>
     </div>
     <div
-      class="tw-justify-items-center tw-overflow-y-auto custom-scrollbar tw-grid tw-grid-cols-1 xl:tw-grid-cols-2"
+      class="tw-justify-items-center tw-overflow-y-auto tw-grid tw-grid-cols-1 xl:tw-grid-cols-2"
     >
       <ChatbotCard
         v-for="item in filteredChatbotMsg"

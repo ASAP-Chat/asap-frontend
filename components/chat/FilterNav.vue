@@ -4,7 +4,10 @@
     width="175"
     color="#fafafa"
   >
-    <v-list color="primary">
+    <v-list
+      color="primary"
+      class="tw-pt-0"
+    >
       <v-list-item
         title="ทั้งหมด"
         value="all"
@@ -43,8 +46,8 @@
         </template>
       </v-list-item>
 
+      <v-divider class="border-opacity-25"></v-divider>
       <v-list-subheader> สถานะแชต </v-list-subheader>
-      <v-divider></v-divider>
       <v-list-item
         value="pending"
         prepend-icon="mdi-circle"
@@ -89,8 +92,8 @@
         </template>
       </v-list-item>
 
+      <v-divider class="border-opacity-25"></v-divider>
       <v-list-subheader> Social Media </v-list-subheader>
-      <v-divider></v-divider>
       <v-list-item
         title="Line"
         :value="SocialType.LINE"
@@ -124,21 +127,7 @@
         @click="updateSelectedItem(SocialType.INSTAGRAM)"
       >
         <template v-slot:prepend>
-          <v-icon
-            style="
-              background: radial-gradient(
-                circle at 30% 107%,
-                #fdf497 0%,
-                #fdf497 5%,
-                #fd5949 45%,
-                #d6249f 60%,
-                #285aeb 90%
-              );
-              background-clip: text;
-              -webkit-text-fill-color: transparent;
-            "
-            >mdi-instagram</v-icon
-          >
+          <v-icon>mdi-instagram</v-icon>
         </template>
       </v-list-item>
     </v-list>

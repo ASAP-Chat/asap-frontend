@@ -54,11 +54,8 @@
               class="tw-mb-3"
             >
               <template v-slot:label>
-                <div>
-                  <span
-                    :class="memberData.role === biz.value ? 'text-primary font-weight-bold' : ''"
-                    >{{ biz.label }}</span
-                  >
+                <div :class="memberData.role === biz.value ? 'text-primary ' : 'tw-text-[#8B8C8C]'">
+                  <b>{{ biz.label }}</b>
                   <br /><span class="tw-text-xs">{{ biz.description }}</span>
                 </div>
               </template>
@@ -167,3 +164,8 @@ watch(
   }
 )
 </script>
+<style>
+.v-label--clickable {
+  opacity: 1;
+}
+</style>

@@ -1,49 +1,4 @@
 <template>
-  <v-navigation-drawer
-    permanent
-    width="300"
-    location="right"
-    v-model="templateDrawer"
-    order="1"
-  >
-    <div class="pa-3 pt-6">
-      <div class="text-center mb-3">
-        <h2>คลังคำตอบ ({{ chatTemplateData.data.length }})</h2>
-      </div>
-      <div class="mb-2">
-        <v-text-field
-          density="compact"
-          variant="outlined"
-          color="primary"
-          rounded
-          placeholder="ค้นหา"
-          bg-color="white"
-          hide-details
-          v-model="searchKeyword"
-        >
-          <template v-slot:prepend-inner>
-            <v-icon color="primary">mdi-magnify</v-icon>
-          </template>
-        </v-text-field>
-      </div>
-    </div>
-    <div class="tw-overflow-auto tw-h-4/5">
-      <div
-        v-for="item in filteredTemplateData"
-        class="mb-6 tw-flex tw-justify-center"
-      >
-        <ChatTemplateCard
-          :id="item._id"
-          :keyword="item.keyword"
-          :template="item.template"
-          :allow-edit="false"
-          :width="250"
-          class="tw-border"
-          @click="updateSendMsg(item.template)"
-        />
-      </div>
-    </div>
-  </v-navigation-drawer>
   <v-app-bar
     :elevation="0"
     class="tw-border-b"
@@ -65,12 +20,6 @@
         :id="props.id"
         :status="props.status"
       />
-      <v-btn
-        icon="mdi-message-text-outline"
-        color="primary"
-        @click.stop="templateDrawer = !templateDrawer"
-        :disabled="storeSelectCus?.agent !== displayName"
-      ></v-btn>
     </template>
     <template v-slot:prepend>
       <v-img
@@ -107,10 +56,6 @@ const props = defineProps<{
   status: any
 }>()
 
-const emit = defineEmits()
-const updateSendMsg = (item: string) => {
-  emit('update:sendMsg', item)
-}
 const user: any = useCookie(USER)
 const { displayName } = user.value && user.value
 

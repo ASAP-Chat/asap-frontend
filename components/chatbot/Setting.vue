@@ -36,21 +36,7 @@
           </tr>
           <tr>
             <td class="tw-flex tw-items-center">
-              <v-icon
-                class="mr-2"
-                style="
-                  background: radial-gradient(
-                    circle at 30% 107%,
-                    #fdf497 0%,
-                    #fdf497 5%,
-                    #fd5949 45%,
-                    #d6249f 60%,
-                    #285aeb 90%
-                  );
-                  background-clip: text;
-                  -webkit-text-fill-color: transparent;
-                "
-                >{{ generateSocialIcon(SocialType.INSTAGRAM) }}</v-icon
+              <v-icon class="mr-2">{{ generateSocialIcon(SocialType.INSTAGRAM) }}</v-icon
               >Instagram
             </td>
             <td>

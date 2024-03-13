@@ -208,7 +208,7 @@
   <div id="chatContainer">
     <div v-if="filteredMessages">
       <div v-if="storeSelectCus">
-        <ChatTemplateNav
+        <ChatAppBar
           :id="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]?._id"
           :status="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]
                 ?.chatStatus"
@@ -252,6 +252,7 @@
         </div>
       </div>
     </div>
+    <ChatTemplateDrawer v-model="templateDrawer" />
     <v-footer
       app
       order="2"
@@ -289,6 +290,16 @@
                   storeSelectCus.status === Status.PENDING
                 "
               >
+                <template v-slot:prepend>
+                  <v-btn
+                    icon="mdi-message-text-outline"
+                    color="primary"
+                    density="compact"
+                    variant="text"
+                    @click.stop="templateDrawer = !templateDrawer"
+                    :disabled="storeSelectCus?.agent !== displayName"
+                  ></v-btn>
+                </template>
                 <template v-slot:append>
                   <v-btn
                     color="primary"
@@ -347,6 +358,7 @@ const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()
 const audio = new Audio(buttonSfx)
+const templateDrawer = ref(false)
 
 function play() {
   audio.play()
