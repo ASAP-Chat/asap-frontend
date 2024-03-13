@@ -28,7 +28,12 @@
     </div>
     <div class="tw-overflow-auto tw-h-4/5">
       <div
-        v-for="item in filteredTemplateData"
+        v-for="item in filteredTemplateData.sort((a:any, b:any) => {
+          const dateA = new Date(a.updatedAt)
+          const dateB = new Date(b.updatedAt)
+
+          return dateB.getTime() - dateA.getTime()
+        })"
         class="mb-6 tw-flex tw-justify-center"
       >
         <ChatTemplateCard
