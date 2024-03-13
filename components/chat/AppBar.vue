@@ -44,9 +44,7 @@
   </v-app-bar>
 </template>
 <script setup lang="ts">
-import { getChatTemplate } from '~/services/message.service'
 import profileSrc from '~/assets/images/profile.png'
-import { USER } from '~/constants/Token'
 import { SocialType } from '~/interfaces/social.interface'
 import { getChatbotStatus } from '~/services/chatbot.service'
 import { Status } from '~/constants/Status'
@@ -56,12 +54,7 @@ const props = defineProps<{
   status: any
 }>()
 
-const user: any = useCookie(USER)
-const { displayName } = user.value && user.value
-
-const templateDrawer = ref(false)
 const storeSelectCus: any = useCookie('storeSelectCus')
-const { chatTemplateData } = await getChatTemplate()
 const { data } = (await getChatbotStatus()).chatbotStatus.value
 const statusLine = ref(data[0].isEnabledLine)
 const statusFb = ref(data[0].isEnabledFacebook)
@@ -74,23 +67,5 @@ const isEnabled = computed(() => {
     (source === SocialType.FACEBOOK && statusFb.value) ||
     (source === SocialType.INSTAGRAM && statusIg.value)
   )
-})
-
-const searchKeyword = ref('')
-const filteredTemplateData = computed(() => {
-  const keyword = searchKeyword.value.toLowerCase().trim()
-  return chatTemplateData.value.data
-    .sort((a: any, b: any) => {
-      const keywordA = a.keyword.toLowerCase()
-      const keywordB = b.keyword.toLowerCase()
-
-      return keywordA.localeCompare(keywordB, 'th', { sensitivity: 'base' })
-    })
-    .filter((item: any) => {
-      return (
-        item.keyword.toLowerCase().includes(keyword) ||
-        item.template.toLowerCase().includes(keyword)
-      )
-    })
 })
 </script>
