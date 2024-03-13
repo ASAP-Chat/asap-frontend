@@ -212,7 +212,6 @@
           :id="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]?._id"
           :status="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]
                 ?.chatStatus"
-          @update:sendMsg="sendMsg = $event"
         />
       </div>
       <div>
@@ -252,7 +251,10 @@
         </div>
       </div>
     </div>
-    <ChatTemplateDrawer v-model="templateDrawer" />
+    <ChatTemplateDrawer
+      v-model="templateDrawer"
+      @update:sendMsg="sendMsg = $event"
+    />
     <v-footer
       app
       order="2"
