@@ -45,7 +45,7 @@
     </div>
     <div
       class="tw-justify-items-center tw-overflow-y-auto tw-grid tw-grid-cols-1 xl:tw-grid-cols-2"
-      style="max-height: calc(100vh - 200px)"
+      style="max-height: calc(100vh - 230px)"
     >
       <ChatbotCard
         v-for="item in filteredChatbotMsg"
