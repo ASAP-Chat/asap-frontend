@@ -16,20 +16,34 @@
     </div>
     <div v-if="role === Role.OWNER">
       <p class="mb-5">บัญชีที่เชื่อมต่อ</p>
-      <v-icon
-        v-for="item in socialInfo.data"
-        size="x-large"
-        class="tw-mr-3.5"
+      <span
+        v-for="(value, key) in social"
+        class="tw-cursor-pointer"
+        @click="copyToClipboard(value, String(key))"
       >
-        {{ generateSocialIcon(item?.socialType) }}</v-icon
-      >
+        <v-tooltip
+          activator="parent"
+          location="top"
+          ><span v-if="(showCopiedTooltip as any)[key]"
+            ><v-icon>mdi-content-copy</v-icon>&nbsp;</span
+          >
+          {{ (showCopiedTooltip as any)[key] ? 'คัดลอกไปยังคลิปบอร์ด' : value }}
+        </v-tooltip>
+        <v-icon
+          v-if="value"
+          :key="key"
+          size="x-large"
+          class="tw-mr-3.5"
+        >
+          {{ generateSocialIcon(String(key).toUpperCase()) }}
+        </v-icon>
+      </span>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { Role } from '~/constants/Role'
 import { USER } from '~/constants/Token'
-import { getSocialAccount } from '~/services/message.service'
 
 useHead({
   title: 'การตั้งค่า',
@@ -39,9 +53,22 @@ definePageMeta({
 })
 
 const user: any = useCookie(USER)
-const { email, displayName, role } = user.value && user.value
+const { email, displayName, role, shop } = user.value && user.value
+const { social } = shop
 
-const { socialInfo } = await getSocialAccount()
+const showCopiedTooltip = ref({
+  facebook: false,
+  line: false,
+  instagram: false,
+})
+
+const copyToClipboard = (value: string, social: string) => {
+  ;(showCopiedTooltip.value as any)[social] = true
+  navigator.clipboard.writeText(value)
+  setTimeout(() => {
+    ;(showCopiedTooltip.value as any)[social] = false
+  }, 1000)
+}
 </script>
 <style>
 .profile-info {
