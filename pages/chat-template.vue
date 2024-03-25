@@ -1,12 +1,11 @@
 <template>
   <div class="px-9 pt-9">
     <div class="tw-flex tw-justify-between mb-7">
-      <div
-        class="tw-flex tw-items-center bg-primary-lighten tw-px-5 text-primary tw-rounded-lg"
-        style="border: 2px solid #674ae7"
-      >
-        {{ chatTemplateData.data.length }}
-        &nbsp;รูปแบบคำตอบ
+      <div class="tw-flex tw-items-center">
+        <span class="tw-text-xl font-weight-bold text-primary">{{
+          chatTemplateData.data.length
+        }}</span>
+        &nbsp; รูปแบบคำตอบ
       </div>
       <div class="tw-flex tw-gap-3 tw-items-center tw-w-96">
         <v-text-field
@@ -45,7 +44,7 @@
       :class="
         filteredTemplateData.length === 0
           ? 'bg-transparent tw-text-center mt-12'
-          : 'bg-white tw-px-6 tw-pt-6 tw-overflow-y-auto tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-2 xl:tw-grid-cols-3'
+          : 'bg-white tw-px-8 tw-pt-8 tw-overflow-y-auto tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-2 xl:tw-grid-cols-3 tw-gap-10 pb-8'
       "
       class="tw-rounded-3xl tw-justify-items-center"
       style="max-height: calc(100vh - 200px)"
@@ -59,7 +58,6 @@
 
           return dateB.getTime() - dateA.getTime()
         })"
-        class="mb-6"
         :id="item._id"
         :keyword="item.keyword"
         :template="item.template"
