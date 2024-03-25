@@ -61,6 +61,8 @@
                     flat
                     icon
                     density="comfortable"
+                    :variant="keyword === '' ? 'outlined' : 'tonal'"
+                    color="primary"
                     size="small"
                     @click="addTextarea"
                     :disabled="keyword === ''"

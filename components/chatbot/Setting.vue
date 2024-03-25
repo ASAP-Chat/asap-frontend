@@ -78,7 +78,7 @@ const updateValues = () => {
 const updateBySocial = () => {
   if (fb.value && line.value && ig.value) {
     all.value = true
-  } else if (!fb.value || !line.value || !ig.value) {
+  } else if (!fb.value && !line.value && !ig.value) {
     all.value = false
   }
   updateChatbotStatus(statusId, line.value, fb.value, ig.value)
