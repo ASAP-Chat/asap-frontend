@@ -28,7 +28,7 @@
       >
         <v-list-item
           class="tw-gap-x-3 pt-4"
-          height="70"
+          height="100"
           exact
           :title="generateName(message)"
           :value="message.customerId"
@@ -72,72 +72,94 @@
             </v-badge>
           </template>
           <template v-slot:append>
-            <v-badge
-              dot
-              floating
-              color="error"
-              v-if="message.isRead === false"
-            >
-              <time class="tw-text-xs tw-opacity-50 text-center">
-                <b
-                  :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+            <div class="text-center">
+              <v-badge
+                dot
+                floating
+                color="error"
+                class="tw--mt-2"
+                v-if="message.isRead === false"
+              >
+                <time>
+                  <div
+                    v-if="customer.data.filter(
+                          (item: any) => item.customerId === message.customerId
+                        )[0]?.chatStatus === Status.PENDING && isChatbotEnabled(message.source)"
+                  >
+                    <v-icon color="primary">mdi-robot-excited-outline</v-icon>
+                  </div>
+                  <div class="tw-text-xs tw-opacity-50">
+                    <b
+                      :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
                     ?.chatStatus}`"
-                  >{{
-                    generateStatus(
-                      customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                        ?.chatStatus
-                    )
-                  }}</b
-                ><br />
-                {{
-                  ((timestamp) => {
-                    const messageTimestamp = useDayjs()(message.sourceTimestamp)
-                    const currentTimestamp = useDayjs()()
+                      >{{
+                        generateStatus(
+                          customer.data.filter(
+                            (item: any) => item.customerId === message.customerId
+                          )[0]?.chatStatus
+                        )
+                      }}</b
+                    ><br />
+                    {{
+                      ((timestamp) => {
+                        const messageTimestamp = useDayjs()(message.sourceTimestamp)
+                        const currentTimestamp = useDayjs()()
 
-                    const hoursDifference = Math.abs(
-                      messageTimestamp.diff(currentTimestamp, 'hours')
-                    )
-                    const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
+                        const hoursDifference = Math.abs(
+                          messageTimestamp.diff(currentTimestamp, 'hours')
+                        )
+                        const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
 
-                    return hoursDifference <= 24
-                      ? messageTimestamp.fromNow()
-                      : sameYear
-                      ? messageTimestamp.format('DD/M')
-                      : messageTimestamp.format('DD/M/YY HH:mm')
-                  })(message.sourceTimestamp)
-                }}
+                        return hoursDifference <= 24
+                          ? messageTimestamp.fromNow()
+                          : sameYear
+                          ? messageTimestamp.format('DD/M')
+                          : messageTimestamp.format('DD/M/YY HH:mm')
+                      })(message.sourceTimestamp)
+                    }}
+                  </div>
+                </time>
+              </v-badge>
+              <time v-else>
+                <div
+                  v-if="customer.data.filter(
+                          (item: any) => item.customerId === message.customerId
+                        )[0]?.chatStatus === Status.PENDING && isChatbotEnabled(message.source)"
+                >
+                  <v-icon color="primary">mdi-robot-excited-outline</v-icon>
+                </div>
+                <div class="tw-text-xs tw-opacity-50">
+                  <b
+                    :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
+                    ?.chatStatus}`"
+                    >{{
+                      generateStatus(
+                        customer.data.filter(
+                          (item: any) => item.customerId === message.customerId
+                        )[0]?.chatStatus
+                      )
+                    }}</b
+                  ><br />
+                  {{
+                    ((timestamp) => {
+                      const messageTimestamp = useDayjs()(message.sourceTimestamp)
+                      const currentTimestamp = useDayjs()()
+
+                      const hoursDifference = Math.abs(
+                        messageTimestamp.diff(currentTimestamp, 'hours')
+                      )
+                      const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
+
+                      return hoursDifference <= 24
+                        ? messageTimestamp.fromNow()
+                        : sameYear
+                        ? messageTimestamp.format('DD/M')
+                        : messageTimestamp.format('DD/M/YY HH:mm')
+                    })(message.sourceTimestamp)
+                  }}
+                </div>
               </time>
-            </v-badge>
-            <time
-              class="tw-text-xs tw-opacity-50 text-center"
-              v-else
-            >
-              <b
-                :class="`text-${customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                    ?.chatStatus}`"
-                >{{
-                  generateStatus(
-                    customer.data.filter((item: any) => item.customerId === message.customerId)[0]
-                      ?.chatStatus
-                  )
-                }}</b
-              ><br />
-              {{
-                ((timestamp) => {
-                  const messageTimestamp = useDayjs()(message.sourceTimestamp)
-                  const currentTimestamp = useDayjs()()
-
-                  const hoursDifference = Math.abs(messageTimestamp.diff(currentTimestamp, 'hours'))
-                  const sameYear = messageTimestamp.isSame(currentTimestamp, 'year')
-
-                  return hoursDifference <= 24
-                    ? messageTimestamp.fromNow()
-                    : sameYear
-                    ? messageTimestamp.format('DD/M')
-                    : messageTimestamp.format('DD/M/YY HH:mm')
-                })(message.sourceTimestamp)
-              }}
-            </time>
+            </div>
           </template>
         </v-list-item>
         <div
@@ -336,6 +358,7 @@ import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/servic
 import { Status } from '~/constants/Status'
 import { Role } from '~/constants/Role'
 import type { ToastOptions } from 'vue-toastification/dist/types/types'
+import { getChatbotStatus } from '~/services/chatbot.service'
 
 const toast = useToast()
 
@@ -685,6 +708,19 @@ const filteredMsg = computed(() => {
 
   return showAllItems.includes(selectedItem.value) ? filteredByStatus : filteredBySelectedItem
 })
+
+const { data } = (await getChatbotStatus()).chatbotStatus.value
+const statusLine = ref(data[0].isEnabledLine)
+const statusFb = ref(data[0].isEnabledFacebook)
+const statusIg = ref(data[0].isEnabledInstagram)
+
+const isChatbotEnabled = (source: string) => {
+  return (
+    (source === SocialType.LINE && statusLine.value) ||
+    (source === SocialType.FACEBOOK && statusFb.value) ||
+    (source === SocialType.INSTAGRAM && statusIg.value)
+  )
+}
 
 onBeforeMount(async () => {
   storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
