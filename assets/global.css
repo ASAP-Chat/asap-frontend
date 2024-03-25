@@ -108,3 +108,8 @@ html {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.v-btn--disabled {
+  pointer-events: auto !important;
+  cursor: not-allowed !important;
+}
