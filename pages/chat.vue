@@ -212,6 +212,7 @@
               <ChatAssignMember
                 :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
                 :current-member="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.agent"
+                @update:message="updateMsg(message.customerId, message._id)"
               />
             </v-menu>
           </div>
@@ -433,7 +434,8 @@ onBeforeMount(() => {
           if (
             newMsg.value.data[0].isOwner === false &&
             newMsg.value.data[0].isRead === false &&
-            newMsg.value.data[0].senderDetail.name
+            newMsg.value.data[0].senderDetail.name &&
+            newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
             play()
             toast(content, notifications)
@@ -443,7 +445,8 @@ onBeforeMount(() => {
           if (
             newMsg.value.data[0].isOwner === false &&
             newMsg.value.data[0].isRead === false &&
-            newMsg.value.data[0].senderDetail.name
+            newMsg.value.data[0].senderDetail.name &&
+            newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
             play()
             toast(content, notifications)
@@ -466,13 +469,21 @@ onBeforeMount(() => {
         )
         if (isCustomerIdEqual && isIdNotPresent) {
           await getCustomer()
-          !newMsg.value.data[0].senderDetail.name && play()
+          !newMsg.value.data[0].senderDetail.name
           filteredMessages.value.data.push(newMsg.value.data[0])
-          updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
-          toast(content, notifications)
+          if (
+            customer.value.data.filter(
+              (item: any) => item.customerId === storeSelectCus.value.userId
+            )[0].agent.displayName === displayName
+          )
+            updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
           nextTick(() => {
             window.scrollTo(0, document.body.scrollHeight)
           })
+          if (newMsg.value.data[0].senderDetail.chatMode !== 'bot') {
+            play()
+            toast(content, notifications)
+          }
         }
       }
     })

@@ -28,6 +28,7 @@ button {
 .Vue-Toastification__icon {
   font-size: 25px !important;
   color: white !important;
+  -webkit-text-fill-color: white !important;
 }
 
 .Vue-Toastification__toast--default.line-custom-toast-class {
@@ -39,6 +40,7 @@ button {
 .Vue-Toastification__toast--default.ig-custom-toast-class {
   background-color: #8204fc !important;
 }
+
 .gradient {
   background: linear-gradient(100deg, #674ae7 0%, #d4c9ff 100%);
 }
@@ -106,7 +108,6 @@ html {
 .mdi-facebook {
   background: linear-gradient(#18abfe, #0163e0);
   background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .v-btn--disabled {

@@ -46,6 +46,8 @@ const props = defineProps<{
   id: string
   currentMember: any
 }>()
+
+const emits = defineEmits(['update:message'])
 const localMember = ref(props.currentMember)
 const access_token = useCookie(ACCESS_TOKEN)
 const storeSelectCus: any = useCookie('storeSelectCus')
@@ -93,6 +95,9 @@ const updateAgent = async (id: string, v: any) => {
     if (response.status === 200) {
       if (storeSelectCus?.value?.statusId === id) {
         storeSelectCus.value.agent = localMember.value.displayName
+      }
+      if (storeSelectCus?.value.agent === v) {
+        emits('update:message')
       }
       await getCustomer()
     } else if (response.status === 401) {
