@@ -124,6 +124,7 @@ const props = defineProps<{
   id: string
   keyword: string
   template: string
+  page: number
 }>()
 const localInfo = ref<any>({
   _id: props.id,
@@ -160,7 +161,7 @@ const editChatTemplate = async () => {
 
     if (response.status === 200) {
       close()
-      await getChatTemplate()
+      await getChatTemplate(props.page)
       toast.success('บันทึกสำเร็จ', useToastOption)
     } else if (response.status === 401) {
       dupKeyword.value = false
@@ -190,7 +191,7 @@ const deleteChatTemplate = async () => {
       close()
       confirmDelete.value = false
       toast.success('ลบรูปแบบคำตอบสำเร็จ', useToastOption)
-      await getChatTemplate()
+      await getChatTemplate(props.page)
     } else {
       await useRefreshToken()
       await deleteChatTemplate()

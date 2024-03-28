@@ -7,10 +7,12 @@ const { shop, isOwner } = user?.value || {}
 const { name } = shop || {}
 
 const chatTemplateData = ref()
-export const getChatTemplate = async () => {
+export const getChatTemplate = async (page: number = 1, onChat: boolean = true) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/chat-template?shopName=${name}`,
+      onChat
+        ? `${import.meta.env.VITE_BASE_URL}/chat-template?shopName=${name}&$limit=12&page=${page}`
+        : `${import.meta.env.VITE_BASE_URL}/chat-template?shopName=${name}`,
       {
         method: 'get',
         headers: {
@@ -23,7 +25,7 @@ export const getChatTemplate = async () => {
     } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
-      await getChatTemplate()
+      await getChatTemplate(page)
     }
   } catch (error: any) {
     console.log(error)

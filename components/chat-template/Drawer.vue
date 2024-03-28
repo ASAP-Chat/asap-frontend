@@ -57,7 +57,7 @@ const updateSendMsg = (item: string) => {
   emit('update:sendMsg', item)
 }
 
-const { chatTemplateData } = await getChatTemplate()
+const { chatTemplateData } = await getChatTemplate(1, false)
 const searchKeyword = ref('')
 const filteredTemplateData = computed(() => {
   const keyword = searchKeyword.value.toLowerCase().trim()

@@ -38,38 +38,53 @@
     <ChatTemplateCreateModal
       v-model="chatTempDialog"
       @close-modal="chatTempDialog = false"
+      :page="page"
     />
 
     <div
-      :class="
-        filteredTemplateData.length === 0
-          ? 'bg-transparent tw-text-center mt-12'
-          : 'bg-white tw-px-8 tw-pt-8 tw-overflow-y-auto tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-2 xl:tw-grid-cols-3 tw-gap-10 pb-8'
-      "
-      class="tw-rounded-3xl tw-justify-items-center"
+      id="scrollableDiv"
+      class="tw-rounded-3xl tw-justify-items-center bg-white tw-px-8 tw-pt-8 tw-overflow-y-auto"
+      :class="{ 'bg-transparent tw-text-center mt-12': filteredTemplateData.length === 0 }"
       style="max-height: calc(100vh - 200px)"
     >
-      {{ filteredTemplateData.length === 0 ? 'ไม่พบรูปแบบคำตอบที่คุณค้นหา' : '' }}
+      <div
+        :class="{
+          'tw-grid tw-grid-cols-1 sm:tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-2 xl:tw-grid-cols-3 tw-gap-10 pb-8':
+            filteredTemplateData.length !== 0,
+        }"
+      >
+        {{ filteredTemplateData.length === 0 ? 'ไม่พบรูปแบบคำตอบที่คุณค้นหา' : '' }}
 
-      <ChatTemplateCard
-        v-for="item in filteredTemplateData.sort((a:any, b:any) => {
+        <ChatTemplateCard
+          v-for="item in filteredTemplateData.sort((a:any, b:any) => {
           const dateA = new Date(a.updatedAt)
           const dateB = new Date(b.updatedAt)
 
           return dateB.getTime() - dateA.getTime()
         })"
-        :id="item._id"
-        :keyword="item.keyword"
-        :template="item.template"
-        :allow-edit="role !== Role.AGENT"
-        @edit="storeEdit(item._id, item.keyword, item.template)"
-      />
+          :id="item._id"
+          :keyword="item.keyword"
+          :template="item.template"
+          :allow-edit="role !== Role.AGENT"
+          @edit="storeEdit(item._id, item.keyword, item.template)"
+        />
+      </div>
+      <div v-if="pageCount > 0 && filteredTemplateData.length !== 0">
+        <v-pagination
+          v-model="page"
+          :length="pageCount"
+          rounded="circle"
+          @click="changePagination"
+        ></v-pagination>
+      </div>
     </div>
+
     <ChatTemplateEditModal
       v-model="editDialog"
       :id="selectedTemplate?.id"
       :keyword="selectedTemplate?.keyword"
       :template="selectedTemplate?.template"
+      :page="page"
       @close-modal="editDialog = false"
     />
   </div>
@@ -81,11 +96,30 @@ import { Role } from '~/constants/Role'
 useHead({
   title: 'รูปแบบคำตอบ',
 })
+const page = ref(1)
 const chatTempDialog = ref(false)
 const editDialog = ref(false)
-const { chatTemplateData } = await getChatTemplate()
+const { chatTemplateData } = await getChatTemplate(page.value)
+const pageCount = computed(() => {
+  return chatTemplateData.value.pageCount
+})
 const user: any = useCookie(USER)
 const { role } = user.value && user.value
+
+function scrollToTop() {
+  var scrollableDiv = document.getElementById('scrollableDiv')
+  if (scrollableDiv) {
+    scrollableDiv.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+}
+
+const changePagination = () => {
+  getChatTemplate(page.value)
+  scrollToTop()
+}
 
 const selectedTemplate = ref<any>({
   _id: '',

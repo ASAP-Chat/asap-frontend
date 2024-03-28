@@ -44,36 +44,55 @@
       </div>
     </div>
     <div
-      class="tw-justify-items-center tw-overflow-y-auto tw-grid tw-grid-cols-1 xl:tw-grid-cols-2"
+      class="tw-justify-items-center tw-overflow-y-auto"
       style="max-height: calc(100vh - 230px)"
     >
-      <ChatbotCard
-        v-for="item in filteredChatbotMsg"
-        class="mb-3"
-        :id="item._id"
-        :keyword="item.keyword"
-        :reply-message="item.replyMessage"
-        @edit="storeEdit(item._id, item.keyword, item.replyMessage)"
-      />
+      <div class="tw-text-center mt-12">
+        {{ filteredChatbotMsg.length === 0 ? 'ไม่พบรูปแบบการตอบกลับของแชตบอทที่คุณค้นหา' : '' }}
+      </div>
+
+      <div class="tw-grid tw-grid-cols-1 xl:tw-grid-cols-2">
+        <ChatbotCard
+          v-for="item in filteredChatbotMsg"
+          class="mb-3"
+          :id="item._id"
+          :keyword="item.keyword"
+          :reply-message="item.replyMessage"
+          @edit="storeEdit(item._id, item.keyword, item.replyMessage)"
+        />
+      </div>
+      <v-pagination
+        v-if="filteredChatbotMsg.length !== 0"
+        v-model="page"
+        :length="pageCount"
+        rounded="circle"
+        @click="changePagination"
+      ></v-pagination>
     </div>
   </div>
 
   <ChatbotCreation
     v-model="chatbotCreation"
     @close="chatbotCreation = false"
+    :page="page"
   />
   <ChatbotEditing
     v-model="chatbotEditing"
     :id="selectedChatbot?.id"
     :keyword="selectedChatbot?.keyword"
     :reply-message="selectedChatbot?.replyMessage"
+    :page="page"
     @close="chatbotEditing = false"
   />
 </template>
 <script setup lang="ts">
 import { getChatbotMsg } from '~/services/chatbot.service'
 
-const { chatbotMsg } = await getChatbotMsg()
+const page = ref(1)
+const { chatbotMsg } = await getChatbotMsg(page.value)
+const pageCount = computed(() => {
+  return chatbotMsg.value.pageCount
+})
 
 const chatbotCreation = ref(false)
 const chatbotEditing = ref(false)
@@ -97,7 +116,7 @@ const filteredChatbotMsg = computed(() => {
       const dateA = new Date(a.updatedAt)
       const dateB = new Date(b.updatedAt)
 
-      return dateA.getTime() - dateB.getTime()
+      return dateB.getTime() - dateA.getTime()
     })
     .filter((item: any) => {
       return (
@@ -106,4 +125,19 @@ const filteredChatbotMsg = computed(() => {
       )
     })
 })
+
+function scrollToTop() {
+  var scrollableDiv = document.getElementById('scrollableDiv')
+  if (scrollableDiv) {
+    scrollableDiv.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }
+}
+
+const changePagination = () => {
+  getChatbotMsg(page.value)
+  scrollToTop()
+}
 </script>

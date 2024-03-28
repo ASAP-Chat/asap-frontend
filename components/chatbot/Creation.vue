@@ -119,6 +119,10 @@ import { ACCESS_TOKEN } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getChatbotMsg } from '~/services/chatbot.service'
 
+const props = defineProps<{
+  page: number
+}>()
+
 const toast = useToast()
 const { required } = useFormRules()
 const access_token = useCookie(ACCESS_TOKEN)
@@ -169,7 +173,7 @@ const createChatbotMsg = async (chatbotInfo: ChatbotInfo) => {
     if (response.status === 200 || response.status === 201) {
       close()
       toast.success('บันทึกสำเร็จ', useToastOption)
-      await getChatbotMsg()
+      await getChatbotMsg(props.page)
     } else if (response.status === 401) {
       dupKeyword.value = false
       await useRefreshToken()

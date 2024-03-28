@@ -53,20 +53,23 @@ export const updateChatbotStatus = async (id: string, line: boolean, fb: boolean
 }
 
 const chatbotMsg = ref()
-export const getChatbotMsg = async () => {
+export const getChatbotMsg = async (page: number) => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chatbot-message`, {
-      method: 'get',
-      headers: {
-        Authorization: 'Bearer ' + access_token.value,
-      },
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/chatbot-message?$limit=12&page=${page}`,
+      {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
     if (response.status === 200) {
       chatbotMsg.value = await response.json()
     } else if (response.status === 401) {
       console.log('call - refresh token')
       await useRefreshToken()
-      await getChatbotMsg()
+      await getChatbotMsg(page)
     }
   } catch (error: any) {
     console.log(error)

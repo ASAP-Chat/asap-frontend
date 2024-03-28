@@ -152,6 +152,7 @@ const props = defineProps<{
   id?: string
   keyword: string[]
   replyMessage: string
+  page: number
 }>()
 
 const localInfo = ref<any>({
@@ -195,7 +196,7 @@ const editChatbotMsg = async () => {
       method: 'PATCH',
       body: JSON.stringify({
         keyword: localInfo.value.keyword,
-        template: localInfo.value.template,
+        replyMessage: localInfo.value.replyMessage,
       }),
       headers: {
         'content-Type': 'application/json',
@@ -206,7 +207,7 @@ const editChatbotMsg = async () => {
     if (response.status === 200) {
       dupKeyword.value = false
       emits('close')
-      await getChatbotMsg()
+      await getChatbotMsg(props.page)
       toast.success('บันทึกสำเร็จ', useToastOption)
     } else if (response.status === 401) {
       dupKeyword.value = false
@@ -238,7 +239,7 @@ const deleteChatbotMsg = async () => {
       close()
       confirmDelete.value = false
       toast.success('ลบรูปแบบคำตอบสำเร็จ', useToastOption)
-      await getChatbotMsg()
+      await getChatbotMsg(props.page)
     } else {
       await useRefreshToken()
       await deleteChatbotMsg()

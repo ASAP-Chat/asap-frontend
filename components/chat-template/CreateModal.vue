@@ -88,6 +88,10 @@ import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/message.service'
 
+const props = defineProps<{
+  page: number
+}>()
+
 const toast = useToast()
 const { required } = useFormRules()
 const user: any = useCookie(USER)
@@ -127,7 +131,7 @@ const createChatTemplate = async (templateInfo: ChatTemplateInfo) => {
     if (response.status === 200 || response.status === 201) {
       close()
       toast.success('บันทึกสำเร็จ', useToastOption)
-      await getChatTemplate()
+      await getChatTemplate(props.page)
     } else if (response.status === 401) {
       dupKeyword.value = false
       await useRefreshToken()
