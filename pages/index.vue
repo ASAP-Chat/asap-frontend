@@ -8,7 +8,7 @@
             class="tw-flex tw-flex-col tw-w-full md:tw-w-2/5 tw-justify-center tw-items-start tw-text-center md:tw-text-left">
             <p class="tw-uppercase tw-tracking-loose tw-w-full">SSA3</p>
             <h1 class="tw-my-4 tw-text-5xl tw-font-bold tw-leading-tight">
-              ระบบจัดการแชตลูกค้าสำหรับร้านค้าใน Social Media
+              ระบบจัดการแชตลูกค้าสำหรับร้านค้าใน <br>Social Media
             </h1>
             <p class="tw-leading-normal tw-text-2xl tw-mb-8 tw-w-full">ASAP CHAT</p>
             <button
