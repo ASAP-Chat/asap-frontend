@@ -8,6 +8,8 @@ export const oauthInstagram = () => {
     redirect_uri = 'https://capstone23.sit.kmutt.ac.th/ssa3/setting/chat-integration/'
   }
   const scope = 'instagram_manage_messages,pages_manage_metadata,instagram_basic'
-  const url = `https://www.facebook.com/dialog/oauth?client_id=${appId}&display=page&extras={"setup":{"channel":"IG_API_ONBOARDING"}}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=integrate-instagram`
+  const url = `https://www.facebook.com/dialog/oauth?client_id=${appId}&display=page&extras={"setup":{"channel":"IG_API_ONBOARDING"}}&redirect_uri=${redirect_uri}&response_type=token&scope=${scope}&state=integrate-instagram`
   return url
 }
+
+// https://www.facebook.com/dialog/oauth?client_id=1232305677642740&display=page&extras={"setup":{"channel":"IG_API_ONBOARDING"}}&redirect_uri=https://capstone23.sit.kmutt.ac.th/ssa3/setting/chat-integration/&response_type=token&scope=instagram_manage_messages,pages_manage_metadata,instagram_basic&state=integrate-instagram
