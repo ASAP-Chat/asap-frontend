@@ -22,7 +22,7 @@ const resetCookie = (cookieName: string) => {
   const cookie = useCookie(cookieName)
   cookie.value = null
 }
-export const useSignOut = async () => {
+export const useSignOut = () => {
   socket.emit('leave-message', name)
   resetCookie(ACCESS_TOKEN)
   resetCookie(USER)
