@@ -15,6 +15,14 @@
     :isSuccess="fbStatus"
     @btn-action="closeModal"
   />
+  <CommonModal
+    v-if="createModalInstagram"
+    :header="igStatus ? 'คุณเชื่อมต่อ Instagram สำเร็จ!' : 'คุณเชื่อมต่อ Instagram ไม่สำเร็จ!'"
+    :content="igStatus ? 'การเชื่อมต่อเรียบร้อยแล้ว' : 'ขออภัย, กรุณาตรวจสอบข้อมูลและลองอีกครั้ง'"
+    :buttonText="igStatus ? 'ปิด' : 'ลองอีกครั้ง'"
+    :isSuccess="igStatus"
+    @btn-action="closeModal"
+  />
   <div class="mt-2">
     <span class="bg-primary text-white tw-px-3.5 tw-py-1.5 tw-rounded-lg">
       {{ socialInfo?.data?.length ? socialInfo?.data?.length : 0 }}/3 &nbsp;ช่องทาง
@@ -206,6 +214,7 @@ import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
 import { SocialType } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
+import { createInstagram } from '~/composables/instagram'
 
 useHead({
   title: 'การตั้งค่า',
@@ -228,6 +237,7 @@ const closeModal = () => {
   deleteModal.value = false
   confirmDeleteModal.value = false
   createModalFacebook.value = false
+  createModalInstagram.value = false
 }
 
 const selectSocial = ref('')
@@ -291,6 +301,9 @@ const getSocialConnectModalComponent = (socialType: string) => {
 const createModalFacebook = ref(false)
 const fbStatus = ref()
 
+const createModalInstagram = ref(false)
+const igStatus = ref()
+
 onBeforeMount(async () => {
   await getSocialAccount()
 
@@ -305,7 +318,21 @@ onBeforeMount(async () => {
     } else {
       fbStatus.value = false
     }
-    createModalFacebook.value = await true
+    createModalFacebook.value = true
+  }
+
+  if (route.query.state === 'integrate-instagram') {
+    const access_token = route.query.access_token as string
+    const instagramResponse: any = await createInstagram(access_token)
+    if (instagramResponse?.status?.isAvailable && instagramResponse?.status?.isInitialized) {
+      igStatus.value = true
+      await router.replace({
+        query: {},
+      })
+    } else {
+      igStatus.value = false
+    }
+    createModalInstagram.value = true
   }
 })
 </script>
