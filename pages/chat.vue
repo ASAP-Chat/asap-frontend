@@ -298,7 +298,7 @@
                 @keydown.prevent.enter="sendMessage()"
                 color="primary"
                 auto-grow
-                rows="1"
+                :rows="disabledChatInput ? 2 : 1"
                 hide-details
                 :placeholder="
                   disabledChatInput
@@ -513,7 +513,7 @@ const selectCustomer = ref<any>({
 })
 
 const storeSelectCus: any = useCookie('storeSelectCus', cookieOptions)
-const disabledMoreThan24 = ref(false)
+const disabledMoreThan24 = ref(true)
 const disabledChatInput = computed(() => {
   return storeSelectCus?.value?.source === SocialType.FACEBOOK && disabledMoreThan24.value
 })
