@@ -6,7 +6,10 @@
     :width="480"
   >
     <div class="tw-flex tw-flex-col tw-h-full">
-      <div class="tw-text-end">
+      <div
+        class="tw-text-end"
+        v-if="allowEdit"
+      >
         <v-btn
           color="white"
           density="compact"
@@ -43,6 +46,7 @@ const props = defineProps<{
   id: string
   keyword?: string[]
   replyMessage: string
+  allowEdit: boolean
 }>()
 const emit = defineEmits(['edit'])
 </script>

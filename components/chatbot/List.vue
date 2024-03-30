@@ -58,6 +58,7 @@
           :id="item._id"
           :keyword="item.keyword"
           :reply-message="item.replyMessage"
+          :allow-edit="role !== Role.AGENT"
           @edit="storeEdit(item._id, item.keyword, item.replyMessage)"
         />
       </div>
@@ -87,12 +88,17 @@
 </template>
 <script setup lang="ts">
 import { getChatbotMsg } from '~/services/chatbot.service'
+import { Role } from '~/constants/Role'
+import { USER } from '~/constants/Token'
 
 const page = ref(1)
 const { chatbotMsg } = await getChatbotMsg(page.value)
 const pageCount = computed(() => {
   return chatbotMsg.value.pageCount
 })
+
+const user: any = useCookie(USER)
+const { role } = user.value && user.value
 
 const chatbotCreation = ref(false)
 const chatbotEditing = ref(false)
