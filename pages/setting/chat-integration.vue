@@ -55,7 +55,11 @@
               >
                 {{ generateSocialIcon(item?.socialType) }}
               </v-icon>
-              {{ item?.profile?.displayName }}
+              {{
+                item.socialType === SocialType.INSTAGRAM
+                  ? item.profile?.username
+                  : item?.profile?.displayName
+              }}
             </td>
             <td
               class="text-left tw-flex tw-items-center tw-justify-start"
@@ -320,10 +324,23 @@ onBeforeMount(async () => {
     }
     createModalFacebook.value = true
   }
+  const currentUrl = window.location.href
+  const url = new URL(currentUrl)
+  const accessToken = ref('')
+  const state = ref('')
 
-  if (route.query.state === 'integrate-instagram') {
-    const access_token = route.query.access_token as string
-    const instagramResponse: any = await createInstagram(access_token)
+  if (url.hash && url.hash.includes('access_token=') && url.hash.includes('state=')) {
+    const params = url.hash.split('&')
+    const accessTokenParam = params.find((param) => param.includes('access_token='))
+    const stateParam = params.find((param) => param.includes('state='))
+
+    if (accessTokenParam && stateParam) {
+      accessToken.value = accessTokenParam.split('=')[1]
+      state.value = stateParam.split('=')[1]
+    }
+  }
+  if (state.value === 'integrate-instagram') {
+    const instagramResponse: any = await createInstagram(accessToken.value)
     if (instagramResponse?.status?.isAvailable && instagramResponse?.status?.isInitialized) {
       igStatus.value = true
       await router.replace({
