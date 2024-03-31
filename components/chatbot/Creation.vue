@@ -74,20 +74,14 @@
         </div>
         <div class="form-control tw-mt-2">
           <p class="pb-2">ข้อความตอบกลับ</p>
-          <v-textarea
+          <CommonTextArea
             id="template"
             name="template"
             :rules="[required]"
             v-model="chatbotInfo.replyMessage"
-            density="compact"
-            variant="outlined"
-            rounded="lg"
-            color="primary"
-            auto-grow
-            rows="1"
             counter
             maxlength="500"
-          ></v-textarea>
+          />
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">

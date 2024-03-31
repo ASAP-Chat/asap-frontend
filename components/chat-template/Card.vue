@@ -10,8 +10,8 @@
       <div
         class="tw-h-12 tw-flex tw-justify-between tw-items-center bg-primary tw-pl-5 tw-border tw-border-[#d4caff]"
       >
-        <div>
-          <div class="tw-items-center font-weight-bold">{{ props.keyword }}</div>
+        <div class="tw-w-4/5">
+          <div class="tw-items-center font-weight-bold tw-truncate">{{ props.keyword }}</div>
         </div>
         <div v-if="allowEdit">
           <CommonIconButton

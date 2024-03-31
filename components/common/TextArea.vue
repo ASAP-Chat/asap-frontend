@@ -1,0 +1,10 @@
+<template>
+  <v-textarea
+    density="compact"
+    variant="outlined"
+    rounded="lg"
+    color="primary"
+    auto-grow
+    rows="1"
+  ></v-textarea>
+</template>

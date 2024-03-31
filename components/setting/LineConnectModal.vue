@@ -70,18 +70,14 @@
             :rules="[required]"
             v-model="lineInfo.socialData.channelSecret"
           />
-          <v-textarea
-            class="mt-2"
+          <CommonTextArea
             label="Channel Access Token (long-lived)"
             :rules="[required]"
             v-model="lineInfo.socialData.channelAccessToken"
-            density="compact"
-            variant="outlined"
-            color="primary"
-            auto-grow
-            rows="1"
+            class="mt-2"
+            rounded="md"
             hide-details
-          ></v-textarea>
+          />
         </div>
       </v-form>
     </v-card-text>

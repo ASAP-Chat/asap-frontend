@@ -25,20 +25,14 @@
       >
         <div class="form-control">
           <p class="pb-2">ชื่อหัวข้อ</p>
-          <v-textarea
+          <common-text-area
             id="keyword"
             name="keyword"
             :rules="[required]"
             v-model="templateInfo.keyword"
-            density="compact"
-            variant="outlined"
-            rounded="lg"
-            color="primary"
-            auto-grow
-            rows="1"
             counter
             maxlength="50"
-          ></v-textarea>
+          />
           <p
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupKeyword"
@@ -48,20 +42,14 @@
         </div>
         <div class="form-control tw-mt-2">
           <p class="pb-2">ข้อความตัวอักษร</p>
-          <v-textarea
+          <common-text-area
             id="template"
             name="template"
             :rules="[required]"
             v-model="templateInfo.template"
-            density="compact"
-            variant="outlined"
-            rounded="lg"
-            color="primary"
-            auto-grow
-            rows="1"
             counter
             maxlength="500"
-          ></v-textarea>
+          />
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
