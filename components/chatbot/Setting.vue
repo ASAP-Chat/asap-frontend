@@ -9,7 +9,12 @@
         <tbody>
           <tr>
             <td><p class="tw-text-base tw-font-semibold">เปิด - ปิด แชตบอท</p></td>
-            <td><CommonSwitch v-model="all" /></td>
+            <td>
+              <CommonSwitch
+                v-model="all"
+                color="#7E68F7"
+              />
+            </td>
           </tr>
           <tr>
             <td class="tw-flex tw-items-center">
@@ -17,7 +22,7 @@
             </td>
             <td>
               <CommonSwitch
-                color="line-color"
+                color="#4BD66E"
                 v-model="line"
               />
             </td>
@@ -29,7 +34,7 @@
             </td>
             <td>
               <CommonSwitch
-                color="fb-color"
+                color="#4BD66E"
                 v-model="fb"
               />
             </td>
@@ -41,7 +46,7 @@
             </td>
             <td>
               <CommonSwitch
-                color="primary"
+                color="#4BD66E"
                 v-model="ig"
               />
             </td>

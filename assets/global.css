@@ -114,3 +114,7 @@ html {
   pointer-events: auto !important;
   cursor: not-allowed !important;
 }
+
+.v-selection-control--dirty .v-switch__track {
+  opacity: 1 !important;
+}
