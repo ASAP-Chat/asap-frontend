@@ -298,7 +298,7 @@
                 @keydown.prevent.enter="sendMessage()"
                 color="primary"
                 auto-grow
-                :rows="disabledChatInput ? 2 : 1"
+                rows="1"
                 hide-details
                 :placeholder="
                   disabledChatInput

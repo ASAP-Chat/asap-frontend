@@ -112,6 +112,7 @@
 
       <div class="tw-text-center">
         <v-btn
+          :class="socialInfo.data.length === 3 ? 'tw-hidden' : ''"
           variant="flat"
           class="tw-mx-auto mt-4"
           color="success"
