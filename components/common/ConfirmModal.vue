@@ -21,17 +21,16 @@
           class="font-weight-bold tw-text-base px-6"
           variant="tonal"
           @click="emits('btn-action')"
-          >{{ props.cancelWording }}
+          >{{ cancelWording }}
         </v-btn>
-        <v-btn
+        <CommonOutlinedButton
+          :text="confirmWording"
+          @click="emits('confirm-action')"
           size="large"
           color="error"
           class="font-weight-bold tw-text-base px-6"
-          flat
-          variant="outlined"
-          @click="emits('confirm-action')"
-          >{{ props.confirmWording }}
-        </v-btn>
+          rounded="md"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>

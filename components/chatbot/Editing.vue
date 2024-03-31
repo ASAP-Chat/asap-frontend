@@ -6,15 +6,12 @@
     <v-card>
       <div class="tw-flex tw-justify-between tw-items-center px-6 pt-8 pb-4">
         <p class="font-weight-bold tw-text-xl">แก้ไขรูปแบบการตอบกลับของแชตบอท</p>
-        <v-btn
+        <common-icon-button
+          icon="mdi-close"
+          size="small"
+          color="secondary-lighten"
           @click="close()"
-          variant="text"
-        >
-          <v-icon
-            icon="mdi-close"
-            color="secondary-lighten"
-          ></v-icon>
-        </v-btn>
+        />
       </div>
 
       <v-form class="px-6 pt-3 pb-3">
@@ -40,32 +37,29 @@
               :error="dupKeyword"
             >
               <template v-slot:append>
-                <v-btn
+                <common-icon-button
                   v-if="localInfo.keyword.length > 1"
                   :class="
                     localInfo.keyword.length !== 3 && index === localInfo.keyword.length - 1
                       ? 'mr-3'
                       : ''
                   "
-                  icon
-                  flat
-                  @click="removeTextarea(index)"
+                  icon="mdi-close"
+                  color="primary"
                   density="comfortable"
                   size="small"
-                >
-                  <v-icon color="primary">mdi-close</v-icon>
-                </v-btn>
-                <v-btn
+                  @click="removeTextarea(index)"
+                />
+                <common-icon-button
                   v-if="localInfo.keyword.length < 3 && index === localInfo.keyword.length - 1"
-                  flat
-                  icon
+                  icon="mdi-plus"
+                  :variant="item === '' ? 'outlined' : 'tonal'"
+                  color="primary"
                   density="comfortable"
                   size="small"
                   @click="addTextarea"
                   :disabled="item === ''"
-                >
-                  <v-icon color="primary">mdi-plus</v-icon>
-                </v-btn>
+                />
               </template>
             </v-textarea>
           </div>
@@ -96,34 +90,22 @@
       </v-form>
       <div class="tw-flex tw-justify-between pb-6 px-6">
         <div>
-          <v-btn
+          <CommonOutlinedButton
+            text="ลบ"
+            icon="mdi-trash-can-outline"
             color="error"
             class="font-weight-bold"
-            variant="outlined"
-            rounded="lg"
-            text="ลบ"
             @click="confirmDelete = true"
-          >
-            <template v-slot:prepend>
-              <v-icon color="red darken-4">mdi-trash-can-outline</v-icon>
-            </template>
-          </v-btn>
+          />
         </div>
         <div>
-          <v-btn
-            color="primary"
-            class="font-weight-bold"
-            flat
-            rounded="lg"
+          <common-button
             text="บันทึก"
-            prepend-icon="mdi-content-save"
+            icon="mdi-content-save"
+            color="primary"
             :disabled="disabledButton"
             @click="editChatbotMsg"
-          >
-            <template v-slot:prepend>
-              <v-icon color="white">mdi mdi-content-save</v-icon>
-            </template>
-          </v-btn>
+          />
         </div>
       </div>
     </v-card>

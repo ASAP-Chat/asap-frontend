@@ -31,16 +31,12 @@
             <v-icon color="primary">mdi-magnify</v-icon>
           </template>
         </v-text-field>
-        <v-btn
-          prepend-icon="mdi-plus"
+        <CommonButton
+          text="เพิ่มใหม่"
+          icon="mdi-plus"
           color="primary"
-          class="font-weight-bold"
-          flat
-          rounded="lg"
           @click="chatbotCreation = true"
-        >
-          <template v-slot:prepend> <v-icon color="white"></v-icon> </template>เพิ่มใหม่
-        </v-btn>
+        ></CommonButton>
       </div>
     </div>
     <div

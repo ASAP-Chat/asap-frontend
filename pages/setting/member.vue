@@ -19,16 +19,12 @@
           <v-icon color="primary">mdi-magnify</v-icon>
         </template>
       </v-text-field>
-      <v-btn
-        prepend-icon="mdi-plus"
+      <CommonButton
+        text="เพิ่มสมาชิก"
+        icon="mdi-plus"
         color="primary"
-        class="font-weight-bold"
-        flat
-        rounded="lg"
         @click="createMemberModal = true"
-      >
-        <template v-slot:prepend> <v-icon color="white"></v-icon> </template>เพิ่มสมาชิก
-      </v-btn>
+      />
     </div>
   </div>
   <div class="bg-white tw-rounded-3xl tw-px-8 tw-pt-4 tw-mt-12">

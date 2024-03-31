@@ -48,18 +48,15 @@
             </p>
           </div>
           <div class="form-control tw-my-2">
-            <v-btn
+            <CommonButton
+              text="เข้าสู่ระบบ"
               block
               size="large"
               color="primary"
-              rounded="lg"
               type="submit"
-              class="font-weight-bold"
               :disabled="!isFormValid"
               :loading="loading"
-            >
-              เข้าสู่ระบบ
-            </v-btn>
+            />
           </div>
         </v-form>
         <p class="tw-text-[#6F7580]">

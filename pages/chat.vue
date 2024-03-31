@@ -196,18 +196,13 @@
               v-if="role !== Role.AGENT"
             >
               <template v-slot:activator="{ props }">
-                <v-btn
+                <CommonIconButton
+                  icon="mdi-account-edit-outline"
                   class="ma-0"
                   color="primary"
-                  v-bind="props"
-                  icon="mdi-account-edit-outline"
-                  variant="text"
                   density="compact"
-                >
-                  <template v-slot:default>
-                    <v-icon color="primary"></v-icon>
-                  </template>
-                </v-btn>
+                  v-bind="props"
+                />
               </template>
               <ChatAssignMember
                 :id="customer.data.filter((item: any) => item.customerId === message.customerId)[0]?._id"
@@ -242,18 +237,13 @@
           class="text-center mb-2"
           v-if="filteredMessages?.total > totalChat"
         >
-          <v-btn
-            prepend-icon="mdi-cursor-default-click-outline"
-            variant="flat"
+          <CommonButton
+            text="คลิกเพื่อแสดงข้อความก่อนหน้า"
+            icon="mdi-cursor-default-click-outline"
             @click="getMoreChat()"
+            class="tw-font-normal"
             :loading="loadingBtn"
-          >
-            <template v-slot:prepend>
-              <v-icon color="primary"></v-icon>
-            </template>
-
-            คลิกเพื่อแสดงข้อความก่อนหน้า
-          </v-btn>
+          />
         </div>
         <div
           v-for="(message, index) in filteredMessages?.data.sort((a:any, b:any) => a.sourceTimestamp - b.sourceTimestamp)"
@@ -316,23 +306,21 @@
                 "
               >
                 <template v-slot:prepend>
-                  <v-btn
+                  <CommonIconButton
                     icon="mdi-message-text-outline"
                     color="primary"
                     density="compact"
-                    variant="text"
                     @click.stop="templateDrawer = !templateDrawer"
                     :disabled="storeSelectCus?.agent !== displayName"
-                  ></v-btn>
+                  />
                 </template>
                 <template v-slot:append>
-                  <v-btn
-                    color="primary"
+                  <CommonIconButton
                     icon="mdi-send"
-                    variant="text"
+                    color="primary"
                     @click="sendMessage()"
                     :disabled="sendMsg === ''"
-                  ></v-btn>
+                  />
                 </template>
               </v-textarea>
             </v-col>

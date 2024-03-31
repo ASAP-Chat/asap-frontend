@@ -6,15 +6,12 @@
     <v-card class="tw-rounded-xl">
       <div class="tw-flex tw-justify-between tw-items-center px-6 pt-8 pb-4">
         <p class="font-weight-bold tw-text-xl">เพิ่มรูปแบบการตอบกลับของแชตบอท</p>
-        <v-btn
+        <common-icon-button
+          icon="mdi-close"
+          size="small"
+          color="secondary-lighten"
           @click="close()"
-          variant="text"
-        >
-          <v-icon
-            icon="mdi-close"
-            color="secondary-lighten"
-          ></v-icon>
-        </v-btn>
+        />
       </div>
       <v-form
         v-model="isFormValid"
@@ -39,36 +36,31 @@
                 maxlength="50"
               >
                 <template v-slot:append>
-                  <v-btn
+                  <common-icon-button
                     v-if="chatbotInfo.keyword.length > 1"
                     :class="
                       chatbotInfo.keyword.length !== 3 && index === chatbotInfo.keyword.length - 1
                         ? 'mr-3'
                         : ''
                     "
-                    icon
-                    flat
-                    @click="removeTextarea(index)"
+                    icon="mdi-close"
+                    color="primary"
                     density="comfortable"
                     size="small"
-                  >
-                    <v-icon color="primary">mdi-close</v-icon>
-                  </v-btn>
-                  <v-btn
+                    @click="removeTextarea(index)"
+                  />
+                  <common-icon-button
                     v-if="
                       chatbotInfo.keyword.length < 3 && index === chatbotInfo.keyword.length - 1
                     "
-                    flat
-                    icon
-                    density="comfortable"
+                    icon="mdi-plus"
                     :variant="keyword === '' ? 'outlined' : 'tonal'"
                     color="primary"
+                    density="comfortable"
                     size="small"
                     @click="addTextarea"
                     :disabled="keyword === ''"
-                  >
-                    <v-icon color="primary">mdi-plus</v-icon>
-                  </v-btn>
+                  />
                 </template>
               </v-textarea>
             </div>
@@ -99,16 +91,12 @@
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
-        <v-btn
-          color="primary"
-          class="font-weight-bold"
-          flat
-          rounded="lg"
+        <common-button
           text="บันทึก"
+          color="primary"
           @click="createChatbotMsg(chatbotInfo)"
           :disabled="disabledButton"
-        >
-        </v-btn>
+        />
       </div>
     </v-card>
   </v-dialog>

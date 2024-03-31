@@ -8,15 +8,12 @@
         <v-toolbar-title class="font-weight-bold">เพิ่มสมาชิกใหม่</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn
+          <common-icon-button
+            icon="mdi-close"
+            size="small"
+            color="secondary-lighten"
             @click="close()"
-            variant="text"
-          >
-            <v-icon
-              icon="mdi-close"
-              color="secondary-lighten"
-            ></v-icon>
-          </v-btn>
+          />
         </v-toolbar-items>
       </v-toolbar>
       <v-form
@@ -64,16 +61,13 @@
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
-        <v-btn
-          color="primary"
-          class="font-weight-bold"
-          flat
-          rounded="lg"
+        <common-button
           text="บันทึก"
+          icon="mdi-content-save"
+          color="primary"
           :disabled="!isFormValid"
           @click="createMember(memberData)"
-        >
-        </v-btn>
+        />
       </div>
     </v-card>
   </v-dialog>

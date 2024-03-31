@@ -10,15 +10,12 @@
         class="tw-text-end"
         v-if="allowEdit"
       >
-        <v-btn
-          color="white"
+        <CommonIconButton
+          icon="mdi-pencil-outline"
+          color="primary"
           density="compact"
-          flat
-          icon
           @click="emit('edit')"
-        >
-          <v-icon color="primary">mdi-pencil-outline</v-icon>
-        </v-btn>
+        />
       </div>
       <div v-for="item in keyword">
         <div class="tw-chat tw-chat-start tw-whitespace-pre-line">

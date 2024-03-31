@@ -22,17 +22,13 @@
             <v-icon color="primary">mdi-magnify</v-icon>
           </template>
         </v-text-field>
-        <v-btn
+        <CommonButton
           v-if="role !== Role.AGENT"
-          prepend-icon="mdi-plus"
+          text="เพิ่มใหม่"
+          icon="mdi-plus"
           color="primary"
-          class="font-weight-bold"
-          flat
-          rounded="lg"
           @click="chatTempDialog = true"
-        >
-          <template v-slot:prepend> <v-icon color="white"></v-icon> </template>เพิ่มใหม่
-        </v-btn>
+        />
       </div>
     </div>
     <ChatTemplateCreateModal

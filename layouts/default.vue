@@ -70,13 +70,14 @@
         </v-list>
 
         <template v-slot:append>
-          <v-btn
-            @click="confirmLogout = true"
-            class="ma-2"
-            variant="text"
-            icon="mdi-logout"
-            color="primary"
-          />
+          <div class="text-center">
+            <common-icon-button
+              icon="mdi-logout"
+              color="primary"
+              class="mx-auto"
+              @click="confirmLogout = true"
+            />
+          </div>
         </template>
       </v-navigation-drawer>
       <v-app-bar

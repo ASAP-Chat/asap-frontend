@@ -34,14 +34,14 @@
         </p>
       </v-card-text>
       <v-card-actions class="justify-center mt-4">
-        <v-btn
+        <CommonButton
+          :text="buttonText!"
+          @click="btnAction"
           size="large"
           class="text-white font-weight-bold tw-text-base px-6"
           :class="props.isSuccess ? 'tw-bg-[#53b389]' : 'tw-bg-[#E71313]'"
           :to="props.to"
-          @click="btnAction"
-          >{{ props.buttonText }}
-        </v-btn>
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>

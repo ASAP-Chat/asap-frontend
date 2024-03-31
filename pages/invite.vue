@@ -75,18 +75,15 @@
           </v-form>
         </div>
         <div class="form-control tw-my-2">
-          <v-btn
+          <CommonButton
+            text="สร้างบัญชีผู้ใช้งาน"
             block
             size="large"
             color="primary"
-            rounded="lg"
-            class="font-weight-bold"
             :loading="loading"
             :disabled="!isFormValid"
             @click="registerMember()"
-          >
-            สร้างบัญชีผู้ใช้งาน
-          </v-btn>
+          />
         </div>
       </div>
     </div>

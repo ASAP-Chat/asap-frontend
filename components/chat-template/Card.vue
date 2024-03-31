@@ -14,15 +14,10 @@
           <div class="tw-items-center font-weight-bold">{{ props.keyword }}</div>
         </div>
         <div v-if="allowEdit">
-          <v-btn
-            color="white"
-            flat
-            icon
+          <CommonIconButton
+            icon="mdi-pencil-outline"
             @click="edit"
-            variant="text"
-          >
-            <v-icon>mdi-pencil-outline</v-icon>
-          </v-btn>
+          />
         </div>
       </div>
       <div class="pt-8 pb-5 px-5 tw-mt-auto">

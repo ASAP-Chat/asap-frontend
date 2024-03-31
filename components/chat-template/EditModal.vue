@@ -11,15 +11,12 @@
         <v-toolbar-title class="font-weight-bold">แก้ไขรูปแบบคำตอบ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn
+          <common-icon-button
+            icon="mdi-close"
+            size="small"
+            color="secondary-lighten"
             @click="close()"
-            variant="text"
-          >
-            <v-icon
-              icon="mdi-close"
-              color="secondary-lighten"
-            ></v-icon>
-          </v-btn>
+          />
         </v-toolbar-items>
       </v-toolbar>
 
@@ -67,34 +64,22 @@
       </v-form>
       <div class="tw-flex tw-justify-between pb-6 px-6">
         <div>
-          <v-btn
+          <CommonOutlinedButton
+            text="ลบ"
+            icon="mdi-trash-can-outline"
             color="error"
             class="font-weight-bold"
-            variant="outlined"
-            rounded="lg"
-            text="ลบ"
             @click="confirmDelete = true"
-          >
-            <template v-slot:prepend>
-              <v-icon color="red darken-4">mdi-trash-can-outline</v-icon>
-            </template>
-          </v-btn>
+          />
         </div>
         <div>
-          <v-btn
-            color="primary"
-            class="font-weight-bold"
-            flat
-            rounded="lg"
+          <common-button
             text="บันทึก"
-            prepend-icon="mdi-content-save"
-            :disabled="!isFormValid"
+            icon="mdi-content-save"
+            color="primary"
             @click="editChatTemplate"
-          >
-            <template v-slot:prepend>
-              <v-icon color="white">mdi mdi-content-save</v-icon>
-            </template>
-          </v-btn>
+            :disabled="!isFormValid"
+          />
         </div>
       </div>
     </v-card>

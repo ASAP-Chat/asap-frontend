@@ -27,13 +27,12 @@
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <v-btn
+      <common-outlined-button
+        text="ไม่มอบหมาย"
         color="error"
         variant="outlined"
         @click="updateAgent(props.id, {})"
-      >
-        ไม่มอบหมาย
-      </v-btn>
+      />
     </v-card-actions>
   </v-card>
 </template>

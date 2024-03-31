@@ -169,18 +169,15 @@
           </v-form>
         </div>
         <div class="form-control tw-my-2">
-          <v-btn
+          <CommonButton
+            text="สร้างบัญชีผู้ใช้งาน"
             block
             size="large"
             color="primary"
-            rounded="lg"
-            class="font-weight-bold"
             :disabled="isButtonDisabled"
             :loading="loading"
             @click="register(userInfo)"
-          >
-            สร้างบัญชีผู้ใช้งาน
-          </v-btn>
+          />
         </div>
         <p class="tw-text-[#6F7580]">
           มีบัญชีอยู่แล้ว?

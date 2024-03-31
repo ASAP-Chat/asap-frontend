@@ -86,13 +86,11 @@
               </div>
             </td>
             <td class="text-center">
-              <v-btn
-                variant="flat"
+              <CommonButton
+                text="ยกเลิกการเชื่อมต่อ"
                 color="error-lighten"
-                rounded="lg"
                 @click=";(confirmDeleteModal = true), (cancelItemId = item?._id)"
-                >ยกเลิกการเชื่อมต่อ</v-btn
-              >
+              />
               <CommonConfirmModal
                 v-if="cancelItemId === item?._id"
                 v-model="confirmDeleteModal"
@@ -111,20 +109,14 @@
       </v-table>
 
       <div class="tw-text-center">
-        <v-btn
-          :class="socialInfo.data.length === 3 ? 'tw-hidden' : ''"
-          variant="flat"
-          class="tw-mx-auto mt-4"
+        <CommonButton
+          text="เพิ่มการเชื่อมต่อ"
+          icon="mdi-plus"
           color="success"
-          rounded="lg"
-          prepend-icon="mdi-plus"
+          class="tw-mx-auto mt-4"
           @click="connectDialog = true"
-        >
-          <template v-slot:prepend>
-            <v-icon color="white"></v-icon>
-          </template>
-          เพิ่มการเชื่อมต่อ</v-btn
-        >
+          :class="socialInfo.data.length === 3 ? 'tw-hidden' : ''"
+        />
       </div>
     </div>
     <div>
@@ -139,16 +131,13 @@
             class="text-center pt-3"
           >
             <v-card-text>
-              <v-btn
+              <common-icon-button
                 class="tw-absolute tw-top-2.5 tw-right-2.5"
+                icon="mdi-close"
+                size="small"
+                color="secondary-lighten"
                 @click="connectDialog = false"
-                variant="text"
-              >
-                <v-icon
-                  icon="mdi-close"
-                  color="secondary-lighten"
-                ></v-icon>
-              </v-btn>
+              />
               <div class="text-center mx-auto">
                 <h3 class="tw-text-xl">เลือกช่องทาง</h3>
                 <p class="tw-text-sm tw-opacity-60">เลือกช่องทางที่ต้องการเชื่อมต่อ</p>
@@ -179,15 +168,13 @@
                       >
                         mdi-check
                       </v-icon>
-                      <v-btn
+                      <CommonOutlinedButton
                         v-else
-                        variant="outlined"
+                        text="เชื่อมต่อ"
                         color="primary"
                         class="font-weight-bold"
                         @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"
-                      >
-                        {{ 'เชื่อมต่อ' }}
-                      </v-btn>
+                      />
                     </td>
                   </tr>
                 </tbody>
