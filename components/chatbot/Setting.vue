@@ -57,7 +57,7 @@
   </v-navigation-drawer>
 </template>
 <script setup lang="ts">
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { getChatbotStatus, updateChatbotStatus } from '~/services/chatbot.service'
 
 const { data } = (await getChatbotStatus()).chatbotStatus.value

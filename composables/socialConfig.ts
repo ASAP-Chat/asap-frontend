@@ -1,8 +1,6 @@
-import { MsgType } from '~/interfaces/message.interface'
-import { SocialType } from '~/interfaces/social.interface'
 import profileSrc from '~/assets/images/profile.png'
-import { Role } from '~/constants/Role'
 import fbSrc from '~/assets/images/facebook-page.png'
+import { SocialType } from '~/constants/SocialType'
 
 export const generateSocialColor = (type: string) => {
   switch (type) {
@@ -71,21 +69,6 @@ export const generateName = (message: any) => {
   }
 }
 
-export const generateMessageSubtitle = (message: any) => {
-  switch (message.type) {
-    case MsgType.STICKER:
-      return `${generateName(message)} ส่งสติกเกอร์`
-    case MsgType.IMAGE:
-      return `${generateName(message)} ส่งรูปภาพ`
-    case MsgType.VIDEO:
-      return `${generateName(message)} ส่งวิดิโอ`
-    case MsgType.AUDIO:
-      return `${generateName(message)} ส่งข้อความเสียง`
-    default:
-      return message.message
-  }
-}
-
 export const generateCustomerImg = (message: any) => {
   const isOwner = message?.isOwner
   const socialType = message?.source
@@ -122,17 +105,4 @@ export const generateAvatarUrl = (message: any) => {
     : profileSrc
 
   return pictureUrl
-}
-
-export const generateRole = (role: any) => {
-  switch (role) {
-    case Role.AGENT:
-      return 'เอเจนต์'
-    case Role.MANAGER:
-      return 'ผู้จัดการ'
-    case Role.OWNER:
-      return 'เจ้าของธุรกิจ'
-    default:
-      return role
-  }
 }

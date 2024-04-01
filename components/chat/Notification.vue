@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MsgType } from '~/interfaces/message.interface'
+import { MsgType } from '~/constants/MessageType'
 import profileSrc from '~/assets/images/profile.png'
 
 const props = defineProps<{

@@ -95,9 +95,10 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { type CreateLineInfo, SocialType } from '~/interfaces/social.interface'
+import { type CreateLineInfo } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
+import { SocialType } from '~/constants/SocialType'
 
 const emits = defineEmits(['back', 'created-success'])
 const { required } = useFormRules()

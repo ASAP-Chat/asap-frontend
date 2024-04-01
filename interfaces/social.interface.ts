@@ -1,8 +1,4 @@
-export enum SocialType {
-  LINE = 'LINE',
-  FACEBOOK = 'FACEBOOK',
-  INSTAGRAM = 'INSTAGRAM',
-}
+import { SocialType } from '~/constants/SocialType'
 export interface SocialLinks {
   facebook: string
   instagram: string

@@ -102,7 +102,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MsgType } from '~/interfaces/message.interface'
+import { MsgType } from '~/constants/MessageType'
 
 const prop = defineProps<{
   name?: string

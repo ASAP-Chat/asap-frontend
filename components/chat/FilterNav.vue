@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { Status } from '~/constants/Status'
 
 const props = defineProps<{

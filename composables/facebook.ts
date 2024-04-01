@@ -1,4 +1,4 @@
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
 

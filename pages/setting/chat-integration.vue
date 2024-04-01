@@ -203,7 +203,7 @@
 import SettingLineConnectModal from '~/components/setting/LineConnectModal.vue'
 import SettingFbConnectModal from '~/components/setting/FbConnectModal.vue'
 import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
 import { createInstagram } from '~/composables/instagram'

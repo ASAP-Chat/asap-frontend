@@ -45,7 +45,7 @@
 </template>
 <script setup lang="ts">
 import profileSrc from '~/assets/images/profile.png'
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { getChatbotStatus } from '~/services/chatbot.service'
 import { Status } from '~/constants/Status'
 

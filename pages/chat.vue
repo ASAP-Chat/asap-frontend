@@ -337,10 +337,10 @@
 </template>
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
-import { SocialType } from '~/interfaces/social.interface'
+import { SocialType } from '~/constants/SocialType'
 import { Manager } from 'socket.io-client'
 import Notification from '~/components/chat/Notification.vue'
-import { MsgType } from '~/interfaces/message.interface'
+import { MsgType } from '~/constants/MessageType'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
 import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/services/message.service'
