@@ -96,13 +96,11 @@ export const generateCustomerImg = (message: any) => {
 export const generateAvatarUrl = (message: any) => {
   const isOwner = message.isOwner
   const socialType = message.source
-  const pictureUrl = isOwner
-    ? socialType === SocialType.LINE
-      ? message.receiverDetail.pictureUrl
-      : profileSrc
-    : socialType === SocialType.LINE
-    ? message.senderDetail.pictureUrl
-    : profileSrc
-
+  let pictureUrl
+  if (isOwner) {
+    pictureUrl = socialType === SocialType.LINE ? message.receiverDetail.pictureUrl : profileSrc
+  } else {
+    pictureUrl = socialType === SocialType.LINE ? message.senderDetail.pictureUrl : profileSrc
+  }
   return pictureUrl
 }

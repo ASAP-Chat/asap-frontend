@@ -27,6 +27,7 @@
           <img
             class="tw-w-full md:tw-w-3/5 tw-z-50"
             :src="heroSrc"
+            alt="hero"
           />
         </div>
       </div>
@@ -104,12 +105,6 @@
               จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
               รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
             </div>
-            <!-- <p class="tw-text-gray-600 tw-mb-8">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                at ipsum eu nunc commodo posuere et sit amet ligula.
-                <br />
-                <br />
-              </p> -->
           </div>
           <div class="tw-w-full sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
             <img
@@ -158,12 +153,6 @@
               ตอบด้วยแชตบอท ตลอด 24 ชั่วโมง สร้างได้เองง่าย ๆ <br />แอดมินสามารถทำงานได้ง่าย ๆ
               เพียงแค่สลับไปมากับบอทได้ตลอดเวลา และทำการแก้บอทที่เดียวใช้ได้ทุกช่องทาง
             </div>
-            <!-- <p class="tw-text-gray-600 tw-mb-8">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                at ipsum eu nunc commodo posuere et sit amet ligula.
-                <br />
-                <br />
-              </p> -->
           </div>
         </div>
       </div>
@@ -199,12 +188,6 @@
               เพื่อนำมาใช้เป็นชุดข้อความมาตรฐานสำหรับให้
               ผู้ใช้งานทุกคนเรียกใช้ชุดข้อความเดียวกันในการให้บริการตอบแชตที่เป็นมาตรฐานเดียวกันได้
             </div>
-            <!-- <p class="tw-text-gray-600 tw-mb-8">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                at ipsum eu nunc commodo posuere et sit amet ligula.
-                <br />
-                <br />
-              </p> -->
           </div>
           <div class="tw-w-full sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
             <img
@@ -253,12 +236,6 @@
               จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
               รองรับแอดมินที่ทำงานเป็นทีม
             </div>
-            <!-- <p class="tw-text-gray-600 tw-mb-8">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                at ipsum eu nunc commodo posuere et sit amet ligula.
-                <br />
-                <br />
-              </p> -->
           </div>
         </div>
       </div>

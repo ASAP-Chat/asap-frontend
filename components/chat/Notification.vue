@@ -2,7 +2,10 @@
   <div class="container tw-flex tw-items-center tw-font-[Anuphan]">
     <div class="tw-chat-image tw-avatar">
       <div class="tw-w-10 tw-rounded-full">
-        <img :src="props.img ? props.img : profileSrc" />
+        <img
+          :src="props.img ? props.img : profileSrc"
+          alt="profile"
+        />
       </div>
     </div>
 

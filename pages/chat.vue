@@ -457,7 +457,6 @@ onBeforeMount(() => {
         )
         if (isCustomerIdEqual && isIdNotPresent) {
           await getCustomer()
-          !newMsg.value.data[0].senderDetail.name
           filteredMessages.value.data.push(newMsg.value.data[0])
           if (
             customer.value.data.filter(
@@ -639,7 +638,7 @@ const getMoreChat = async () => {
       if (Array.isArray(result.data)) {
         totalChat.value += result.data.length
       }
-      var myDiv = document.getElementById('chatContainer')
+      const myDiv = document.getElementById('chatContainer')
       const height = myDiv && Math.trunc(myDiv.offsetHeight / 3.32)
       nextTick(() => {
         if (myDiv && height) window.scrollTo(0, height)

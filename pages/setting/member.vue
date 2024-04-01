@@ -170,9 +170,6 @@ const deleteItem = async (item: any) => {
 <style>
 .v-data-table-header__content {
   font-weight: bold;
-}
-
-.v-data-table-header__content {
   font-size: 18px;
   color: #464646;
 }

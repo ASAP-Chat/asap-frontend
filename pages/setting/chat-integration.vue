@@ -36,9 +36,22 @@
       >
         <thead>
           <tr class="tw-text-lg text-left tw-text-[#464646]">
-            <th class="font-weight-bold tw-w-96">ชื่อช่องทาง</th>
-            <th class="text-left font-weight-bold tw-w-64">สถานะ</th>
-            <th class="tw-w-64"></th>
+            <th
+              id="social"
+              class="font-weight-bold tw-w-96"
+            >
+              ชื่อช่องทาง
+            </th>
+            <th
+              id="status"
+              class="text-left font-weight-bold tw-w-64"
+            >
+              สถานะ
+            </th>
+            <th
+              id="action"
+              class="tw-w-64"
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -206,7 +219,8 @@ import SettingIgConnectModal from '~/components/setting/IgConnectModal.vue'
 import { SocialType } from '~/constants/SocialType'
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
-import { createInstagram } from '~/composables/instagram'
+import { createFacebook } from '~/services/facebook.service'
+import { createInstagram } from '~/services/instagram.service'
 
 useHead({
   title: 'การตั้งค่า',

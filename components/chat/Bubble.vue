@@ -29,7 +29,10 @@
         class="tw-w-10 tw-rounded-full"
         v-if="prop.img"
       >
-        <img :src="prop.img" />
+        <img
+          :src="prop.img"
+          alt="profile"
+        />
       </div>
     </div>
     <div class="tw-chat-header">
@@ -49,7 +52,10 @@
       class="tw-chat-bubble tw-bg-transparent"
       v-if="prop.msgType === MsgType.STICKER"
     >
-      <img :src="prop.msgSticker" />
+      <img
+        :src="prop.msgSticker"
+        alt="sticker"
+      />
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"

@@ -74,12 +74,13 @@ const updateStatus = async (newValue: string) => {
 
 const updateStatusByStep = async () => {
   const nextStatus = ref('')
-  nextStatus.value =
-    localStatus.value === Status.PENDING
-      ? Status.ONGOING
-      : localStatus.value === Status.ONGOING
-      ? Status.COMPLETED
-      : ''
+  if (localStatus.value === Status.PENDING) {
+    nextStatus.value = Status.ONGOING
+  } else if (localStatus.value === Status.ONGOING) {
+    nextStatus.value = Status.COMPLETED
+  } else {
+    nextStatus.value = ''
+  }
   localStatus.value = nextStatus.value
   await updateChatStatus(props.id, nextStatus.value)
 }
