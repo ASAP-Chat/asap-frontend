@@ -1,4 +1,4 @@
-name: CI/CD Flows
+name: CI/CD Flow
 on:
   push:
     branches: [main]
