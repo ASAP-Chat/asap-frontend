@@ -34,6 +34,8 @@
                 rows="1"
                 counter
                 maxlength="50"
+                :rules="[required]"
+                :error="dupKeyword"
               >
                 <template v-slot:append>
                   <common-icon-button
@@ -69,7 +71,7 @@
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupKeyword"
           >
-            Keyword นี้มีอยู่แล้ว
+            Keyword นี้มีอยู่แล้ว : {{ dupWording }}
           </p>
         </div>
         <div class="form-control tw-mt-2">
@@ -109,6 +111,7 @@ const toast = useToast()
 const { required } = useFormRules()
 const access_token = useCookie(ACCESS_TOKEN)
 const dupKeyword = ref(false)
+const dupWording = ref('')
 
 const chatbotInfo = ref<ChatbotInfo>({
   keyword: [''],
@@ -133,12 +136,10 @@ const disabledButton = computed(() => {
 const emits = defineEmits(['close'])
 const close = () => {
   emits('close')
-  // dupKeyword.value = false
   chatbotInfo.value.keyword = ['']
   chatbotInfo.value.replyMessage = ''
 }
 const isFormValid = ref(false)
-
 const createChatbotMsg = async (chatbotInfo: ChatbotInfo) => {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chatbot-message`, {
@@ -162,7 +163,9 @@ const createChatbotMsg = async (chatbotInfo: ChatbotInfo) => {
       await createChatbotMsg(chatbotInfo)
     }
     if (response.status === 500) {
+      const dup = await response.json()
       dupKeyword.value = true
+      dupWording.value = dup.data.keyValue.keyword
     } else {
       console.log('err')
     }
@@ -170,8 +173,9 @@ const createChatbotMsg = async (chatbotInfo: ChatbotInfo) => {
     console.error(error)
   }
 }
+
 watch(
-  () => chatbotInfo.value.keyword,
+  () => chatbotInfo.value.keyword.map((item) => item),
   (newValue) => {
     dupKeyword.value = false
   }
