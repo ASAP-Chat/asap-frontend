@@ -1,5 +1,5 @@
 body {
-  font-family: 'Anuphan';
+  font-family: 'Anuphan', sans-serif;
 }
 
 .btn-shadow {
@@ -117,4 +117,9 @@ html {
 
 .v-selection-control--dirty .v-switch__track {
   opacity: 1 !important;
+}
+
+.v-input--disabled {
+  pointer-events: auto !important;
+  cursor: not-allowed !important;
 }

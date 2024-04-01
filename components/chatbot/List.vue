@@ -32,6 +32,7 @@
           </template>
         </v-text-field>
         <CommonButton
+          v-if="role !== Role.AGENT"
           text="เพิ่มใหม่"
           icon="mdi-plus"
           color="primary"

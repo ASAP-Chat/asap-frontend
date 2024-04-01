@@ -13,6 +13,7 @@
               <CommonSwitch
                 v-model="all"
                 color="#7E68F7"
+                :disabled="role === Role.AGENT"
               />
             </td>
           </tr>
@@ -24,6 +25,7 @@
               <CommonSwitch
                 color="#4BD66E"
                 v-model="line"
+                :disabled="role === Role.AGENT"
               />
             </td>
           </tr>
@@ -36,6 +38,7 @@
               <CommonSwitch
                 color="#4BD66E"
                 v-model="fb"
+                :disabled="role === Role.AGENT"
               />
             </td>
           </tr>
@@ -48,6 +51,7 @@
               <CommonSwitch
                 color="#4BD66E"
                 v-model="ig"
+                :disabled="role === Role.AGENT"
               />
             </td>
           </tr>
@@ -59,6 +63,11 @@
 <script setup lang="ts">
 import { SocialType } from '~/constants/SocialType'
 import { getChatbotStatus, updateChatbotStatus } from '~/services/chatbot.service'
+import { Role } from '~/constants/Role'
+import { USER } from '~/constants/Token'
+
+const user: any = useCookie(USER)
+const { role } = user.value || {}
 
 const { data } = (await getChatbotStatus()).chatbotStatus.value
 const line = ref(data[0].isEnabledLine)
