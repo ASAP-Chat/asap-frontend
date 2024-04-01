@@ -83,7 +83,14 @@
             v-model="chatbotInfo.replyMessage"
             counter
             maxlength="500"
+            :error="dupReply"
           />
+          <p
+            class="mb-3 text-error tw-text-sm mt-n3"
+            v-if="dupReply"
+          >
+            ข้แความตอบกลับนี้มีอยู่แล้ว
+          </p>
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
@@ -111,6 +118,7 @@ const toast = useToast()
 const { required } = useFormRules()
 const access_token = useCookie(ACCESS_TOKEN)
 const dupKeyword = ref(false)
+const dupReply = ref(false)
 const dupWording = ref('')
 
 const chatbotInfo = ref<ChatbotInfo>({
@@ -164,8 +172,12 @@ const createChatbotMsg = async (chatbotInfo: ChatbotInfo) => {
     }
     if (response.status === 500) {
       const dup = await response.json()
-      dupKeyword.value = true
-      dupWording.value = dup.data.keyValue.keyword
+      if (dup.data.keyValue.keyword) {
+        dupKeyword.value = true
+        dupWording.value = dup.data.keyValue.keyword
+      } else {
+        dupReply.value = true
+      }
     } else {
       console.log('err')
     }
@@ -178,6 +190,12 @@ watch(
   () => chatbotInfo.value.keyword.map((item) => item),
   (newValue) => {
     dupKeyword.value = false
+  }
+)
+watch(
+  () => chatbotInfo.value.replyMessage,
+  (newValue) => {
+    dupReply.value = false
   }
 )
 </script>
