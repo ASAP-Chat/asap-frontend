@@ -67,7 +67,8 @@
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupKeyword"
           >
-            มี Keyword ซ้ำกับรูปแบบการตอบกลับของแชตบอทที่มีอยู่แล้ว, <br />โปรดเปลี่ยน Keyword
+            มี Keyword ซ้ำกับรูปแบบการตอบกลับของแชตบอทที่มีอยู่แล้ว, <br />โปรดเปลี่ยน Keyword :
+            {{ dupWording }}
           </p>
         </div>
         <div class="form-control tw-mt-2">
@@ -79,7 +80,14 @@
             v-model="localInfo.replyMessage"
             counter
             maxlength="500"
+            :error="dupReply"
           />
+          <p
+            class="mb-3 text-error tw-text-sm mt-n3"
+            v-if="dupReply"
+          >
+            ข้แความตอบกลับนี้มีอยู่แล้ว
+          </p>
         </div>
       </v-form>
       <div class="tw-flex tw-justify-between pb-6 px-6">
@@ -123,6 +131,8 @@ import { getChatbotMsg } from '~/services/chatbot.service'
 const toast = useToast()
 const confirmDelete = ref(false)
 const dupKeyword = ref(false)
+const dupWording = ref('')
+const dupReply = ref(false)
 
 const props = defineProps<{
   id?: string
@@ -190,7 +200,17 @@ const editChatbotMsg = async () => {
       await useRefreshToken()
       await editChatbotMsg()
     } else if (response.status === 500) {
-      dupKeyword.value = true
+      const dup = await response.json()
+      if (dup.message.includes('replyMessage:')) {
+        dupReply.value = true
+      } else {
+        const regex = /keyword: "(.*?)"/
+        const match = dup.message.match(regex)
+        if (match && match.length > 1) {
+          dupWording.value = match[1]
+        }
+        dupKeyword.value = true
+      }
     } else {
       console.log('err')
     }
@@ -253,4 +273,11 @@ for (let i = 0; i < 3; i++) {
     }
   )
 }
+
+watch(
+  () => localInfo.value.replyMessage,
+  (newValue) => {
+    dupReply.value = false
+  }
+)
 </script>
