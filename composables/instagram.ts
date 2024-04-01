@@ -16,8 +16,6 @@ export const oauthInstagram = () => {
   return url
 }
 
-// https://www.facebook.com/dialog/oauth?client_id=1232305677642740&display=page&extras={"setup":{"channel":"IG_API_ONBOARDING"}}&redirect_uri=https://capstone23.sit.kmutt.ac.th/ssa3/setting/chat-integration/&response_type=token&scope=instagram_manage_messages,pages_manage_metadata,instagram_basic&state=integrate-instagram
-
 export const createInstagram = async (token: string) => {
   const user: any = useCookie(USER)
   const access_token = useCookie(ACCESS_TOKEN)

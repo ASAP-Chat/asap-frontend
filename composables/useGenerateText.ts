@@ -1,5 +1,6 @@
 import { Role } from '~/constants/Role'
 import { MsgType } from '~/constants/MessageType'
+import { Status } from '~/constants/Status'
 
 export const generateRole = (role: any) => {
   switch (role) {
@@ -26,5 +27,18 @@ export const generateMessageSubtitle = (message: any) => {
       return `${generateName(message)} ส่งข้อความเสียง`
     default:
       return message.message
+  }
+}
+
+export const generateStatus = (localStatus: string) => {
+  switch (localStatus) {
+    case Status.PENDING:
+      return 'รอดำเนินการ'
+    case Status.ONGOING:
+      return 'ดำเนินการ'
+    case Status.COMPLETED:
+      return 'เสร็จสิ้น'
+    default:
+      return ''
   }
 }
