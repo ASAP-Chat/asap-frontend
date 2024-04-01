@@ -87,8 +87,9 @@
 </template>
 <script setup lang="ts">
 import { USER } from '~/constants/Token'
-import { getChatTemplate } from '../services/message.service'
+import { getChatTemplate } from '~/services/template.service'
 import { Role } from '~/constants/Role'
+
 useHead({
   title: 'รูปแบบคำตอบ',
 })

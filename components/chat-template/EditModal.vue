@@ -92,7 +92,7 @@
 <script setup lang="ts">
 import { ACCESS_TOKEN } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
-import { getChatTemplate } from '~/services/message.service'
+import { getChatTemplate } from '~/services/template.service'
 
 const toast = useToast()
 const confirmDelete = ref(false)

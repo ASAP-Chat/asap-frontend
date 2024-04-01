@@ -67,7 +67,7 @@
 import { type ChatTemplateInfo } from '~/interfaces/social.interface'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { useToast } from 'vue-toastification'
-import { getChatTemplate } from '~/services/message.service'
+import { getChatTemplate } from '~/services/template.service'
 
 const props = defineProps<{
   page: number

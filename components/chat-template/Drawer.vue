@@ -50,7 +50,7 @@
   </v-navigation-drawer>
 </template>
 <script setup lang="ts">
-import { getChatTemplate } from '~/services/message.service'
+import { getChatTemplate } from '~/services/template.service'
 
 const emit = defineEmits()
 const updateSendMsg = (item: string) => {
