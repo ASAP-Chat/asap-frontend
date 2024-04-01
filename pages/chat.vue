@@ -367,7 +367,7 @@ const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner, role, displayName } = user.value && user.value
+const { shop, isOwner, role, displayName } = user.value || {}
 const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()

@@ -84,7 +84,7 @@ const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 const dupKeyword = ref(false)
 
-const { shop } = user.value && user.value
+const { shop } = user.value || {}
 
 const businesses = [
   {

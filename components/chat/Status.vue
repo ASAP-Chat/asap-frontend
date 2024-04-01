@@ -50,7 +50,7 @@ const props = defineProps<{
 const localStatus = ref(props.status)
 const storeSelectCus: any = useCookie('storeSelectCus')
 const user: any = useCookie(USER)
-const { displayName } = user.value && user.value
+const { displayName } = user.value || {}
 
 const presetStatus = [
   {

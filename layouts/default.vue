@@ -119,7 +119,7 @@ import { USER } from '~/constants/Token'
 const route = useRoute()
 const confirmLogout = ref(false)
 const user: any = useCookie(USER)
-const { displayName, role } = user.value && user.value
+const { displayName, role } = user.value || {}
 
 const pathToTitle = {
   chat: 'แชต',
@@ -180,4 +180,3 @@ const pathTitle = computed(() => {
   return route.name
 })
 </script>
-<style></style>

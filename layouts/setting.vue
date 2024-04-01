@@ -159,7 +159,7 @@ const { socialInfo } = await getSocialAccount()
 const confirmLogout = ref(false)
 
 const user: any = useCookie(USER)
-const { displayName, role } = user.value && user.value
+const { displayName, role } = user.value || {}
 
 const sidebarList = [
   {

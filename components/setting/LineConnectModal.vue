@@ -127,7 +127,7 @@ const lineInfo = ref<CreateLineInfo>({
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, _id } = user.value && user.value
+const { shop, _id } = user.value || {}
 const { name } = shop
 
 const showModal = ref(false)
@@ -171,6 +171,8 @@ const createLine = async (lineInfo: CreateLineInfo) => {
 
 const closeModal = () => {
   showModal.value = false
-  isSuccessCreate.value === true ? emits('created-success') : null
+  if (isSuccessCreate.value === true) {
+    emits('created-success')
+  }
 }
 </script>

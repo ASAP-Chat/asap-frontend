@@ -65,5 +65,3 @@ const btnAction = () => {
   emits('btn-action')
 }
 </script>
-
-<style scoped></style>

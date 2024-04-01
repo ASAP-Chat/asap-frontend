@@ -138,7 +138,6 @@ const handleScroll = () => {
 
 watchEffect(() => {
   const header = document.getElementById('header')
-  const toToggle = document.querySelector('.toggleColour')
 
   if (data.scrollY > 10) {
     header?.classList.add('bg-white')
@@ -149,5 +148,3 @@ watchEffect(() => {
   }
 })
 </script>
-
-<style></style>

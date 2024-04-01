@@ -40,8 +40,7 @@ export const updateChatbotStatus = async (id: string, line: boolean, fb: boolean
       },
     })
 
-    if (response.status === 200) {
-    } else if (response.status === 401) {
+    if (response.status === 401) {
       await useRefreshToken()
       await updateChatbotStatus(id, line, fb, ig)
     } else {

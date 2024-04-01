@@ -109,14 +109,6 @@
           </div>
         </div>
       </div>
-      <!-- Support me: https://www.buymeacoffee.com/hakimovDev -->
-      <!-- <a class="tw-fixed tw-z-50 tw-bottom-6 tw-right-2" title="Support me" href="https://www.buymeacoffee.com/hakimovDev" target="_blank">
-        <img class="!h-12" src="../../assets/imgs/buy-me-coffe.png" alt="Buy me a coffe">
-      </a> -->
-      <!-- Source codes: https://github.com/hakimov-dev/landing-template -->
-      <!-- <a class="tw-fixed tw-z-50 tw-bottom-6 tw-left-2" title="Free source codes" href="https://github.com/hakimov-dev/landing-template" target="_blank">
-        <img class="!h-12" src="../../assets/imgs/github.svg" alt="github">
-      </a> -->
     </footer>
   </template>
   

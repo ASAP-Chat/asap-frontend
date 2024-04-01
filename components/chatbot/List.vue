@@ -94,7 +94,7 @@ const pageCount = computed(() => {
 })
 
 const user: any = useCookie(USER)
-const { role } = user.value && user.value
+const { role } = user.value || {}
 
 const chatbotCreation = ref(false)
 const chatbotEditing = ref(false)
@@ -129,7 +129,7 @@ const filteredChatbotMsg = computed(() => {
 })
 
 function scrollToTop() {
-  var scrollableDiv = document.getElementById('scrollableDiv')
+  const scrollableDiv = document.getElementById('scrollableDiv')
   if (scrollableDiv) {
     scrollableDiv.scrollTo({
       top: 0,

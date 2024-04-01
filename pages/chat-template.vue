@@ -101,10 +101,10 @@ const pageCount = computed(() => {
   return chatTemplateData.value.pageCount
 })
 const user: any = useCookie(USER)
-const { role } = user.value && user.value
+const { role } = user.value || {}
 
 function scrollToTop() {
-  var scrollableDiv = document.getElementById('scrollableDiv')
+  const scrollableDiv = document.getElementById('scrollableDiv')
   if (scrollableDiv) {
     scrollableDiv.scrollTo({
       top: 0,

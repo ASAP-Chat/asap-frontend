@@ -25,4 +25,3 @@ const props = defineProps<{
   senderName?: string
 }>()
 </script>
-<style></style>

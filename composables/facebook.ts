@@ -20,7 +20,7 @@ export const createFacebook = async (code: string) => {
   const user: any = useCookie(USER)
   const access_token = useCookie(ACCESS_TOKEN)
 
-  const { shop, _id } = user.value && user.value
+  const { shop, _id } = user.value || {}
   const { name } = shop
 
   try {

@@ -53,7 +53,7 @@ definePageMeta({
 })
 
 const user: any = useCookie(USER)
-const { email, displayName, role, shop } = user.value && user.value
+const { email, displayName, role, shop } = user.value || {}
 const { social } = shop
 
 const showCopiedTooltip = ref({
