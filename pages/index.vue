@@ -86,7 +86,7 @@
           data-aos="fade-up"
           class="tw-w-full tw-my-2 tw-text-5xl tw-font-bold tw-leading-tight tw-text-center tw-text-gray-800"
         >
-          แชท
+          แชต
         </h2>
         <div
           data-aos="fade-up"
