@@ -73,7 +73,7 @@ const { data } = (await getChatbotStatus()).chatbotStatus.value
 const line = ref(data[0].isEnabledLine)
 const fb = ref(data[0].isEnabledFacebook)
 const ig = ref(data[0].isEnabledInstagram)
-const all = ref(line.value && fb.value && ig.value)
+const all = ref(line.value || fb.value || ig.value)
 const statusId = data[0]._id
 
 const updateValues = () => {
