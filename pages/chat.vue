@@ -383,6 +383,7 @@ onBeforeMount(() => {
     socket.emit('join-message', name)
     socket.on('latest-message', async (data: any) => {
       newMsg.value = data
+      console.log('🍪🥛 ~ socket.on ~ data:', data)
       const content = {
         component: Notification,
         props: {
@@ -420,56 +421,49 @@ onBeforeMount(() => {
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
           if (
-            newMsg.value.data[0].isOwner === false &&
-            newMsg.value.data[0].isRead === false &&
-            newMsg.value.data[0].senderDetail.name &&
+            (newMsg.value.data[0].isOwner === false &&
+              newMsg.value.data[0].isRead === false &&
+              newMsg.value.data[0].senderDetail.name) ||
             newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
+            console.log(1)
+
             play()
             toast(content, notifications)
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
           if (
-            newMsg.value.data[0].isOwner === false &&
-            newMsg.value.data[0].isRead === false &&
-            newMsg.value.data[0].senderDetail.name &&
+            (newMsg.value.data[0].isOwner === false &&
+              newMsg.value.data[0].isRead === false &&
+              newMsg.value.data[0].senderDetail.name) ||
             newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
+            console.log(2)
+
             play()
             toast(content, notifications)
           }
         }
-      }
 
-      if (
-        storeSelectCus.value &&
-        filteredMessages.value &&
-        Array.isArray(filteredMessages.value.data) &&
-        newMsg.value.data &&
-        newMsg.value.data.length > 0
-      ) {
-        const isCustomerIdEqual = filteredMessages.value.data.every(
-          (item: any) => item.customerId === newMsg.value.data[0].customerId
-        )
-        const isIdNotPresent = !filteredMessages.value.data.some(
-          (item: any) => item._id === newMsg.value.data[0]._id
-        )
-        if (isCustomerIdEqual && isIdNotPresent) {
-          await getCustomer()
-          filteredMessages.value.data.push(newMsg.value.data[0])
-          if (
-            customer.value.data.filter(
-              (item: any) => item.customerId === storeSelectCus.value.userId
-            )[0].agent.displayName === displayName
+        if (storeSelectCus.value) {
+          const isCustomerIdEqual = filteredMessages.value.data.every(
+            (item: any) => item.customerId === newMsg.value.data[0].customerId
           )
-            updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
-          nextTick(() => {
-            window.scrollTo(0, document.body.scrollHeight)
-          })
-          if (newMsg.value.data[0].senderDetail.chatMode !== 'bot') {
-            play()
-            toast(content, notifications)
+          const isIdNotPresent = !filteredMessages.value.data.some(
+            (item: any) => item._id === newMsg.value.data[0]._id
+          )
+          if (isCustomerIdEqual && isIdNotPresent) {
+            filteredMessages.value.data.push(newMsg.value.data[0])
+            if (
+              customer.value.data.filter(
+                (item: any) => item.customerId === storeSelectCus.value.userId
+              )[0].agent.displayName === displayName
+            )
+              updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
+            nextTick(() => {
+              window.scrollTo(0, document.body.scrollHeight)
+            })
           }
         }
       }
