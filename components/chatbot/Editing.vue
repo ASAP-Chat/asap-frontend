@@ -86,7 +86,7 @@
             class="mb-3 text-error tw-text-sm mt-n3"
             v-if="dupReply"
           >
-            ข้แความตอบกลับนี้มีอยู่แล้ว
+            ข้อความตอบกลับนี้มีอยู่แล้ว
           </p>
         </div>
       </v-form>
