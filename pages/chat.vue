@@ -383,7 +383,6 @@ onBeforeMount(() => {
     socket.emit('join-message', name)
     socket.on('latest-message', async (data: any) => {
       newMsg.value = data
-      console.log('🍪🥛 ~ socket.on ~ data:', data)
       const content = {
         component: Notification,
         props: {
@@ -426,10 +425,10 @@ onBeforeMount(() => {
               newMsg.value.data[0].senderDetail.name) ||
             newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
-            console.log(1)
-
-            play()
-            toast(content, notifications)
+            if (!newMsg.value.data[0].isRead) {
+              play()
+              toast(content, notifications)
+            }
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
@@ -439,10 +438,10 @@ onBeforeMount(() => {
               newMsg.value.data[0].senderDetail.name) ||
             newMsg.value.data[0].senderDetail.chatMode !== 'bot'
           ) {
-            console.log(2)
-
-            play()
-            toast(content, notifications)
+            if (!newMsg.value.data[0].isRead) {
+              play()
+              toast(content, notifications)
+            }
           }
         }
 
