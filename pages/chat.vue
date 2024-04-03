@@ -419,29 +419,15 @@ onBeforeMount(() => {
         await getCustomer()
         if (existingIndex !== -1) {
           latestMessages.value.data[existingIndex] = newMsg.value.data[0]
-          if (
-            (newMsg.value.data[0].isOwner === false &&
-              newMsg.value.data[0].isRead === false &&
-              newMsg.value.data[0].senderDetail.name) ||
-            newMsg.value.data[0].senderDetail.chatMode !== 'bot'
-          ) {
-            if (!newMsg.value.data[0].isRead) {
-              play()
-              toast(content, notifications)
-            }
+          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            play()
+            toast(content, notifications)
           }
         } else {
           latestMessages.value.data.push(newMsg.value.data[0])
-          if (
-            (newMsg.value.data[0].isOwner === false &&
-              newMsg.value.data[0].isRead === false &&
-              newMsg.value.data[0].senderDetail.name) ||
-            newMsg.value.data[0].senderDetail.chatMode !== 'bot'
-          ) {
-            if (!newMsg.value.data[0].isRead) {
-              play()
-              toast(content, notifications)
-            }
+          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+            play()
+            toast(content, notifications)
           }
         }
 
