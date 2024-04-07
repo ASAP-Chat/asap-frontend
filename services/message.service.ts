@@ -21,6 +21,8 @@ export const getSocialAccount = async () => {
       console.log('call - refresh token')
       await useRefreshToken()
       await getSocialAccount()
+    } else if (response.status === 404) {
+      socialInfo.value = null
     }
   } catch (error: any) {
     console.log(error)
@@ -104,7 +106,7 @@ export const getCustomer = async () => {
   return { customer }
 }
 
-const storeSelectCus: any = useCookie('storeSelectCus')
+const storeCustomer = useStoreCustomer()
 
 export const updateChatStatus = async (statusId: string, chatStatus: string) => {
   try {
@@ -121,7 +123,7 @@ export const updateChatStatus = async (statusId: string, chatStatus: string) => 
 
     if (response.status === 200) {
       await getCustomer()
-      storeSelectCus.value.status = chatStatus
+      storeCustomer.value.status = chatStatus
     } else if (response.status === 401) {
       await useRefreshToken()
       await updateChatStatus(statusId, chatStatus)

@@ -29,9 +29,12 @@
     </span>
   </div>
   <div class="mt-12 mx-auto">
-    <div class="bg-white tw-rounded-3xl tw-px-8 tw-py-4">
+    <div
+      class="tw-rounded-3xl tw-px-8 tw-py-4"
+      :class="socialInfo?.data?.length > 1 ? 'bg-white' : ''"
+    >
       <v-table
-        v-if="socialInfo && socialInfo.data && socialInfo.data.length > 0"
+        v-if="socialInfo?.data && socialInfo.data.length > 0"
         fixed-header
       >
         <thead>
@@ -57,7 +60,7 @@
         <tbody>
           <tr
             class="tw-text-sm"
-            v-if="socialInfo && socialInfo.data"
+            v-if="socialInfo?.data"
             v-for="item in socialInfo.data"
             :key="item.name"
           >
@@ -128,7 +131,7 @@
           color="success"
           class="tw-mx-auto mt-4"
           @click="connectDialog = true"
-          :class="socialInfo.data.length === 3 ? 'tw-hidden' : ''"
+          :class="socialInfo?.data?.length === 3 ? 'tw-hidden' : ''"
         />
       </div>
     </div>
@@ -265,7 +268,7 @@ const socialList = [
 const { socialInfo } = await getSocialAccount()
 const access_token = useCookie(ACCESS_TOKEN)
 
-const storeSelectCus = useCookie('storeSelectCus')
+const storeCustomer = useStoreCustomer()
 
 const cancelSocialAccount = async (id: string) => {
   try {
@@ -280,7 +283,7 @@ const cancelSocialAccount = async (id: string) => {
       socialInfo.value.data = socialInfo.value.data.filter((social: any) => social._id !== id)
       isSuccessDelete.value = true
       deleteModal.value = true
-      storeSelectCus.value = null
+      storeCustomer.value = null
     } else {
       console.log('call - refresh token')
       isSuccessDelete.value = false
