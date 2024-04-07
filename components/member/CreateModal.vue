@@ -140,8 +140,7 @@ const createMember = async (memberData: MemberInfo) => {
       dupKeyword.value = false
       await useRefreshToken()
       await createMember(memberData)
-    }
-    if (response.status === 500) {
+    } else if (response.status === 500) {
       dupKeyword.value = true
     } else {
       console.log('err')
