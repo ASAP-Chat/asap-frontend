@@ -32,7 +32,7 @@
           exact
           :title="generateName(message)"
           :value="message.customerId"
-          :active="storeSelectCus && message.customerId === storeSelectCus.userId"
+          :active="storeCustomer && message.customerId === storeCustomer.userId"
           @click="
             setSelectCustomer(
               message.customerId,
@@ -167,7 +167,7 @@
           :class="{
             'pt-2': customer.data.filter((item: any) => item.customerId === message.customerId)[0]
                     ?.chatStatus !== Status.PENDING,
-            'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeSelectCus?.userId
+            'tw-bg-[#E4E4E4]': customer.data.filter((item: any) => item.customerId === message.customerId)[0]?.customerId === storeCustomer?.userId
           }"
         >
           <div>
@@ -224,11 +224,11 @@
   </div>
 
   <div id="chatContainer">
-    <div v-if="filteredMessages">
-      <div v-if="storeSelectCus">
+    <div v-if="filteredMessages && storeCustomer">
+      <div>
         <ChatAppBar
-          :id="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]?._id"
-          :status="customer.data.filter((item: any) => item.customerId === storeSelectCus.userId)[0]
+          :id="customer.data.filter((item: any) => item.customerId === storeCustomer.userId)[0]?._id"
+          :status="customer.data.filter((item: any) => item.customerId === storeCustomer.userId)[0]
                 ?.chatStatus"
         />
       </div>
@@ -273,9 +273,9 @@
       order="2"
       name="footer"
       class="tw-grid"
-      :class="storeSelectCus ? ' tw-drop-shadow-2xl' : 'tw-bg-[#f2f2f2]'"
+      :class="storeCustomer ? ' tw-drop-shadow-2xl' : 'tw-bg-[#f2f2f2]'"
     >
-      <v-form :class="storeSelectCus ? '' : 'tw-invisible'">
+      <v-form :class="storeCustomer ? '' : 'tw-invisible'">
         <v-container>
           <v-row>
             <v-col cols="12">
@@ -293,16 +293,16 @@
                 :placeholder="
                   disabledChatInput
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามข้อกำหนดของ Facebook'
-                    : storeSelectCus?.agent !== displayName
+                    : storeCustomer?.agent !== displayName
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากคุณไม่ได้รับผิดชอบแชตนี้'
-                    : storeSelectCus.status === Status.PENDING
+                    : storeCustomer?.status === Status.PENDING
                     ? 'คุณจะสามารถตอบแชตได้ ก็ต่อเมื่อสถานะของแชตเป็นดำเนินการ'
                     : 'พิมพ์ข้อความ ...'
                 "
                 :disabled="
                   Boolean(disabledChatInput) ||
-                  storeSelectCus?.agent !== displayName ||
-                  storeSelectCus.status === Status.PENDING
+                  storeCustomer?.agent !== displayName ||
+                  storeCustomer?.status === Status.PENDING
                 "
               >
                 <template v-slot:prepend>
@@ -311,7 +311,7 @@
                     color="primary"
                     density="compact"
                     @click.stop="templateDrawer = !templateDrawer"
-                    :disabled="storeSelectCus?.agent !== displayName"
+                    :disabled="storeCustomer?.agent !== displayName"
                   />
                 </template>
                 <template v-slot:append>
@@ -386,14 +386,15 @@ onBeforeMount(() => {
       const content = {
         component: Notification,
         props: {
-          img: generateAvatarUrl(newMsg.value.data[0]),
-          senderName: newMsg.value.data[0].senderDetail.displayName,
-          msg: newMsg.value.data[0].message,
-          type: newMsg.value.data[0].type,
+          img: generateAvatarUrl(newMsg.value),
+          senderName: newMsg.value.senderDetail.displayName,
+          msg: newMsg.value.message,
+          type: newMsg.value.type,
         },
       }
+
       const notifications: ToastOptions = {
-        toastClassName: generateToastClass(newMsg.value.data[0].source),
+        toastClassName: generateToastClass(newMsg.value.source),
         timeout: 2984,
         closeOnClick: true,
         pauseOnFocusLoss: false,
@@ -403,49 +404,45 @@ onBeforeMount(() => {
         showCloseButtonOnHover: true,
         hideProgressBar: true,
         closeButton: 'button',
-        icon: generateToastIcon(newMsg.value.data[0].source),
+        icon: generateToastIcon(newMsg.value.source),
         rtl: false,
       }
-      if (
-        latestMessages.value &&
-        Array.isArray(latestMessages.value.data) &&
-        newMsg.value.data &&
-        newMsg.value.data.length > 0
-      ) {
+      await getLatestMsg()
+      if (latestMessages.value && Array.isArray(latestMessages.value.data) && newMsg.value) {
         const existingIndex = latestMessages.value.data.findIndex(
-          (item: any) => item.customerId === newMsg.value.data[0].customerId
+          (item: any) => item.customerId === newMsg.value.customerId
         )
 
         await getCustomer()
         if (existingIndex !== -1) {
-          latestMessages.value.data[existingIndex] = newMsg.value.data[0]
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+          latestMessages.value[existingIndex] = newMsg.value
+          if (newMsg.value.isOwner === false && newMsg.value.isRead === false) {
             play()
             toast(content, notifications)
           }
         } else {
-          latestMessages.value.data.push(newMsg.value.data[0])
-          if (newMsg.value.data[0].isOwner === false && newMsg.value.data[0].isRead === false) {
+          latestMessages.value.data.push(newMsg.value)
+          if (newMsg.value.isOwner === false && newMsg.value.isRead === false) {
             play()
             toast(content, notifications)
           }
         }
 
-        if (storeSelectCus.value) {
+        if (storeCustomer.value) {
           const isCustomerIdEqual = filteredMessages.value.data.every(
-            (item: any) => item.customerId === newMsg.value.data[0].customerId
+            (item: any) => item.customerId === newMsg.value.customerId
           )
           const isIdNotPresent = !filteredMessages.value.data.some(
-            (item: any) => item._id === newMsg.value.data[0]._id
+            (item: any) => item._id === newMsg.value._id
           )
           if (isCustomerIdEqual && isIdNotPresent) {
-            filteredMessages.value.data.push(newMsg.value.data[0])
+            filteredMessages.value.data.push(newMsg.value)
             if (
               customer.value.data.filter(
-                (item: any) => item.customerId === storeSelectCus.value.userId
+                (item: any) => item.customerId === storeCustomer.value.userId
               )[0].agent.displayName === displayName
             )
-              updateMsg(storeSelectCus.value.userId, newMsg.value.data[0]._id)
+              updateMsg(storeCustomer.value.userId, newMsg.value._id)
             nextTick(() => {
               window.scrollTo(0, document.body.scrollHeight)
             })
@@ -478,10 +475,11 @@ const selectCustomer = ref<any>({
   time: '',
 })
 
-const storeSelectCus: any = useCookie('storeSelectCus', cookieOptions)
+const storeCustomer = useStoreCustomer()
+
 const disabledMoreThan24 = ref(true)
 const disabledChatInput = computed(() => {
-  return storeSelectCus?.value?.source === SocialType.FACEBOOK && disabledMoreThan24.value
+  return storeCustomer?.value?.source === SocialType.FACEBOOK && disabledMoreThan24.value
 })
 
 const setSelectCustomer = async (
@@ -513,8 +511,7 @@ const setSelectCustomer = async (
     status,
     agent,
   }
-  storeSelectCus.value = selectCustomer.value
-
+  storeCustomer.value = selectCustomer.value
   const hoursDifference = Math.abs(messageTimestamp.diff(useDayjs()(), 'hours'))
   disabledMoreThan24.value = hoursDifference >= 24
   sendMsg.value = ''
@@ -522,15 +519,14 @@ const setSelectCustomer = async (
 }
 
 const sendMessage = async () => {
-  console.log(sendMsg.value === '')
   if (sendMsg.value !== '') {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
+        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeCustomer.value.userId}`,
         {
           method: 'POST',
           body: JSON.stringify({
-            source: storeSelectCus.value.source,
+            source: storeCustomer.value.source,
             message: {
               text: sendMsg.value,
             },
@@ -544,7 +540,7 @@ const sendMessage = async () => {
 
       if (response.status === 200 || response.status === 201) {
         sendMsg.value = ''
-        await getMsgById(storeSelectCus.value.userId, 0)
+        await getMsgById(storeCustomer.value.userId, 0)
       } else if (response.status === 401) {
         console.log('call - refresh token')
         await useRefreshToken()
@@ -599,7 +595,7 @@ const getMoreChat = async () => {
   loadingBtn.value = true
   try {
     const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeSelectCus.value.userId}`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeCustomer.value.userId}`,
       {
         method: 'get',
         headers: {
@@ -610,7 +606,7 @@ const getMoreChat = async () => {
         },
       }
     )
-    if (storeSelectCus) {
+    if (storeCustomer) {
       const result: any = await response.data.value
       filteredMessages.value.data.push(...Object.values(result.data))
 
@@ -700,7 +696,7 @@ const isChatbotEnabled = (source: string) => {
 }
 
 onBeforeMount(async () => {
-  storeSelectCus.value && (await getMsgById(storeSelectCus.value.userId, totalChat.value))
+  storeCustomer.value && (await getMsgById(storeCustomer.value.userId, totalChat.value))
   await getSocialAccount()
   await getLatestMsg()
   await getCustomer()
@@ -709,7 +705,7 @@ onBeforeMount(async () => {
 watch(
   () => selectedItem.value,
   (newValue) => {
-    storeSelectCus.value = null
+    storeCustomer.value = null
     selectCustomer.value = {
       userId: '',
       displayName: '',

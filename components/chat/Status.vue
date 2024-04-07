@@ -6,7 +6,7 @@
         :color="localStatus"
         v-bind="props"
         class="tw-rounded-l-md tw-rounded-r-none"
-        :disabled="storeSelectCus?.agent !== displayName"
+        :disabled="storeCustomer?.agent !== displayName"
       >
         {{ generateStatus(localStatus) }}
       </v-btn>
@@ -18,7 +18,7 @@
         icon="mdi-chevron-right"
         size="small"
         class="tw-h-9 tw-ml-[1px] tw-rounded-l-none tw-rounded-r-md"
-        :disabled="storeSelectCus?.agent !== displayName"
+        :disabled="storeCustomer?.agent !== displayName"
         @click="updateStatusByStep"
       >
         <template v-slot:default>
@@ -48,7 +48,8 @@ const props = defineProps<{
 }>()
 
 const localStatus = ref(props.status)
-const storeSelectCus: any = useCookie('storeSelectCus')
+const storeCustomer = useStoreCustomer()
+
 const user: any = useCookie(USER)
 const { displayName } = user.value || {}
 

@@ -28,18 +28,16 @@
         aspect-ratio="1/1"
         cover
         class="tw-rounded-full"
-        :src="
-          storeSelectCus.source === SocialType.FACEBOOK ? profileSrc : storeSelectCus.pictureUrl
-        "
+        :src="storeCustomer.source === SocialType.FACEBOOK ? profileSrc : storeCustomer.pictureUrl"
       ></v-img>
     </template>
     <v-app-bar-title class="font-weight-bold">
       <v-icon
         class="pb-6"
         size="x-small"
-        >{{ generateSocialIcon(storeSelectCus.source) }}</v-icon
+        >{{ generateSocialIcon(storeCustomer.source) }}</v-icon
       >
-      {{ storeSelectCus.displayName }}
+      {{ storeCustomer.displayName }}
     </v-app-bar-title>
   </v-app-bar>
 </template>
@@ -54,14 +52,15 @@ const props = defineProps<{
   status: any
 }>()
 
-const storeSelectCus: any = useCookie('storeSelectCus')
+const storeCustomer = useStoreCustomer()
+
 const { data } = (await getChatbotStatus()).chatbotStatus.value
 const statusLine = ref(data[0].isEnabledLine)
 const statusFb = ref(data[0].isEnabledFacebook)
 const statusIg = ref(data[0].isEnabledInstagram)
 
 const isEnabled = computed(() => {
-  const { source } = storeSelectCus.value
+  const { source } = storeCustomer.value
   return (
     (source === SocialType.LINE && statusLine.value) ||
     (source === SocialType.FACEBOOK && statusFb.value) ||

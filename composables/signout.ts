@@ -13,6 +13,7 @@ const manager = new Manager(socketURL, {
   forceNew: true,
 })
 const socket = manager.socket('/sockets/latest-message')
+const storeCustomer = useStoreCustomer()
 const user: any = useCookie(USER)
 
 const { shop } = user?.value || {}
@@ -27,6 +28,6 @@ export const useSignOut = () => {
   resetCookie(ACCESS_TOKEN)
   resetCookie(USER)
   resetCookie(REFRESH_TOKEN)
-  resetCookie('storeSelectCus')
+  storeCustomer.value = null
   navigateTo('/')
 }

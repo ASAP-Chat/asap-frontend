@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import { getMember } from '~/services/member.service'
-import { ACCESS_TOKEN } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import { getCustomer } from '~/services/message.service'
 
 const props = defineProps<{
@@ -48,8 +48,9 @@ const props = defineProps<{
 
 const emits = defineEmits(['update:message'])
 const localMember = ref(props.currentMember)
+const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
-const storeSelectCus: any = useCookie('storeSelectCus')
+const storeCustomer = useStoreCustomer()
 
 const { memberData } = await getMember()
 const roleOrder: { [key: string]: number } = {
@@ -78,7 +79,6 @@ const sortedMembers = computed(() => {
 })
 const updateAgent = async (id: string, v: any) => {
   localMember.value = v
-
   try {
     const response = await fetch(`${import.meta.env.VITE_BASE_URL}/chat-customer/${id}`, {
       method: 'PATCH',
@@ -92,10 +92,13 @@ const updateAgent = async (id: string, v: any) => {
     })
 
     if (response.status === 200) {
-      if (storeSelectCus?.value?.statusId === id) {
-        storeSelectCus.value.agent = localMember.value.displayName
+      if (storeCustomer?.value?.statusId === id) {
+        storeCustomer.value.agent = localMember.value.displayName
+        if (user.value.displayName === localMember.value.displayName) {
+          emits('update:message')
+        }
       }
-      if (storeSelectCus?.value.agent === v) {
+      if (storeCustomer?.value.agent === v) {
         emits('update:message')
       }
       await getCustomer()
