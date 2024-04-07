@@ -1,13 +1,4 @@
 <template>
-  <CommonModal
-    v-if="!socialInfo && isOwner"
-    :header="'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'"
-    custom-icon="mdi-store-cog-outline"
-    :content="'โปรดเชื่อมต่ออย่างน้อย 1 บัญชี Social Media เพื่อเริ่มใช้งาน ASAP'"
-    :buttonText="'ตั้งค่า'"
-    :isSuccess="false"
-    @btn-action="navigateTo('/setting/chat-integration/')"
-  />
   <div>
     <ChatFilterNav
       :selectedItem="selectedItem"

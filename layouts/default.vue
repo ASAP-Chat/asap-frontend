@@ -9,6 +9,15 @@
     @btn-action="confirmLogout = false"
     @confirm-action="useSignOut()"
   />
+  <CommonModal
+    v-if="!socialInfo && isOwner"
+    :header="'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'"
+    custom-icon="mdi-store-cog-outline"
+    :content="'โปรดเชื่อมต่ออย่างน้อย 1 บัญชี Social Media เพื่อเริ่มใช้งาน ASAP'"
+    :buttonText="'ตั้งค่า'"
+    :isSuccess="false"
+    @btn-action="navigateTo('/setting/chat-integration/')"
+  />
 
   <v-card>
     <v-layout>
@@ -115,11 +124,13 @@
 import { type PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
 import { USER } from '~/constants/Token'
+import { getSocialAccount } from '~/services/message.service'
 
 const route = useRoute()
 const confirmLogout = ref(false)
 const user: any = useCookie(USER)
-const { displayName, role } = user.value || {}
+const { displayName, role, isOwner } = user.value || {}
+const { socialInfo } = await getSocialAccount()
 
 const pathToTitle = {
   chat: 'แชต',
