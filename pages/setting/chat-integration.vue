@@ -31,7 +31,7 @@
   <div class="mt-12 mx-auto">
     <div
       class="tw-rounded-3xl tw-px-8 tw-py-4"
-      :class="socialInfo?.data?.length > 1 ? 'bg-white' : ''"
+      :class="socialInfo?.data?.length >= 1 ? 'bg-white' : ''"
     >
       <v-table
         v-if="socialInfo?.data && socialInfo.data.length > 0"
