@@ -35,15 +35,12 @@ const latestMessages = ref()
 export const getLatestMsg = async () => {
   if (isOwner) {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/latest`,
-        {
-          method: 'get',
-          headers: {
-            Authorization: 'Bearer ' + access_token.value,
-          },
-        }
-      )
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/social-message/latest`, {
+        method: 'get',
+        headers: {
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      })
       if (response.status === 200) {
         latestMessages.value = await response.json()
       } else if (response.status === 401) {

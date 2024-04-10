@@ -95,9 +95,17 @@
                   >
                     {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-close' }}
                   </v-icon>
-                  <span :class="{ 'font-weight-bold': item?.status?.isAvailable }">{{
-                    item?.status?.isAvailable ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'
-                  }}</span>
+                  <span
+                    :class="{
+                      'font-weight-bold': item?.status?.isAvailable && item?.status?.isInitialized,
+                    }"
+                  >
+                    {{
+                      item?.status?.isAvailable && item?.status?.isInitialized
+                        ? 'พร้อมใช้งาน'
+                        : 'ไม่พร้อมใช้งาน'
+                    }}</span
+                  >
                 </div>
               </div>
             </td>
