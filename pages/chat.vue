@@ -271,6 +271,7 @@
           <v-row>
             <v-col cols="12">
               <v-textarea
+                v-if="previewImageUrls.length === 0"
                 type="text"
                 rounded="xl"
                 v-model="sendMsg"
@@ -302,7 +303,18 @@
                     color="primary"
                     density="compact"
                     @click.stop="templateDrawer = !templateDrawer"
-                    :disabled="storeCustomer?.agent !== displayName"
+                    :disabled="
+                      storeCustomer?.agent !== displayName ||
+                      storeCustomer?.status === Status.PENDING
+                    "
+                  />
+                  <FileUploadInput
+                    ref="fileInputComponentRef"
+                    :previewImageUrl="previewImageUrls"
+                    @handleImageChange="handleImageChange"
+                    @handleClickAttachment="handleClickAttachment"
+                    :disabled-btn="storeCustomer?.status === Status.PENDING"
+                    :density-btn="'compact'"
                   />
                 </template>
                 <template v-slot:append>
@@ -316,6 +328,44 @@
               </v-textarea>
             </v-col>
           </v-row>
+          <div
+            class="tw-flex"
+            v-if="previewImageUrls.length !== 0"
+          >
+            <FileUploadInput
+              ref="fileInputComponentRef"
+              :previewImageUrl="previewImageUrls"
+              @handleImageChange="handleImageChange"
+              @handleClickAttachment="handleClickAttachment"
+              :disabled-btn="storeCustomer?.status === Status.PENDING"
+            />
+            <div
+              class="tw-w-full tw-rounded-3xl tw-border tw-border-solid tw-border-[#ababab] tw-p-3"
+            >
+              <div class="tw-justify-items-center tw-grid tw-grid-cols-5 tw-gap-y-3.5">
+                <div
+                  class="tw-text-end tw-relative tw-inline-block"
+                  v-for="(url, index) in previewImageUrls"
+                  :key="index"
+                >
+                  <FileUploadOutput :src="url" />
+                  <CommonIconButton
+                    icon="mdi-close"
+                    density="compact"
+                    size="small"
+                    variant="flat"
+                    color="#949494"
+                    @click="removeImage(index)"
+                    class="tw-absolute tw-top-0 tw-left-0"
+                  />
+                </div>
+              </div>
+            </div>
+            <CommonIconButton
+              icon="mdi-send"
+              color="primary"
+            />
+          </div>
         </v-container>
       </v-form>
     </v-footer>
@@ -341,6 +391,40 @@ import type { ToastOptions } from 'vue-toastification/dist/types/types'
 import { getChatbotStatus } from '~/services/chatbot.service'
 
 const toast = useToast()
+
+const previewUploads = ref({
+  files: [] as File[],
+  urls: [] as string[],
+})
+const previewImageUrls = computed(() => previewUploads.value.urls)
+const fileInputComponentRef = ref()
+const handleClickAttachment = () => {
+  const fileUploadRef = fileInputComponentRef.value.fileInputRef
+  fileUploadRef?.click()
+}
+
+const handleImageChange = (event: Event | any) => {
+  const files = event.target?.files
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      previewUploads.value.files.push(file)
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (reader.result) {
+          previewUploads.value.urls.push(reader.result as string)
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+    event.target.value = null
+  }
+}
+const removeImage = (index: number) => {
+  previewUploads.value.files.splice(index, 1)
+  previewUploads.value.urls.splice(index, 1)
+}
 
 let socketURL
 if (process.env.NODE_ENV === 'development') {
