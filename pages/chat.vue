@@ -358,7 +358,7 @@ const socket = manager.socket('/sockets/latest-message')
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner, role, displayName } = user.value || {}
+const { shop, role, displayName } = user.value || {}
 const { name } = shop
 const newMsg = ref()
 const filteredMessages: any = ref()
@@ -513,7 +513,7 @@ const sendMessage = async () => {
   if (sendMsg.value !== '') {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeCustomer.value.userId}`,
+        `${import.meta.env.VITE_BASE_URL}/social-message/${storeCustomer.value.userId}`,
         {
           method: 'POST',
           body: JSON.stringify({
@@ -556,7 +556,7 @@ const getMsgById = async (customerId: any, total: number) => {
   loading.value = true
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${customerId}?$skip=${total}`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${customerId}?$skip=${total}`,
       {
         method: 'get',
         headers: {
@@ -586,7 +586,7 @@ const getMoreChat = async () => {
   loadingBtn.value = true
   try {
     const response = await useFetch(
-      `${import.meta.env.VITE_BASE_URL}/social-message/${name}/${storeCustomer.value.userId}`,
+      `${import.meta.env.VITE_BASE_URL}/social-message/${storeCustomer.value.userId}`,
       {
         method: 'get',
         headers: {
