@@ -61,24 +61,25 @@
       class="tw-chat-bubble tw-bg-transparent pa-0"
       v-if="prop.msgType === MsgType.IMAGE"
     >
-      <v-hover v-slot="{ isHovering, props }">
-        <v-card
-          :class="{ 'on-hover tw-opacity-50	': isHovering }"
-          v-bind="props"
-          variant="flat"
-        >
-          <a
-            :href="prop.msgLink"
-            target="_blank"
-          >
-            <v-img
-              :width="266"
-              cover
-              :src="prop.msgLink"
-            ></v-img>
-          </a>
-        </v-card>
-      </v-hover>
+      <a
+        :href="prop.msgLink"
+        target="_blank"
+      >
+        <div>
+          <v-img
+            :width="266"
+            cover
+            :src="prop.msgLink"
+            @load="imageLoaded = true"
+          ></v-img>
+
+          <v-skeleton-loader
+            v-if="!imageLoaded"
+            :width="266"
+            type="image"
+          ></v-skeleton-loader>
+        </div>
+      </a>
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
@@ -121,4 +122,6 @@ const prop = defineProps<{
   time?: number
   isOwner?: boolean
 }>()
+
+const imageLoaded = ref(false)
 </script>
