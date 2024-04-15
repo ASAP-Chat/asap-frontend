@@ -29,7 +29,7 @@
         >
       </v-card-title>
       <v-card-text class="text-center tw-mt-0 tw-text-base">
-        <p v-html="props.content" />
+        <p v-html="props.content"></p>
       </v-card-text>
       <v-card-actions class="justify-center mt-4">
         <CommonButton

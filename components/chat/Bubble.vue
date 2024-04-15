@@ -121,7 +121,7 @@
     </GoogleMap>
     <div class="tw-p-3">
       <a
-        :href="msgLocation?.link"
+        :href="msgLocation?.link || '#'"
         target="_blank"
         class="tw-no-underline tw-text-black hover:tw-text-[#674AE7]"
       >
