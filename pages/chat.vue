@@ -246,6 +246,7 @@
             :msg-link="
               message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
             "
+            :msg-location="message.messageObject"
             :name="generateName(message)"
             :img="generateCustomerImg(message)"
             :date="showDisplayTime(filteredMessages, index) ? message.sourceTimestamp : ''"
@@ -302,7 +303,10 @@
                     color="primary"
                     density="compact"
                     @click.stop="templateDrawer = !templateDrawer"
-                    :disabled="storeCustomer?.agent !== displayName"
+                    :disabled="
+                      storeCustomer?.agent !== displayName ||
+                      storeCustomer?.status === Status.PENDING
+                    "
                   />
                 </template>
                 <template v-slot:append>
@@ -705,6 +709,12 @@ watch(
       time: '',
     }
     filteredMessages.value = null
+  }
+)
+watch(
+  () => storeCustomer.value,
+  () => {
+    templateDrawer.value = false
   }
 )
 </script>

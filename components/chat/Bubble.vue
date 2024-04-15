@@ -17,6 +17,7 @@
       </span>
     </v-chip>
   </div>
+
   <div
     class="tw-chat"
     :class="[isOwner ? 'tw-chat-end' : 'tw-chat-start']"
@@ -107,9 +108,32 @@
       </audio>
     </div>
   </div>
+  <div
+    v-if="prop.msgType === MsgType.LOCATION"
+    class="ml-9 bg-white tw-w-2/4 tw-rounded-lg"
+  >
+    <GoogleMap
+      class="tw-h-52 tw-rounded-lg"
+      :center="center"
+      :zoom="15"
+    >
+      <Marker :options="{ position: center }" />
+    </GoogleMap>
+    <div class="tw-p-3">
+      <a
+        :href="msgLocation?.link"
+        target="_blank"
+        class="tw-no-underline tw-text-black hover:tw-text-[#674AE7]"
+      >
+        <p class="tw-text-lg">🚩 {{ msgLocation?.title }}</p>
+        <p class="tw-text-sm">{{ msgLocation?.address }}</p>
+      </a>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { MsgType } from '~/constants/MessageType'
+import { GoogleMap, Marker } from 'vue3-google-map'
 
 const prop = defineProps<{
   name?: string
@@ -118,10 +142,18 @@ const prop = defineProps<{
   msgText?: string
   msgSticker?: string
   msgLink?: string
+  msgLocation?: {
+    latitude: number
+    longitude: number
+    title: string
+    address: string
+    link: string
+  }
   date?: any
   time?: number
   isOwner?: boolean
 }>()
 
+const center = { lat: prop.msgLocation?.latitude, lng: prop.msgLocation?.longitude }
 const imageLoaded = ref(false)
 </script>
