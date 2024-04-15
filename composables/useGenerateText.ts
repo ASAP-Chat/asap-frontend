@@ -25,6 +25,8 @@ export const generateMessageSubtitle = (message: any) => {
       return `${generateName(message)} ส่งวิดิโอ`
     case MsgType.AUDIO:
       return `${generateName(message)} ส่งข้อความเสียง`
+    case MsgType.LOCATION:
+      return `${generateName(message)} ส่งตำแหน่งที่ตั้ง`
     default:
       return message.message
   }

@@ -53,7 +53,7 @@
         </li>
       </ol>
       <p class="tw-mt-2 tw-text-sm">
-        <v-icon>mdi-tooltip-question-outline</v-icon>&nbsp;<a
+        <v-icon color="primary">mdi-tooltip-question-outline</v-icon>&nbsp;<a
           href="https://drive.google.com/file/d/1dGJFoqmX2_OX_TfobtdsJuJk5H5dwmiG/view?usp=sharing"
           target="_blank"
           >ดูขั้นตอนแบบละเอียด</a

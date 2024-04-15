@@ -246,6 +246,7 @@
             :msg-link="
               message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
             "
+            :msg-location="message.messageObject"
             :name="generateName(message)"
             :img="generateCustomerImg(message)"
             :date="showDisplayTime(filteredMessages, index) ? message.sourceTimestamp : ''"
@@ -789,6 +790,12 @@ watch(
       time: '',
     }
     filteredMessages.value = null
+  }
+)
+watch(
+  () => storeCustomer.value,
+  () => {
+    templateDrawer.value = false
   }
 )
 </script>

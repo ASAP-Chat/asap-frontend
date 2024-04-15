@@ -3,9 +3,7 @@
     v-if="showModal"
     :header="isSuccessRegister ? 'ลงทะเบียนสำเร็จ!' : 'ลงทะเบียนไม่สำเร็จ!'"
     :content="
-      isSuccessRegister
-        ? 'คุณได้ทำการลงทะเบียนสำเร็จเรียบร้อยแล้ว'
-        : 'ขออภัย, ที่อยู่อีเมลนี้มีในระบบแล้ว'
+      isSuccessRegister ? 'คุณได้ทำการลงทะเบียนสำเร็จเรียบร้อยแล้ว' : 'ขออภัย, โปรดลองอีกครั้ง'
     "
     :buttonText="isSuccessRegister ? 'เข้าสู่ระบบ' : 'ลองอีกครั้ง'"
     :isSuccess="isSuccessRegister"
@@ -40,7 +38,14 @@
               name="email"
               type="email"
               label="อีเมล"
+              :error="dupEmail"
             />
+            <p
+              class="mb-3 text-error tw-text-sm mt-n3"
+              v-if="dupEmail"
+            >
+              ที่อยู่อีเมลนี้มีในระบบแล้ว
+            </p>
           </div>
           <div class="form-control tw-mt-2">
             <CommonTextField
@@ -75,7 +80,14 @@
               name="displayName"
               type="displayName"
               label="ชื่อผู้ใช้"
+              :error="dupName"
             />
+            <p
+              class="mb-3 text-error tw-text-sm mt-n3"
+              v-if="dupName"
+            >
+              ขื่อผู้ใช้นี้มีในระบบแล้ว
+            </p>
           </div>
         </v-form>
         <!-- Biz question -->
@@ -90,7 +102,14 @@
               label="ชื่อธุรกิจ"
               maxlength="100"
               counter
+              :error="dupShopName"
             />
+            <p
+              class="mb-3 text-error tw-text-sm mt-n3"
+              v-if="dupShopName"
+            >
+              ขื่อร้านค้านี้มีในระบบแล้ว
+            </p>
           </div>
           <div class="form-control tw-mb-3">
             <v-autocomplete
@@ -238,6 +257,9 @@ const selectedSocial = ref<string[]>([])
 const showModal = ref(false)
 const isSuccessRegister = ref()
 const loading = ref(false)
+const dupName = ref(false)
+const dupEmail = ref(false)
+const dupShopName = ref(false)
 
 const categories = JSON.parse(JSON.stringify(businessCategories))
 
@@ -282,9 +304,18 @@ const register = async (user: UserSignup) => {
       window.scrollTo(0, document.body.offsetHeight)
     } else {
       loading.value = false
-      isSuccessRegister.value = false
-      showModal.value = true
-      console.log(`Request failed with status: ${response.error.value}`)
+      const dup = await response.error
+      if (dup.value?.data.data.keyValue.displayName) {
+        dupName.value = true
+      } else if (dup.value?.data.data.keyValue.shopName) {
+        dupShopName.value = true
+      } else if (dup.value?.data.data.keyValue.email) {
+        dupEmail.value = true
+      } else {
+        isSuccessRegister.value = false
+        showModal.value = true
+        console.log('🍪🥛 ~ register ~ dup:', dup.value?.data.data.keyValue)
+      }
     }
   } catch (error) {
     console.error(error)
@@ -294,4 +325,23 @@ const register = async (user: UserSignup) => {
 const closeModal = () => {
   showModal.value = false
 }
+
+watch(
+  () => userInfo.value.email,
+  (newValue) => {
+    dupEmail.value = false
+  }
+)
+watch(
+  () => userInfo.value.displayName,
+  (newValue) => {
+    dupName.value = false
+  }
+)
+watch(
+  () => userInfo.value.shop?.name,
+  (newValue) => {
+    dupShopName.value = false
+  }
+)
 </script>

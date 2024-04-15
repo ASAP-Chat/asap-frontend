@@ -11,9 +11,7 @@
 
     <div class="ms-2">
       <p class="font-weight-bold">คุณมีข้อความใหม่ !</p>
-      <p v-if="type === MsgType.TEXT">{{ props.msg }}</p>
-      <p v-if="type === MsgType.STICKER">{{ props.senderName }} ส่งสติกเกอร์</p>
-      <p v-if="type === MsgType.IMAGE">{{ props.senderName }} ส่งรูปภาพ</p>
+      <p>{{ generateNotiSubtext() }}</p>
     </div>
   </div>
 </template>
@@ -27,4 +25,23 @@ const props = defineProps<{
   type: string
   senderName?: string
 }>()
+
+const generateNotiSubtext = () => {
+  switch (props.type) {
+    case MsgType.TEXT:
+      return props.msg
+    case MsgType.STICKER:
+      return `${props.senderName} ส่งสติกเกอร์`
+    case MsgType.IMAGE:
+      return `${props.senderName} ส่งรูปภาพ`
+    case MsgType.VIDEO:
+      return `${props.senderName} ส่งวิดิโอ`
+    case MsgType.AUDIO:
+      return `${props.senderName} ส่งข้อความเสียง`
+    case MsgType.LOCATION:
+      return `${props.senderName} ส่งตำแหน่งที่ตั้ง`
+    default:
+      return ''
+  }
+}
 </script>

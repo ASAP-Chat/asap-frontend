@@ -50,6 +50,8 @@
   </v-card>
 </template>
 <script setup lang="ts">
+import { oauthInstagram } from '~/services/instagram.service'
+
 const emits = defineEmits(['back'])
 
 const back = () => {

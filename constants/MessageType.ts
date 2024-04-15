@@ -4,4 +4,5 @@ export enum MsgType {
   STICKER = 'STICKER',
   VIDEO = 'VIDEO',
   AUDIO = 'AUDIO',
+  LOCATION = 'LOCATION',
 }

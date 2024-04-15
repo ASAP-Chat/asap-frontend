@@ -113,8 +113,10 @@
       >
         <v-list color="primary">
           <div
-            v-for="item in role !== Role.AGENT
+            v-for="item in role === Role.OWNER
               ? settingItems
+              : role === Role.MANAGER
+              ? settingItems.filter((item) => item.title !== 'การตั้งค่าช่องทาง')
               : settingItems.filter((item) => item.path === '/setting/profile/')"
           >
             <v-list-item

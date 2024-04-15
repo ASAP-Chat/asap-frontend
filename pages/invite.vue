@@ -42,7 +42,14 @@
                 label="ชื่อผู้ใช้"
                 :rules="[required]"
                 v-model="memberInfo.displayName"
+                :error="dupName"
               />
+              <p
+                class="mb-3 text-error tw-text-sm mt-n3"
+                v-if="dupName"
+              >
+                ขื่อผู้ใช้นี้มีในระบบแล้ว
+              </p>
             </div>
             <div class="form-control tw-mt-2">
               <CommonTextField
@@ -105,6 +112,7 @@ const route = useRoute()
 const inviteId = route.query.invite_id
 const memberById: any = ref()
 const isFormValid = ref(false)
+const dupName = ref(false)
 
 const showModal = ref(false)
 const isSuccessRegister = ref()
@@ -160,6 +168,7 @@ const registerMember = async () => {
       showModal.value = true
     } else {
       loading.value = false
+      dupName.value = true
     }
   } catch (error) {
     console.error(error)
@@ -172,4 +181,11 @@ const confirmVisible = ref(false)
 onBeforeMount(async () => {
   await getMemberById()
 })
+
+watch(
+  () => memberInfo.value.displayName,
+  (newValue) => {
+    dupName.value = false
+  }
+)
 </script>

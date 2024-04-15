@@ -13,12 +13,15 @@
     v-if="!socialInfo && isOwner"
     :header="'ยังไม่ได้ลงทะเบียนบัญชี Social Media!'"
     custom-icon="mdi-store-cog-outline"
-    :content="'โปรดเชื่อมต่ออย่างน้อย 1 บัญชี Social Media เพื่อเริ่มใช้งาน ASAP'"
-    :buttonText="'ตั้งค่า'"
+    :content="
+      role === Role.OWNER
+        ? 'โปรดเชื่อมต่ออย่างน้อย 1 บัญชี Social Media เพื่อเริ่มใช้งาน ASAP'
+        : `ร้านค้า ${name} ยังไม่ได้เชื่อมต่อกับบัญชี Social Media <br/>กรุณารอเจ้าของร้านทำการเชื่อมต่อ และเข้าใช้งานอีกครั้ง`
+    "
+    :buttonText="role === Role.OWNER ? 'ตั้งค่า' : 'ออกจากระบบ'"
     :isSuccess="false"
-    @btn-action="navigateTo('/setting/chat-integration/')"
+    @btn-action="role === Role.OWNER ? navigateTo('/setting/chat-integration/') : useSignOut()"
   />
-
   <v-card>
     <v-layout>
       <v-navigation-drawer
@@ -125,11 +128,13 @@ import { type PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
 import { USER } from '~/constants/Token'
 import { getSocialAccount } from '~/services/message.service'
+import { Role } from '~/constants/Role'
 
 const route = useRoute()
 const confirmLogout = ref(false)
 const user: any = useCookie(USER)
-const { displayName, role, isOwner } = user.value || {}
+const { displayName, role, isOwner, shop } = user.value || {}
+const { name } = shop || {}
 const { socialInfo } = await getSocialAccount()
 
 const pathToTitle = {
