@@ -48,7 +48,7 @@
                 class="mb-3 text-error tw-text-sm mt-n3"
                 v-if="dupName"
               >
-                ขื่อผู้ใช้นี้มีในระบบแล้ว
+                ชื่อผู้ใช้นี้มีในระบบแล้ว
               </p>
             </div>
             <div class="form-control tw-mt-2">

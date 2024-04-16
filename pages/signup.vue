@@ -86,7 +86,7 @@
               class="mb-3 text-error tw-text-sm mt-n3"
               v-if="dupName"
             >
-              ขื่อผู้ใช้นี้มีในระบบแล้ว
+              ชื่อผู้ใช้นี้มีในระบบแล้ว
             </p>
           </div>
         </v-form>
@@ -314,7 +314,6 @@ const register = async (user: UserSignup) => {
       } else {
         isSuccessRegister.value = false
         showModal.value = true
-        console.log('🍪🥛 ~ register ~ dup:', dup.value?.data.data.keyValue)
       }
     }
   } catch (error) {
