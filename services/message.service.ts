@@ -3,8 +3,7 @@ import { ACCESS_TOKEN, USER } from '~/constants/Token'
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)
 
-const { shop, isOwner } = user?.value || {}
-const { name } = shop || {}
+const { isOwner } = user?.value || {}
 
 const socialInfo = ref()
 export const getSocialAccount = async () => {
@@ -127,4 +126,31 @@ export const updateChatStatus = async (statusId: string, chatStatus: string) => 
   } catch (error) {
     console.log(error)
   }
+}
+
+const uploadResponse = ref()
+const uploadStatus = ref()
+export const uploadFiles = async (files: string[], fileName: File[]) => {
+  let formData = new FormData()
+  for (let i = 0; i < files.length; i++) {
+    const response = await fetch(files[i])
+    const blob = await response.blob()
+    formData.append('files', blob, fileName[i].name)
+  }
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/uploadFiles`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Authorization: 'Bearer ' + access_token.value,
+      },
+    })
+    if (response.status === 200 || response.status === 201) {
+      uploadResponse.value = await response.json()
+      uploadStatus.value = await response.status
+    }
+  } catch (error: any) {
+    console.log(error)
+  }
+  return { uploadResponse, uploadStatus }
 }
