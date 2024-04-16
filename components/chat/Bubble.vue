@@ -54,7 +54,7 @@
       v-if="prop.msgType === MsgType.STICKER"
     >
       <img
-        :src="prop.msgSticker"
+        :src="prop.msgLink"
         alt="sticker"
       />
     </div>
@@ -87,7 +87,7 @@
       v-if="prop.msgType === MsgType.VIDEO"
     >
       <video
-        width="200"
+        width="266"
         controls
       >
         <source
@@ -95,6 +95,13 @@
           type="video/mp4"
         />
       </video>
+    </div>
+    <div
+      class="tw-chat-bubble tw-bg-transparent pa-0"
+      v-if="prop.msgType === MsgType.FILE"
+      v-for="link in msgLink"
+    >
+      <div v-html="generateFileBubble(link)"></div>
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
@@ -140,8 +147,7 @@ const prop = defineProps<{
   img?: string
   msgType?: string
   msgText?: string
-  msgSticker?: string
-  msgLink?: string
+  msgLink?: any
   msgLocation?: {
     latitude: number
     longitude: number
@@ -153,7 +159,35 @@ const prop = defineProps<{
   time?: number
   isOwner?: boolean
 }>()
-
 const center = { lat: prop.msgLocation?.latitude, lng: prop.msgLocation?.longitude }
 const imageLoaded = ref(false)
+
+const generateFileBubble = (file: string) => {
+  const urlParts = file.split('/')
+  const fileName = urlParts[urlParts.length - 1]
+  const fileTypeMatch = fileName.match(/\.([0-9a-z]+)(?:[?#]|$)/i)
+
+  const imageTypes = ['jpg', 'jpeg', 'png', 'gif']
+  const videoTypes = ['mp4', 'mov', 'avi', 'wmv', 'flv']
+
+  if (fileTypeMatch) {
+    const fileType = fileTypeMatch[1].toLowerCase()
+
+    if (imageTypes.includes(fileType)) {
+      return ` <a href="${file}" target="_blank">
+          <div>
+            <img src="${file}" width="266" alt="Image">
+          </div>
+        </a>`
+    } else if (videoTypes.includes(fileType)) {
+      return `
+        <video width="266" controls>
+          <source src="${file}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>`
+    }
+  }
+
+  return ''
+}
 </script>

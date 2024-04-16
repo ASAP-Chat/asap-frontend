@@ -17,6 +17,8 @@ export const generateRole = (role: any) => {
 
 export const generateMessageSubtitle = (message: any) => {
   switch (message.type) {
+    case MsgType.FILE:
+      return 'คุณส่งไฟล์'
     case MsgType.STICKER:
       return `${generateName(message)} ส่งสติกเกอร์`
     case MsgType.IMAGE:

@@ -5,4 +5,5 @@ export enum MsgType {
   VIDEO = 'VIDEO',
   AUDIO = 'AUDIO',
   LOCATION = 'LOCATION',
+  FILE = 'FILE',
 }

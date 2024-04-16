@@ -10,11 +10,11 @@
       @change="(event:Event)=>{
         emits('handleImageChange',event)
       }"
-      accept="image/*"
+      accept="image/*,video/*"
     />
     <CommonIconButton
       class="ml-2"
-      icon="mdi-image-plus-outline"
+      icon="mdi-paperclip-plus"
       color="primary"
       :density="densityBtn"
       @click="$emit('handleClickAttachment')"

@@ -242,10 +242,7 @@
           <ChatBubble
             :msgType="message.type"
             :msg-text="message.message"
-            :msg-sticker="message.type === MsgType.STICKER ? message.link[0] : ''"
-            :msg-link="
-              message && message.type !== MsgType.STICKER && message.link ? message.link[0] : ''
-            "
+            :msg-link="message.type === MsgType.FILE ? message.link : message.link[0]"
             :msg-location="message.messageObject"
             :name="generateName(message)"
             :img="generateCustomerImg(message)"
@@ -314,7 +311,10 @@
                     :previewImageUrl="previewImageUrls"
                     @handleImageChange="handleImageChange"
                     @handleClickAttachment="handleClickAttachment"
-                    :disabled-btn="storeCustomer?.status === Status.PENDING"
+                    :disabled-btn="
+                      storeCustomer?.agent !== displayName ||
+                      storeCustomer?.status === Status.PENDING
+                    "
                     :density-btn="'compact'"
                   />
                 </template>
@@ -338,25 +338,33 @@
               :previewImageUrl="previewImageUrls"
               @handleImageChange="handleImageChange"
               @handleClickAttachment="handleClickAttachment"
-              :disabled-btn="storeCustomer?.status === Status.PENDING"
+              :disabled-btn="
+                storeCustomer?.agent !== displayName || storeCustomer?.status === Status.PENDING
+              "
             />
             <div
               class="tw-w-full tw-rounded-3xl tw-border tw-border-solid tw-border-[#ababab] tw-p-3"
             >
-              <div class="tw-justify-items-center tw-grid tw-grid-cols-5 tw-gap-y-3.5">
+              <div
+                class="tw-justify-items-center tw-grid xl:tw-grid-cols-5 sm:tw-grid-cols-3 tw-gap-y-3.5"
+              >
                 <div
                   class="tw-text-end tw-relative tw-inline-block"
-                  v-for="(url, index) in previewImageUrls"
+                  v-for="(file, index) in previewImageUrls"
                   :key="index"
                 >
-                  <FileUploadOutput :src="url" />
+                  <FileUploadOutput
+                    :src="file"
+                    :type="previewUploads.files[index].type"
+                    :size="previewUploads.files[index].size"
+                  />
                   <CommonIconButton
                     icon="mdi-close"
                     density="compact"
                     size="small"
                     variant="flat"
                     color="#949494"
-                    @click="removeImage(index)"
+                    @click="removeFile(index)"
                     class="tw-absolute tw-top-0 tw-left-0"
                   />
                 </div>
@@ -365,9 +373,21 @@
             <CommonIconButton
               icon="mdi-send"
               color="primary"
+              :loading="sendFilesLoading"
+              :disabled="
+                previewImageUrls.length > 5 ||
+                Boolean(previewUploads.files.find((file) => file.size > 5000000))
+              "
+              @click="sendFiles(previewImageUrls, previewUploads.files)"
             />
           </div>
         </v-container>
+        <p
+          class="mb-3 text-error tw-text-sm"
+          v-if="previewImageUrls.length > 5"
+        >
+          คุณสามารถส่งไฟล์รูปภาพและวีดีโอได้ครั้งละ 5 ไฟล์เท่านั้น
+        </p>
       </v-form>
     </v-footer>
 
@@ -379,16 +399,22 @@
 </template>
 <script setup lang="ts">
 import { useToast } from 'vue-toastification'
-import { SocialType } from '~/constants/SocialType'
+import type { ToastOptions } from 'vue-toastification/dist/types/types'
 import { Manager } from 'socket.io-client'
-import Notification from '~/components/chat/Notification.vue'
-import { MsgType } from '~/constants/MessageType'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
-import { getSocialAccount, getLatestMsg, updateMsg, getCustomer } from '~/services/message.service'
+import Notification from '~/components/chat/Notification.vue'
+import { SocialType } from '~/constants/SocialType'
+import { MsgType } from '~/constants/MessageType'
 import { Status } from '~/constants/Status'
 import { Role } from '~/constants/Role'
-import type { ToastOptions } from 'vue-toastification/dist/types/types'
+import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import {
+  getSocialAccount,
+  getLatestMsg,
+  updateMsg,
+  getCustomer,
+  uploadFiles,
+} from '~/services/message.service'
 import { getChatbotStatus } from '~/services/chatbot.service'
 
 const toast = useToast()
@@ -397,6 +423,7 @@ const previewUploads = ref({
   files: [] as File[],
   urls: [] as string[],
 })
+
 const previewImageUrls = computed(() => previewUploads.value.urls)
 const fileInputComponentRef = ref()
 const handleClickAttachment = () => {
@@ -414,17 +441,26 @@ const handleImageChange = (event: Event | any) => {
       const reader = new FileReader()
       reader.onload = () => {
         if (reader.result) {
-          previewUploads.value.urls.push(reader.result as string)
+          if (file.type.startsWith('image')) {
+            previewUploads.value.urls.push(reader.result as string)
+          }
         }
       }
       reader.readAsDataURL(file)
+      if (file.type.startsWith('video')) {
+        const videoUrl = URL.createObjectURL(file)
+        previewUploads.value.urls.push(videoUrl)
+      }
     }
     event.target.value = null
+    console.log(previewUploads.value.urls)
   }
 }
-const removeImage = (index: number) => {
+
+const removeFile = async (index: number) => {
   previewUploads.value.files.splice(index, 1)
   previewUploads.value.urls.splice(index, 1)
+  console.log(previewUploads.value.urls)
 }
 
 let socketURL
@@ -593,6 +629,45 @@ const setSelectCustomer = async (
   sendMsg.value = ''
   nextTick(() => window.scrollTo(0, document.body.scrollHeight))
 }
+const sendFilesLoading = ref(false)
+const sendFileMsg = async (file: any) => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/social-message/${storeCustomer.value.userId}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          source: storeCustomer.value.source,
+          message: {
+            files: file,
+          },
+        }),
+        headers: {
+          'content-Type': 'application/json',
+          Authorization: 'Bearer ' + access_token.value,
+        },
+      }
+    )
+    if (response.status === 200 || response.status === 201) {
+      previewUploads.value.files = []
+      previewUploads.value.urls = []
+      await getMsgById(storeCustomer.value.userId, 0)
+      sendFilesLoading.value = false
+    } else if (response.status === 401) {
+      await useRefreshToken()
+      await sendFileMsg(file)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+const sendFiles = async (base64: string[], files: File[]) => {
+  sendFilesLoading.value = true
+  const { uploadResponse, uploadStatus } = await uploadFiles(base64, files)
+  if (uploadStatus.value === 200) {
+    sendFileMsg(uploadResponse.value.data)
+  }
+}
 
 const sendMessage = async () => {
   if (sendMsg.value !== '') {
@@ -653,10 +728,6 @@ const getMsgById = async (customerId: any, total: number) => {
       filteredMessages.value = await response.json()
       totalChat.value = filteredMessages.value && filteredMessages.value.data.length
       loading.value = false
-      filteredMessages.value &&
-        nextTick(() => {
-          window.scrollTo(0, document.body.scrollHeight)
-        })
     } else if (response.status === 401) {
       await useRefreshToken()
       await getMsgById(customerId, totalChat.value)
@@ -796,6 +867,16 @@ watch(
   () => storeCustomer.value,
   () => {
     templateDrawer.value = false
+    previewUploads.value.files = []
+    previewUploads.value.urls = []
+  }
+)
+watch(
+  () => filteredMessages.value,
+  () => {
+    nextTick(() => {
+      window.scrollTo(0, document.body.scrollHeight)
+    })
   }
 )
 </script>
