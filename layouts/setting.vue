@@ -198,7 +198,7 @@ const settingItems = [
     icon: 'mdi-account-outline',
   },
   {
-    title: 'การตั้งค่าช่องทาง',
+    title: 'การตั้งค่า Social Media Platforms',
     path: '/setting/chat-integration/',
     value: 'chat-integration',
     icon: 'mdi-store-cog-outline',
