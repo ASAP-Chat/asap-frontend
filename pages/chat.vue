@@ -499,7 +499,7 @@ onBeforeMount(() => {
         component: Notification,
         props: {
           img: generateAvatarUrl(newMsg.value),
-          senderName: newMsg.value.senderDetail.displayName,
+          senderName: newMsg.value.senderDetail.displayName || newMsg.value.senderDetail.name,
           msg: newMsg.value.message,
           type: newMsg.value.type,
         },
