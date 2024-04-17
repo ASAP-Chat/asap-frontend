@@ -63,14 +63,14 @@
       v-if="prop.msgType === MsgType.IMAGE"
     >
       <a
-        :href="prop.msgLink"
+        v-for="link in msgLink"
         target="_blank"
       >
-        <div>
+        <div class="mb-2">
           <v-img
             :width="266"
             cover
-            :src="prop.msgLink"
+            :src="link"
             @load="imageLoaded = true"
           ></v-img>
 

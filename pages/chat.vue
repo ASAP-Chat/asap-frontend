@@ -242,7 +242,7 @@
           <ChatBubble
             :msgType="message.type"
             :msg-text="message.message"
-            :msg-link="message.type === MsgType.FILE ? message.link : message.link[0]"
+            :msg-link="message.link"
             :msg-location="message.messageObject"
             :name="generateName(message)"
             :img="generateCustomerImg(message)"

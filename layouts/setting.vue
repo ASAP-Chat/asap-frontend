@@ -111,7 +111,10 @@
         width="175"
         color="#fafafa"
       >
-        <v-list color="primary">
+        <v-list
+          color="primary"
+          class="pa-0"
+        >
           <div
             v-for="item in role === Role.OWNER
               ? settingItems

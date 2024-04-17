@@ -79,21 +79,33 @@
             </td>
             <td
               class="text-left tw-flex tw-items-center tw-justify-start"
-              :class="item?.status?.isAvailable ? 'text-success' : 'text-warning'"
+              :class="
+                item?.status?.isAvailable && item?.status?.isInitialized
+                  ? 'text-success'
+                  : 'text-warning'
+              "
             >
               <div>
                 <v-tooltip
-                  v-if="!item?.status?.isAvailable"
+                  v-if="!item?.status?.isAvailable || !item?.status?.isInitialized"
                   activator="parent"
                   location="top"
                   >โปรดยกเลิกการเชื่อมต่อ และเชื่อมต่อใหม่ด้วยข้อมูลที่ถูกต้อง
                 </v-tooltip>
                 <div class="tw-flex tw-items-center tw-justify-center">
                   <v-icon
-                    :color="item?.status?.isAvailable ? 'success' : 'warning'"
+                    :color="
+                      item?.status?.isAvailable && item?.status?.isInitialized
+                        ? 'success'
+                        : 'warning'
+                    "
                     class="mr-1"
                   >
-                    {{ item?.status?.isAvailable ? 'mdi-check-circle' : 'mdi-close' }}
+                    {{
+                      item?.status?.isAvailable && item?.status?.isInitialized
+                        ? 'mdi-check-circle'
+                        : 'mdi-close'
+                    }}
                   </v-icon>
                   <span
                     :class="{
