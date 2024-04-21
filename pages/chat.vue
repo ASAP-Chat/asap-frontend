@@ -404,7 +404,6 @@ import { Manager } from 'socket.io-client'
 import buttonSfx from '~/assets/sounds/noti-sound.mp3'
 import Notification from '~/components/chat/Notification.vue'
 import { SocialType } from '~/constants/SocialType'
-import { MsgType } from '~/constants/MessageType'
 import { Status } from '~/constants/Status'
 import { Role } from '~/constants/Role'
 import { ACCESS_TOKEN, USER } from '~/constants/Token'
@@ -653,6 +652,7 @@ const sendFileMsg = async (file: any) => {
       previewUploads.value.urls = []
       await getMsgById(storeCustomer.value.userId, 0)
       sendFilesLoading.value = false
+      nextTick(() => window.scrollTo(0, document.body.scrollHeight))
     } else if (response.status === 401) {
       await useRefreshToken()
       await sendFileMsg(file)
@@ -665,8 +665,28 @@ const sendFiles = async (base64: string[], files: File[]) => {
   sendFilesLoading.value = true
   const { uploadResponse, uploadStatus } = await uploadFiles(base64, files)
   if (uploadStatus.value === 200) {
-    sendFileMsg(uploadResponse.value.data)
+    if (
+      storeCustomer.value.source === SocialType.FACEBOOK ||
+      storeCustomer.value.source === SocialType.INSTAGRAM
+    ) {
+      for (let i = 0; i < uploadResponse.value.data.length; i++) {
+        await sendFile([uploadResponse.value.data[i]])
+      }
+    } else {
+      sendFileMsg(uploadResponse.value.data)
+    }
   }
+}
+
+const sendFile = async (fileData: any) => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      sendFileMsg(fileData)
+      resolve()
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
 
 const sendMessage = async () => {
