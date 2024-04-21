@@ -28,12 +28,12 @@
         aspect-ratio="1/1"
         cover
         class="tw-rounded-full"
-        :src="storeCustomer.source === SocialType.FACEBOOK ? profileSrc : storeCustomer.pictureUrl"
+        :src="storeCustomer.pictureUrl"
       ></v-img>
     </template>
     <v-app-bar-title class="font-weight-bold">
       <v-icon
-        class="pb-6"
+        :class="storeCustomer.source === SocialType.INSTAGRAM ? 'pb-1' : 'pb-6'"
         size="x-small"
         >{{ generateSocialIcon(storeCustomer.source) }}</v-icon
       >

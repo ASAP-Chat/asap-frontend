@@ -1,4 +1,3 @@
-import profileSrc from '~/assets/images/profile.png'
 import fbSrc from '~/assets/images/facebook-page.png'
 import { SocialType } from '~/constants/SocialType'
 
@@ -44,7 +43,7 @@ export const generateToastIcon = (type: string) => {
     case SocialType.FACEBOOK:
       return 'fa-brands fa-square-facebook'
     case SocialType.INSTAGRAM:
-      return 'fa-brands fa-square-instagram'
+      return 'fa-brands fa-instagram'
     default:
       return ''
   }
@@ -81,12 +80,10 @@ export const generateCustomerImg = (message: any) => {
       return isOwner ? senderDetail?.pictureUrl : senderDetail.pictureUrl
 
     case SocialType.FACEBOOK:
-      return isOwner ? fbSrc : profileSrc
+      return isOwner ? fbSrc : senderDetail?.picture.data.url
 
     case SocialType.INSTAGRAM:
-      return isOwner
-        ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/768px-Instagram_logo_2022.svg.png'
-        : profileSrc
+      return isOwner ? senderDetail?.profile_picture_url : senderDetail?.profile_pic
 
     default:
       return ''
@@ -96,11 +93,20 @@ export const generateCustomerImg = (message: any) => {
 export const generateAvatarUrl = (message: any) => {
   const isOwner = message.isOwner
   const socialType = message.source
-  let pictureUrl
-  if (isOwner) {
-    pictureUrl = socialType === SocialType.LINE ? message.receiverDetail.pictureUrl : profileSrc
-  } else {
-    pictureUrl = socialType === SocialType.LINE ? message.senderDetail.pictureUrl : profileSrc
+
+  switch (socialType) {
+    case SocialType.LINE:
+      return isOwner ? message.receiverDetail.pictureUrl : message.senderDetail.pictureUrl
+
+    case SocialType.FACEBOOK:
+      return isOwner
+        ? message.receiverDetail?.picture.data.url
+        : message.senderDetail?.picture.data.url
+
+    case SocialType.INSTAGRAM:
+      return isOwner ? message.receiverDetail?.profile_pic : message.senderDetail?.profile_pic
+
+    default:
+      return ''
   }
-  return pictureUrl
 }
