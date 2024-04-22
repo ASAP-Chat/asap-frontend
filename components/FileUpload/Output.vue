@@ -28,13 +28,13 @@
       class="mt-1 text-error tw-text-sm"
       v-if="type.startsWith('video') && size >= 200000000"
     >
-      ไฟล์นี้มีขนาดเกิน 1MB
+      ไฟล์นี้มีขนาดเกิน 200MB
     </p>
     <p
       class="mt-1 text-error tw-text-sm"
       v-if="type.startsWith('image') && size >= 10000000"
     >
-      ไฟล์นี้มีขนาดเกิน 1MB
+      ไฟล์นี้มีขนาดเกิน 10MB
     </p>
   </div>
 </template>
