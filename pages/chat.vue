@@ -285,14 +285,14 @@
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากข้อความล่าสุดมีอายุมากกว่า 24 ชั่วโมง ตามข้อกำหนดของ Facebook'
                     : storeCustomer?.agent !== displayName
                     ? 'ไม่สามารถส่งข้อความได้ เนื่องจากคุณไม่ได้รับผิดชอบแชตนี้'
-                    : storeCustomer?.status === Status.PENDING
+                    : storeCustomer?.status !== Status.ONGOING
                     ? 'คุณจะสามารถตอบแชตได้ ก็ต่อเมื่อสถานะของแชตเป็นดำเนินการ'
                     : 'พิมพ์ข้อความ ...'
                 "
                 :disabled="
                   Boolean(disabledChatInput) ||
                   storeCustomer?.agent !== displayName ||
-                  storeCustomer?.status === Status.PENDING
+                  storeCustomer?.status !== Status.ONGOING
                 "
               >
                 <template v-slot:prepend>
@@ -303,7 +303,7 @@
                     @click.stop="templateDrawer = !templateDrawer"
                     :disabled="
                       storeCustomer?.agent !== displayName ||
-                      storeCustomer?.status === Status.PENDING
+                      storeCustomer?.status !== Status.ONGOING
                     "
                   />
                   <FileUploadInput
@@ -313,7 +313,7 @@
                     @handleClickAttachment="handleClickAttachment"
                     :disabled-btn="
                       storeCustomer?.agent !== displayName ||
-                      storeCustomer?.status === Status.PENDING
+                      storeCustomer?.status !== Status.ONGOING
                     "
                     :density-btn="'compact'"
                   />
@@ -339,7 +339,7 @@
               @handleImageChange="handleImageChange"
               @handleClickAttachment="handleClickAttachment"
               :disabled-btn="
-                storeCustomer?.agent !== displayName || storeCustomer?.status === Status.PENDING
+                storeCustomer?.agent !== displayName || storeCustomer?.status !== Status.ONGOING
               "
             />
             <div
