@@ -10,7 +10,7 @@
       @change="(event:Event)=>{
         emits('handleImageChange',event)
       }"
-      accept="image/*,video/*"
+      accept="image/png,image/jpg,image/jpeg,image/jfif,image/gif,video/*"
     />
     <CommonIconButton
       class="ml-2"
