@@ -167,7 +167,7 @@ const generateFileBubble = (file: string) => {
   const fileName = urlParts[urlParts.length - 1]
   const fileTypeMatch = fileName.match(/\.([0-9a-z]+)(?:[?#]|$)/i)
 
-  const imageTypes = ['jpg', 'jpeg', 'png', 'gif']
+  const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'jfif', 'webp']
   const videoTypes = ['mp4', 'mov', 'avi', 'wmv', 'flv']
 
   if (fileTypeMatch) {
