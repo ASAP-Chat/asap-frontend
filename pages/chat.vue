@@ -452,14 +452,12 @@ const handleImageChange = (event: Event | any) => {
       }
     }
     event.target.value = null
-    console.log(previewUploads.value.urls)
   }
 }
 
 const removeFile = async (index: number) => {
   previewUploads.value.files.splice(index, 1)
   previewUploads.value.urls.splice(index, 1)
-  console.log(previewUploads.value.urls)
 }
 
 let socketURL
