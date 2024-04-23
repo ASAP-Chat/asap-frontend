@@ -60,7 +60,7 @@
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
-      v-if="prop.msgType === MsgType.IMAGE"
+      v-if="!unsendFile && prop.msgType === MsgType.IMAGE"
     >
       <a
         v-for="link in msgLink"
@@ -95,6 +95,13 @@
           type="video/mp4"
         />
       </video>
+    </div>
+    <div
+      v-if="unsendFile"
+      class="tw-py-2 tw-px-4 tw-col-start-2 tw-border-dashed tw-border tw-border-[#bcc0c4] tw-rounded-lg tw-whitespace-pre-line tw-text-[#bcc0c4]"
+      :class="isOwner ? 'tw-bg-[#d4caff]' : 'tw-bg-[#fff]'"
+    >
+      ยกเลิกข้อความ
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
@@ -161,7 +168,37 @@ const prop = defineProps<{
 }>()
 const center = { lat: prop.msgLocation?.latitude, lng: prop.msgLocation?.longitude }
 const imageLoaded = ref(false)
+function checkIfLinkExists(url: any, callback: any) {
+  const img = new Image()
+  img.src = url
 
+  if (img.complete) {
+    callback(true)
+  } else {
+    img.onload = () => {
+      callback(true)
+    }
+
+    img.onerror = () => {
+      callback(false)
+    }
+  }
+}
+
+const unsendFile = ref(false)
+if (
+  prop.msgType === MsgType.IMAGE ||
+  prop.msgType === MsgType.VIDEO ||
+  prop.msgType === MsgType.AUDIO
+) {
+  checkIfLinkExists(prop.msgLink, (exists: any) => {
+    if (exists) {
+      unsendFile.value = false
+    } else {
+      unsendFile.value = true
+    }
+  })
+}
 const generateFileBubble = (file: string) => {
   const urlParts = file.split('/')
   const fileName = urlParts[urlParts.length - 1]
