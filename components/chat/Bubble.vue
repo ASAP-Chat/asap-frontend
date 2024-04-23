@@ -84,7 +84,7 @@
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
-      v-if="prop.msgType === MsgType.VIDEO"
+      v-if="!unsendFile && prop.msgType === MsgType.VIDEO"
     >
       <video
         width="266"
@@ -112,7 +112,7 @@
     </div>
     <div
       class="tw-chat-bubble tw-bg-transparent pa-0"
-      v-if="prop.msgType === MsgType.AUDIO"
+      v-if="!unsendFile && prop.msgType === MsgType.AUDIO"
     >
       <audio controls>
         <source
