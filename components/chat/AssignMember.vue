@@ -98,9 +98,6 @@ const updateAgent = async (id: string, v: any) => {
           emits('update:message')
         }
       }
-      if (storeCustomer?.value.agent === v) {
-        emits('update:message')
-      }
       await getCustomer()
     } else if (response.status === 401) {
       await useRefreshToken()
