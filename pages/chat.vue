@@ -376,7 +376,7 @@
               :loading="sendFilesLoading"
               :disabled="
                 previewImageUrls.length > 5 ||
-                Boolean(previewUploads.files.find((file) => file.size > 5000000))
+                Boolean(previewUploads.files.find((file) => file.size > 50000000))
               "
               @click="sendFiles(previewImageUrls, previewUploads.files)"
             />
