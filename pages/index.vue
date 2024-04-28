@@ -233,8 +233,8 @@
             class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center tw-flex-col"
           >
             <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
-              จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
-              รองรับแอดมินที่ทำงานเป็นทีม
+              ระบบการจัดการทีมที่จะช่วยเพิ่มความคล่องตัวให้กับการทำงาน โดยจะมีการแบ่งงานของผู้ดูแลอย่างเป็นระบบ ช่วยลดความซ้ำซ้อน และเพิ่มประสิทธิภาพให้กับ
+              ผู้ดูแลระบบร้านค้า
             </div>
           </div>
         </div>
