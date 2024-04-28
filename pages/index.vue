@@ -345,8 +345,13 @@
           </div>
         </div>
       </div>
-      <div class="tw-mt-5 tw-text-[25px] tw-font-bold tw-text-gray-700">
-        Advised by Dr. Sunisa Sathapornvajana
+      <div class="tw-mt-20 tw-flex tw-flex-row tw-w-full tw-justify-center tw-items-center tw-space-x-14 tw-text-[25px] tw-font-bold tw-text-gray-700">
+        <img
+              src="../assets/images/Advised.jpg"
+              alt="member"
+              class="tw-w-52 tw-h-52 tw-rounded-full tw-justify-center tw-drop-shadow-xl tw-shadow-md"
+            />  
+        <span>Advised by Dr. Sunisa Sathapornvajana</span>
       </div>
     </section>
   </div>
