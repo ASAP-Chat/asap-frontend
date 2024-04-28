@@ -103,7 +103,7 @@
           <div class="tw-w-5/6 sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
             <div class="tw-text-[20px] tw-text-gray-800 tw-mb-2 tw-leading-6">
               จัดการแชตผ่านเว็บไซต์ LINE OA, Facebook messenger และ Instagram ในที่เดียว
-              รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัว
+              รองรับแอดมินที่ทำงานเป็นทีม ปลอดภัยไม่ต้องใช้บัญชีส่วนตัวช่วยให้ธุรกิจมีประสิทธิภาพในการบริการลูกค้าได้อย่างเต็มประสิทธิภาพ
             </div>
           </div>
           <div class="tw-w-full sm:tw-w-1/2 tw-p-6 tw-flex tw-justify-center tw-items-center">
