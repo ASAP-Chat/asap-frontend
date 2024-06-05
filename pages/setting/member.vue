@@ -97,7 +97,7 @@
 <script setup lang="ts">
 // @ts-nocheck
 
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { getMember } from '~/services/member.service'
 import { useToast } from 'vue-toastification'
 import { Role } from '~/constants/Role'

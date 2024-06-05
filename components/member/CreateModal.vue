@@ -74,7 +74,7 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { useToast } from 'vue-toastification'
 import { getMember } from '~/services/member.service'
 import { MemberInfo } from '~/interfaces/social.interface'

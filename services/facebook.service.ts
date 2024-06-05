@@ -1,5 +1,5 @@
 import { SocialType } from '~/constants/SocialType'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { getSocialAccount } from '~/services/message.service'
 
 export const oauthFacebook = () => {

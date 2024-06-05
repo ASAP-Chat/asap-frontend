@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { getChatbotMsg } from '~/services/chatbot.service'
 import { Role } from '~/constants/Role'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 
 const page = ref(1)
 const { chatbotMsg } = await getChatbotMsg(page.value)

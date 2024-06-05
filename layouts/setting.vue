@@ -157,7 +157,7 @@
 <script setup lang="ts">
 import imageSrc from '~/assets/images/logo.png'
 import { Role } from '~/constants/Role'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 import { getSocialAccount } from '~/services/message.service'
 
 const { socialInfo } = await getSocialAccount()

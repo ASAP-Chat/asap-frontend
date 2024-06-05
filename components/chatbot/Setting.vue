@@ -64,7 +64,7 @@
 import { SocialType } from '~/constants/SocialType'
 import { getChatbotStatus, updateChatbotStatus } from '~/services/chatbot.service'
 import { Role } from '~/constants/Role'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 
 const user: any = useCookie(USER)
 const { role } = user.value || {}

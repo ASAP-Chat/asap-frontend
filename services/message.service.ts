@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 
 const user: any = useCookie(USER)
 const access_token = useCookie(ACCESS_TOKEN)

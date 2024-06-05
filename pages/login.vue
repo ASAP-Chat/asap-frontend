@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { type UserLogin } from '~/interfaces/auth.interface'
 import imageSrc from '~/assets/images/logo.png'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Token'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Cookie'
 
 const router = useRouter()
 

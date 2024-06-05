@@ -87,7 +87,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 import { getChatTemplate } from '~/services/template.service'
 import { Role } from '~/constants/Role'
 

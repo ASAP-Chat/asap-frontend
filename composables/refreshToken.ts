@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Token'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '~/constants/Cookie'
 
 const access_token = useCookie(ACCESS_TOKEN)
 const refresh_token = useCookie(REFRESH_TOKEN)

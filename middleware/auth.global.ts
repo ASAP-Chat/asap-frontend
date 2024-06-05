@@ -1,5 +1,5 @@
 import { Role } from '~/constants/Role'
-import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER } from '~/constants/Cookie'
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const user: any = useCookie(USER)

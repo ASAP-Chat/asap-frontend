@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import { Status } from '~/constants/Status'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 import { updateChatStatus } from '~/services/message.service'
 
 const props = defineProps<{

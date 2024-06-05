@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import { getMember } from '~/services/member.service'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { getCustomer } from '~/services/message.service'
 
 const props = defineProps<{

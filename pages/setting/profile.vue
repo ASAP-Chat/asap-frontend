@@ -43,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import { Role } from '~/constants/Role'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 
 useHead({
   title: 'การตั้งค่า',

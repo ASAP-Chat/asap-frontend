@@ -1,5 +1,5 @@
 import { Manager } from 'socket.io-client'
-import { USER, REFRESH_TOKEN, ACCESS_TOKEN } from '~/constants/Token'
+import { USER, REFRESH_TOKEN, ACCESS_TOKEN } from '~/constants/Cookie'
 
 let socketURL
 if (process.env.NODE_ENV === 'development') {

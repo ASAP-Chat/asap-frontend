@@ -126,7 +126,7 @@
 <script lang="ts" setup>
 import { type PathToTitleMap } from '~/interfaces/index.interface'
 import imageSrc from '~/assets/images/logo.png'
-import { USER } from '~/constants/Token'
+import { USER } from '~/constants/Cookie'
 import { getSocialAccount } from '~/services/message.service'
 import { Role } from '~/constants/Role'
 

@@ -96,7 +96,7 @@
 </template>
 <script setup lang="ts">
 import { type CreateLineInfo } from '~/interfaces/social.interface'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { getSocialAccount } from '~/services/message.service'
 import { SocialType } from '~/constants/SocialType'
 

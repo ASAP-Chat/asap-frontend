@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { SocialType } from '~/constants/SocialType'
 import { getSocialAccount } from '~/services/message.service'
 

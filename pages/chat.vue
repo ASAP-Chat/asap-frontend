@@ -407,7 +407,7 @@ import Notification from '~/components/chat/Notification.vue'
 import { SocialType } from '~/constants/SocialType'
 import { Status } from '~/constants/Status'
 import { Role } from '~/constants/Role'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import {
   getSocialAccount,
   getLatestMsg,

@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { type ChatTemplateInfo } from '~/interfaces/social.interface'
-import { ACCESS_TOKEN, USER } from '~/constants/Token'
+import { ACCESS_TOKEN, USER } from '~/constants/Cookie'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/template.service'
 

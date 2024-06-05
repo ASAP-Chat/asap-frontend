@@ -92,7 +92,7 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ACCESS_TOKEN } from '~/constants/Token'
+import { ACCESS_TOKEN } from '~/constants/Cookie'
 import { useToast } from 'vue-toastification'
 import { getChatTemplate } from '~/services/template.service'
 
