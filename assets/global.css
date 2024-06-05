@@ -59,7 +59,14 @@ html {
   scroll-margin-top: 100px;
 }
 
-.v-btn--disabled.v-btn--variant-elevated {
+.v-btn--disabled.v-btn--variant-elevated,
+.v-btn--disabled.v-btn--variant-flat {
+  background-color: #d0d0d0 !important;
+  color: black !important;
+  opacity: 0.5 !important;
+}
+
+.v-btn--disabled.v-btn--variant-outlined {
   background-color: #d0d0d0 !important;
   color: black !important;
   opacity: 0.5 !important;
