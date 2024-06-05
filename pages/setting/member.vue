@@ -23,6 +23,7 @@
         text="เพิ่มสมาชิก"
         icon="mdi-plus"
         color="primary"
+        variant="flat"
         @click="createMemberModal = true"
       />
     </div>

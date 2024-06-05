@@ -1,7 +1,7 @@
 <template>
   <v-btn
     class="font-weight-bold"
-    flat
+    :variant="variant"
     rounded="lg"
     :text="text"
   >
@@ -17,5 +17,6 @@
 const props = defineProps<{
   text: string
   icon?: string
+  variant: 'text' | 'flat' | 'elevated' | 'tonal' | 'outlined' | 'plain'
 }>()
 </script>

@@ -37,6 +37,7 @@
           @click="btnAction"
           size="large"
           class="text-white font-weight-bold tw-text-base px-6"
+          variant="flat"
           :class="props.isSuccess ? 'tw-bg-[#53b389]' : 'tw-bg-[#E71313]'"
           :to="props.to"
         />

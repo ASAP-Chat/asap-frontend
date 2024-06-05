@@ -94,9 +94,10 @@
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
-        <common-button
+        <CommonButton
           text="บันทึก"
           color="primary"
+          variant="flat"
           @click="createChatbotMsg(chatbotInfo)"
           :disabled="disabledButton"
         />

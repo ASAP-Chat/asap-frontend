@@ -58,19 +58,21 @@
       </v-form>
       <div class="tw-flex tw-justify-between pb-6 px-6">
         <div>
-          <CommonOutlinedButton
+          <CommonButton
             text="ลบ"
             icon="mdi-trash-can-outline"
             color="error"
+            variant="outlined"
             class="font-weight-bold"
             @click="confirmDelete = true"
           />
         </div>
         <div>
-          <common-button
+          <CommonButton
             text="บันทึก"
             icon="mdi-content-save"
             color="primary"
+            variant="flat"
             @click="editChatTemplate"
             :disabled="!isFormValid"
           />

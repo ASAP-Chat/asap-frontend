@@ -61,10 +61,11 @@
         </div>
       </v-form>
       <div class="tw-flex tw-justify-end pb-6 px-6">
-        <common-button
+        <CommonButton
           text="บันทึก"
           icon="mdi-content-save"
           color="primary"
+          variant="flat"
           :disabled="!isFormValid"
           @click="createMember(memberData)"
         />

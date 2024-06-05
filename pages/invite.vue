@@ -88,6 +88,7 @@
             size="large"
             color="primary"
             :loading="loading"
+            variant="flat"
             :disabled="!isFormValid"
             @click="registerMember()"
           />

@@ -192,6 +192,7 @@
             text="สร้างบัญชีผู้ใช้งาน"
             block
             size="large"
+            variant="flat"
             color="primary"
             :disabled="isButtonDisabled"
             :loading="loading"

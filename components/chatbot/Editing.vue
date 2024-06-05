@@ -92,8 +92,9 @@
       </v-form>
       <div class="tw-flex tw-justify-between pb-6 px-6">
         <div>
-          <CommonOutlinedButton
+          <CommonButton
             text="ลบ"
+            variant="outlined"
             icon="mdi-trash-can-outline"
             color="error"
             class="font-weight-bold"
@@ -101,10 +102,11 @@
           />
         </div>
         <div>
-          <common-button
+          <CommonButton
             text="บันทึก"
             icon="mdi-content-save"
             color="primary"
+            variant="flat"
             :disabled="disabledButton"
             @click="editChatbotMsg"
           />

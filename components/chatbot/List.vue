@@ -36,6 +36,7 @@
           text="เพิ่มใหม่"
           icon="mdi-plus"
           color="primary"
+          variant="flat"
           @click="chatbotCreation = true"
         ></CommonButton>
       </div>

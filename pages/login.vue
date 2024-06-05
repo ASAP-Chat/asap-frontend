@@ -54,6 +54,7 @@
               size="large"
               color="primary"
               type="submit"
+              variant="flat"
               :disabled="!isFormValid"
               :loading="loading"
             />

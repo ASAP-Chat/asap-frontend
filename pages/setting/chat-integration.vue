@@ -125,6 +125,7 @@
               <CommonButton
                 text="ยกเลิกการเชื่อมต่อ"
                 color="error-lighten"
+                variant="flat"
                 @click=";(confirmDeleteModal = true), (cancelItemId = item?._id)"
               />
               <CommonConfirmModal
@@ -149,6 +150,7 @@
           text="เพิ่มการเชื่อมต่อ"
           icon="mdi-plus"
           color="success"
+          variant="flat"
           class="tw-mx-auto mt-4"
           @click="connectDialog = true"
           :class="socialInfo?.data?.length === 3 ? 'tw-hidden' : ''"

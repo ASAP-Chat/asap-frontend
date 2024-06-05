@@ -234,6 +234,7 @@
             @click="getMoreChat()"
             class="tw-font-normal"
             :loading="loadingBtn"
+            variant="flat"
           />
         </div>
         <div
