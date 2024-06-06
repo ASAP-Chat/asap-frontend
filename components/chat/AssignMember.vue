@@ -27,7 +27,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <common-outlined-button
+      <CommonButton
         text="ไม่มอบหมาย"
         color="error"
         variant="outlined"

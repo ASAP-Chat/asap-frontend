@@ -206,9 +206,10 @@
                       >
                         mdi-check
                       </v-icon>
-                      <CommonOutlinedButton
+                      <CommonButton
                         v-else
                         text="เชื่อมต่อ"
+                        variant="outlined"
                         color="primary"
                         class="font-weight-bold"
                         @click=";(connectSocialDialog = true), (selectSocial = item.socialType)"

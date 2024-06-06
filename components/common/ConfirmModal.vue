@@ -23,11 +23,12 @@
           @click="emits('btn-action')"
           >{{ cancelWording }}
         </v-btn>
-        <CommonOutlinedButton
+        <CommonButton
           :text="confirmWording"
           @click="emits('confirm-action')"
           size="large"
           color="error"
+          variant="outlined"
           class="font-weight-bold tw-text-base px-6"
           rounded="md"
         />
